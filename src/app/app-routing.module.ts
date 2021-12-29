@@ -8,7 +8,7 @@ import { AboutusComponent } from './aboutus/aboutus.component'
 
 import { AuthGuard } from './_helpers';
 
-const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
+// const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
 
 const routes: Routes = [
     { path: '', component: MyinfoComponent, canActivate: [AuthGuard]},
@@ -16,8 +16,8 @@ const routes: Routes = [
     { path: 'teaminfo', component: TeaminfoComponent, canActivate: [AuthGuard]},
     { path: 'leavetracker', component: LeavetrackerComponent, canActivate: [AuthGuard]},
     { path: 'aboutus', component: AboutusComponent, canActivate: [AuthGuard]},
-    { path: 'account', loadChildren: accountModule },
-
+    { path: 'account', loadChildren: "./account/account.module#AccountModule" },
+    // { path: 'account', loadChildren: accountModule },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
 ];

@@ -13,6 +13,20 @@ export class AccountService {
     private userSubject: BehaviorSubject<User>;
     public user: Observable<User>;
 
+    private data = {
+        userInfo:null,
+        teamInfo:null,
+        allSkill:null,
+        allProjects:null
+    }
+
+    private userInfoData =  new BehaviorSubject([]);
+    private teamInfoData =  new BehaviorSubject([]);
+    private allSkillData = new BehaviorSubject([]);
+    private allProjectsData = new BehaviorSubject([]);
+
+
+
     constructor(
         private router: Router,
         private http: HttpClient
@@ -24,6 +38,8 @@ export class AccountService {
     public get userValue(): User {
         return this.userSubject.value;
     }
+
+
 
     login(username, password) {
         return this.http.post<User>(`${environment.apiUrl}/api/auth/signin`, { username, password })
@@ -93,15 +109,46 @@ export class AccountService {
         return this.http.delete(`${environment.apiUrl}/home/photos/${id}`);
     }
 
-    getTeamData(){
-        return this.http.get(`${environment.apiUrl}/home/userswithpagination`);
+
+    get userInfoFields(){
+        return this.userInfoData.asObservable();
+    }
+
+    get teamInfoFields(){
+        return this.teamInfoData.asObservable();
+    }
+
+    get allSkillFields(){
+        return this.allSkillData.asObservable();
+
+    }
+
+    get allProjectFields(){
+        return this.allProjectsData.asObservable();
+
+    }
+
+    getTeamData(page){
+         this.http.get(`${environment.apiUrl}/home/userswithpagination?page=${page}`).subscribe(response=>{
+             this.data.userInfo =  response;
+             this.teamInfoData.next(this.data.userInfo.UserInfo)
+             this.userInfoData.next(this.data.userInfo);
+
+         })
     }
 
     getAllSkillSets(){
-        return this.http.get(`${environment.apiUrl}/home/getAllSkills`);
+        return this.http.get(`${environment.apiUrl}/home/getAllSkills`).subscribe(response=>{
+            this.data.allSkill = response;
+            this.allSkillData.next(this.data.allSkill)
+        });
+    }
+    getAllProjects(){
+        return this.http.get(`${environment.apiUrl}/home/getAllProjects`).subscribe(response=>{
+            this.data.allProjects = response;
+            this.allProjectsData.next(this.data.allProjects)
+        });
     }
 
-    getAllProjects(){
-        return this.http.get(`${environment.apiUrl}/home/getAllProjects`);
-    }
+    
 }

@@ -12,7 +12,6 @@ describe('AboutusComponent', () => {
     })
     .compileComponents();
   }));
-
   beforeEach(() => {
     fixture = TestBed.createComponent(AboutusComponent);
     component = fixture.componentInstance;

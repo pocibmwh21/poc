@@ -1,174 +1,84 @@
 <div class="container">
-  <div class="col-12" style="margin-top: 41px">
-    <h1 class="team-info-head float-left">Team Info</h1>
-    <div class="float-right col-8">
-      <img
-        class="float-right"
-        width="20"
-        height="20"
-        (click)="applyFilter()"
-        style="cursor: pointer; margin-top: 7px"
-        src="../assets/img/filter.png"
-      />
-      <ng-multiselect-dropdown
-        class="float-right col-5"
-        [placeholder]="'Select Skills'"
-        [settings]="dropdownSettings"
-        [data]="allSkills"
-        [(ngModel)]="selectedSkill"
-      >
-      </ng-multiselect-dropdown>
-      <ng-multiselect-dropdown
-        class="float-right col-5"
-        [placeholder]="'Select Project'"
-        [settings]="dropdownSettingsProject"
-        [data]="allProjects"
-        [(ngModel)]="selectedProject"
-      >
-      </ng-multiselect-dropdown>
-    </div>
-  </div>
-
-  <table class="table table-hover table-condensed table-striped">
-    <thead>
-      <tr class="border_bottom">
-        <th>EmpId</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Project</th>
-        <th>Skills</th>
-        <th>Email Id</th>
-        <th>contact</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <ng-container *ngFor="let user of teamDetails.UserInfo; let i = index">
-        <tr
-          [style.display]="
-            i / pageSize >= page || i / pageSize < page - 1 ? 'none' : null
-          "
-          class="border_bottom"
-          class="accordion-toggle"
-        >
-          <td>{{ user.empId }}</td>
-          <td>{{ user.firstName }}</td>
-          <td>{{ user.lastName }}</td>
-          <td
-            class="project-td"
-            matTooltip="{{ user.projectCommas }}"
-            matTooltipClass="test"
-            [matTooltipPosition]="'above'"
-            aria-label="Button that displays a tooltip when focused or hovered over"
-          >
-            <span *ngFor="let project of user.projects; last as isLast">
-              {{ project.pname }}{{ isLast ? "" : ", " }}
-            </span>
-          </td>
-
-          <td>
-            <ng-container
-              *ngFor="let skill of user.primarySkill; first as isFirst"
-            >
-              <span *ngIf="isFirst">
-                {{ skill }}
-                <img
-                  width="10"
-                  height="10"
-                  *ngIf="user.primarySkill.length != 0"
-                  src="../assets/img/skill-checkmark.png"
-                />
-              </span>
-            </ng-container>
-
-            <!-- <div>
+	<div class="col-12" style="margin-top: 41px;">
+		<h1 class="team-info-head float-left">Team Info</h1>
+		<div class="float-right col-8"> <img class="float-right" width="20" height="20" (click)="applyFilter()" style="cursor: pointer; margin-top: 7px;" src="../assets/img/filter.png">
+			<ng-multiselect-dropdown class="float-right col-5" [placeholder]="'Select Skills'" [settings]="dropdownSettings" [data]="allSkills" [(ngModel)]="selectedSkill"> </ng-multiselect-dropdown>
+			<ng-multiselect-dropdown class="float-right col-5" [placeholder]="'Select Project'" [settings]="dropdownSettingsProject" [data]="allProjects" [(ngModel)]="selectedProject"> </ng-multiselect-dropdown>
+		</div>
+	</div>
+	<table class="col-12 table table-hover table-condensed table-striped">
+		<thead>
+			<tr class="border_bottom">
+				<th>EmpId</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Project</th>
+				<th>Skills</th>
+				<th>Email Id</th>
+				<th>contact</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngIf="teamDetails.length==0">
+				<td colspan="4" class="text-center"> <span class="spinner-border spinner-border-lg align-center"></span> </td>
+			</tr>
+			<ng-container *ngFor="let user of userInfo ;  let i=index">
+				<tr [style.display]="i/pageSize>=page || i/pageSize<(page-1)?'none':null" class="border_bottom" class="accordion-toggle">
+					<td>1234</td>
+					<td>{{user.firstName}}</td>
+					<td>{{user.lastName}}</td>
+					<td class="project-td" matTooltip="{{user.projectCommas}}" matTooltipClass="test" [matTooltipPosition]="'above'"> <span *ngFor="let project of user.projects last as isLast">
+                            {{project.pname}}{{isLast?'':', '}}
+                        </span> </td>
+					<td class="project-td" [matTooltip]="user.allSkills" [matTooltipPosition]="'above'">
+						<!-- <ng-container *ngFor="let skill of user.skillSet" > --><span *ngFor="let skill of user.skillSets last as isLast">
+                        <span *ngIf="skill.skillCategory=='primary'">
+                            {{skill.technology}}<img width="10" height="10" src="../assets/img/skill-checkmark.png">&nbsp;
+                        </span> </span> <span *ngFor="let skill of user.skillSets last as isLast">
+                        <span *ngIf="skill.skillCategory=='secondary'">
+                                {{skill.technology}}&nbsp;
+                        </span> </span>
+						<!-- <div>
                         <span>{{user.skillCommas}}</span>
                         <img width="15" height="15" *ngIf="user.skillCommas!=''" src="../assets/img/primary-skill.PNG">
                     </div> -->
-          </td>
-          <td>{{ user.email }}</td>
-          <td>xxxxxxxxxx</td>
-          <td>
-            <a
-              class="collapsed"
-              data-toggle="collapse"
-              [attr.data-target]="'#' + user.firstName + user.id"
-              aria-expanded="true"
-              aria-controls="collapseOne"
-            >
-            </a>
-          </td>
-        </tr>
-        <tr
-          id="details{{ i }}"
-          style="background: white"
-          [style.display]="
-            i / pageSize >= page || i / pageSize < page - 1 ? 'none' : null
-          "
-        >
-          <td colspan="12" class="hiddenRow" style="padding: 0">
-            <div
-              style="background: white; box-shadow: none"
-              class="accordian-body collapse"
-              id="{{ user.firstName }}{{ user.id }}"
-            >
-              <div
-                class="col-lg-6 align-items-center d-flex"
-                style="padding: 20px"
-              >
-                <ul class="list-unstyled row">
-                  <li class="list-item col-6" *ngIf="user.mobileNo == 0">
-                    <b>Mobile No:&nbsp;&nbsp;</b>-
-                  </li>
-                  <li class="list-item col-6" *ngIf="user.mobileNo != 0">
-                    <b>Mobile No:&nbsp;&nbsp;</b>{{ user.mobileNo }}
-                  </li>
-                  <li class="list-item col-6">
-                    <b>Role:&nbsp;&nbsp;</b>
-                    <span *ngFor="let roles of user.techRoles; last as isLast">
-                      {{ roles.title }}{{ isLast ? "" : ", " }}
-                    </span>
-                  </li>
-
-                  <li class="list-item col-6">
-                    <b>Gender:&nbsp;&nbsp;</b>{{ user.gender }}
-                  </li>
-                  <!-- <li class="list-item col-3" ><b>Project:</b>FHIR</li> -->
-                  <li class="list-item col-6">
-                    <b> Location:&nbsp;&nbsp;</b>{{ user.location.name }}
-                  </li>
-                  <li class="list-item col-12">
-                    <b>Skill:</b>
-                    <ng-container *ngFor="let skill of user.skillSets">
-                      <span
-                        *ngIf="skill.skillCategory == 'primary'"
-                        class="skill"
-                        >{{ skill.technology }}</span
-                      >
-                      <span
-                        *ngIf="skill.skillCategory == 'secondary'"
-                        class="skill sec-skill"
-                        >{{ skill.technology }}</span
-                      >
-                    </ng-container>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </ng-container>
-    </tbody>
-  </table>
-  <ngb-pagination
-    class="float-right"
-    *ngIf="totalSize > 10"
-    [collectionSize]="totalSize"
-    [(page)]="page"
-    [pageSize]="pageSize"
-    [rotate]="true"
-    [ellipses]="true"
-    aria-label="Default pagination"
-    (pageChange)="onPageChange(page)"
-  ></ngb-pagination>
+					</td>
+					<td>{{user.email}}</td>
+					<td>xxxxxxxxxx</td>
+					<td>
+						<a class="collapsed" data-toggle="collapse" [attr.data-target]="'#'+user.firstName+user.id" aria-expanded="true" aria-controls="collapseOne"> </a>
+					</td>
+				</tr>
+				<tr id="details{{i}}" style="background: white;" [style.display]="i/pageSize>=page || i/pageSize<(page-1)?'none':null">
+					<td colspan="12" class="hiddenRow" style="padding: 0;">
+						<div style="background: white;
+                    box-shadow: none;" class="accordian-body collapse" id="{{user.firstName}}{{user.id}}">
+							<div class="col-lg-6 align-items-center d-flex" style="padding: 20px;">
+								<ul class="list-unstyled row">
+									<li class="list-item col-6" *ngIf="user.mobileNo"> <b>Mobile No:&nbsp;&nbsp;</b>{{user.mobileNo}}</li>
+									<li class="list-item col-6 nodata" *ngIf="!user.mobileNo"> <b>Mobile No:&nbsp;&nbsp;</b><i>No Data Available</i></li>
+									<li class="list-item col-6" *ngIf="user.techRoles.length!=0"><b>Role:&nbsp;&nbsp;</b> <span *ngFor="let roles of user.techRoles last as isLast">
+                                                    {{roles.title}}{{isLast?'':', '}}
+                                                </span> </li>
+									<li class="list-item col-6 nodata" *ngIf="user.techRoles.length==0"> <b>Role:&nbsp;&nbsp;</b><i>No Data Available</i></li>
+									<li class="list-item col-6" *ngIf="user.gender"><b>Gender:&nbsp;&nbsp;</b>{{user.gender}}</li>
+									<li class="list-item col-6 nodata" *ngIf="!user.gender"> <b>Gender:&nbsp;&nbsp;</b><i>No Data Available</i></li>
+									<!-- <li class="list-item col-3" ><b>Project:</b>FHIR</li> -->
+									<li class="list-item col-6" *ngIf="user.location.name"><b> Location:&nbsp;&nbsp;</b>{{user.location.name}}</li>
+									<li class="list-item col-6 nodata" *ngIf="!user.location.name"> <b>Location:&nbsp;&nbsp;</b><i>No Data Available</i></li>
+									<li class="list-item col-6 nodata" *ngIf="user.skillSets.length==0"> <b>Skill:&nbsp;&nbsp;</b><i>No Data Available</i></li>
+									<li class="list-item col-12" *ngIf="user.skillSets.length!=0"><b>Skill:</b>
+										<ng-container *ngFor="let skill of user.skillSets"> <span *ngIf="skill.skillCategory=='secondary'" class="skill sec-skill">{{skill.technology}}</span> </ng-container>
+										<ng-container *ngFor="let skill of user.skillSets"> <span *ngIf="skill.skillCategory=='primary'" class="skill">{{skill.technology}}</span> </ng-container>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</ng-container>
+		</tbody>
+	</table>
+	<ngb-pagination class="float-right" *ngIf="totalSize>10" [collectionSize]="totalSize" [(page)]="page" [pageSize]="10" [rotate]="true" [ellipses]="true" aria-label="Default pagination" (pageChange)="onPageChange(page)"></ngb-pagination>
 </div>

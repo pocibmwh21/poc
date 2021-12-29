@@ -22,7 +22,7 @@ import { TeaminfoComponent } from './teaminfo/teaminfo.component'
 import { LeavetrackerComponent } from './leavetracker/leavetracker.component'
 import { AboutusComponent } from './aboutus/aboutus.component'
 import {MatTooltipModule} from '@angular/material/tooltip';
-
+import {IvyCarouselModule} from 'angular-responsive-carousel';
 
 
 FullCalendarModule.registerPlugins([ 
@@ -42,7 +42,9 @@ FullCalendarModule.registerPlugins([
         FullCalendarModule,
         FormsModule,
         MatTooltipModule,
-        NgMultiSelectDropDownModule.forRoot()
+        NgMultiSelectDropDownModule.forRoot(),
+        IvyCarouselModule,
+
         ],
     declarations: [
         AppComponent,
@@ -51,7 +53,7 @@ FullCalendarModule.registerPlugins([
         MyinfoComponent,
         TeaminfoComponent,
         LeavetrackerComponent,
-        AboutusComponent,
+        AboutusComponent
       ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

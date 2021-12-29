@@ -1,1 +1,199 @@
-<p>leavetracker works!</p>
+<div class="container-fluid container-margin">
+    <div class="row row-allign">
+        <div class="col-md-7">
+            <div class="leave-border"></div>
+            <div class="leave-tracker-text">LEAVE TRACKER</div>
+
+            <div class="calendra-margin">
+                <full-calendar class="leave-calender" [options]="calendarOptions"></full-calendar>
+
+            </div>
+        </div>
+        <div class="col-md-2" >
+
+        </div>
+
+        <div class="col-md-3 delete-icon-position">
+
+              <div style="
+              margin-left: 31%;
+              margin-bottom: 6%;
+          ">
+                    <button class="btn btn-primary" data-toggle="modal"
+                    data-target="#myModal2">Update Leaves</button><button class="delete-icon" data-toggle="modal" data-target="#myModal"><i
+                        class="fa fa-trash-o icon"></i></button>
+              </div> 
+            <!-- <button class="date-button"><i class="fa fa-angle-left icon"></i>
+                <span>OCT-2021</span>
+                <i class="fa fa-angle-right icon"></i>
+            </button> -->
+            <div class="availabilityUpdate">
+                   
+                <p style="font-size: 14px;font-weight: bolder; ">Availability Update</p>
+            </div>
+            <div>
+                    <full-calendar #calendar class="day-calender" [options]="calendarOptionstest"></full-calendar>
+
+            </div>
+            <div class="div" style="margin-top:10%">
+                    <div>
+                        <p class="holiday-head">Public Holiday</p>
+                    </div>
+    
+                    <div class="sidebarsecond">
+                        <p class="sidebarone-text" style="margin:6px">14 oct 2021 <br />
+                            Diwali</p>
+                    </div>
+    
+                    <div class="sidebarsecond">
+                        <p class="sidebarone-text" style="margin:6px">14 oct 2021 <br />
+                            Diwali</p>
+                    </div>
+    
+                    <div class="sidebarsecond">
+                        <p class="sidebarone-text" style="margin:6px">14 oct 2021 <br />
+                            Diwali</p>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+    
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="delete-leave-popup">Delete leaves</div>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    
+                    </div>
+    
+                    <div style="margin-left: 86%">
+                        <button style="border: none;background-color:none;"> <i class='fa fa-chevron-circle-left'
+                                style="font-size: 15px;margin-left:48%;color: darkgray"></i></button>
+    
+                        <button style="border: none;background-color:none;"><i class='fa fa-chevron-circle-right'
+                                style="font-size: 15px;color: darkgray"></i></button>
+    
+                    </div>
+    
+                    <div class="modal-body">
+                        <table class="table">
+                            <tr>
+                                <th>Applied leaves</th>
+                            </tr>
+    
+                            <tr>
+                                <td style="font-size: 13px">15-18-Oct 2021</td>
+                                <td>
+                                    <button style="border: none">
+                                        <i class="fa fa-trash-o icon" style="font-size: 15px"></i>
+                                    </button></td>
+                            </tr>
+    
+                            <tr>
+                                <td style="font-size: 13px">15-18-Oct 2021</td>
+                                <td>
+                                    <button style="border: none">
+                                        <i class="fa fa-trash-o icon" style="font-size: 15px"></i>
+                                    </button></td>
+                            </tr>
+    
+                            <tr>
+                                <td style="font-size: 13px">15-18-Oct 2021</td>
+                                <td>
+                                    <button style="border: none">
+                                        <i class="fa fa-trash-o icon" style="font-size: 15px"></i>
+                                    </button></td>
+                            </tr>
+    
+                            <tr>
+                                <td style="font-size: 13px">15-18-Oct 2021</td>
+                                <td>
+                                    <button style="border: none">
+                                        <i class="fa fa-trash-o icon" style="font-size: 15px"></i>
+                                    </button></td>
+                            </tr>
+    
+                            <tr>
+                                <td style="font-size: 13px">15-18-Oct 2021</td>
+                                <td>
+                                    <button style="border: none">
+                                        <i class="fa fa-trash-o icon" style="font-size: 15px"></i>
+                                    </button></td>
+                            </tr>
+    
+                            <tr>
+                                <td style="font-size: 13px">15-18-Oct 2021</td>
+                                <td>
+                                    <button style="border: none">
+                                        <i class="fa fa-trash-o icon" style="font-size: 15px"></i>
+                                    </button></td>
+                            </tr>
+    
+                        </table>
+                    </div>
+                    <!-- <div class="modal-footer">
+    
+                    </div> -->
+                </div>
+    
+            </div>
+        </div>
+    
+        <!-- adding code -->
+    
+        <!-- adding code -->
+    
+        <div id="myModal2" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+    
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="delete-leave-popup">Update leaves</div>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-inline">
+                        <div class="form-row">
+                            <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+                                outsideDays="hidden">
+                            </ngb-datepicker>
+    
+                            <ng-template #t let-date let-focused="focused">
+                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                    (mouseleave)="hoveredDate = null">
+                                    {{ date.day }}
+                                </span>
+                            </ng-template>
+    
+                        </div>
+                        </form>
+                    </div>
+    
+                    <div class="modal-footer">
+    
+                        <div class="div">
+                            <button style="border: none;background-color:none;">
+                                <i class='fa fa-chevron-circle-left'
+                                    style="font-size: 21px;margin-left:32%;color: darkgray"></i>
+                            </button>
+    
+                            <button style="border: none;background-color:none;">
+                                <i class='fa fa-chevron-circle-right' style="font-size:21px;color: darkgray"></i>
+                            </button>
+                        </div>
+    
+                        <button class="btn btn-primary">Cancel</button>
+                        <button class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+    
+                <!-- adding code -->
+    
+            </div>
+        </div>
+
+</div>

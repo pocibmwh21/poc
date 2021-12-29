@@ -7,8 +7,10 @@
 		<div class="row">
 			<div class="col-lg-6 user-content">
 				<div id="hovering" class="hovereffect">
-                  <p  *ngIf="noImage" class="no-image">{{noImageAbbr}}</p>
-                  <img width="200" height="200" class="rounded-circle article-img img-responsive" src={{retrievedImage}}>
+				  <p  *ngIf="noImage" class="no-image">{{noImageAbbr}}</p>
+				  <p *ngIf="loadingImage"  class="spinner-border spinner-border-lg align-center" style="margin-top: 43%;"></p>
+
+                  <img *ngIf="!loadingImage" width="200" height="200" class="rounded-circle article-img img-responsive" src={{retrievedImage}}>
 					<div class="overlay">
 						<input type="file" id="upload" (change)="onFileChanged($event)" hidden/>
 						<label class="info info-label" for="upload"><img src="../assets/img/upload-icon.png"></label>
@@ -26,7 +28,7 @@
                         <br>
                         <button class="addLeave-btn" (click)="openModal(addLeaveModal, user)">+&nbsp;&nbsp;Leaves</button>
                     </span> </div>
-			<div class="col-lg-6 align-items-center d-flex">
+			<div  class="col-lg-6 align-items-center d-flex">
 				<form class="edit-form" *ngIf="isEditForm" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
 					<div class="form-row">
 						<div class="form-group  data-section col-7">
@@ -109,12 +111,12 @@
                                    <img  (click)="deleteSecondarySkill(secskill,j)"class="primclose" width="10" height="10" src="../assets/img/close-icon.png">
                                 </span>
 						  </div>
-						  <div  style="padding-top: 4%;" *ngIf="submitted && f.selectedPrim.errors && extraPrimary.length==0" class="invalid-feedback">
-								<div *ngIf="f.selectedPrim.errors.required">Minimum one primary skill is required</div>
+						  <div  style="padding-top: 4%;" *ngIf="submitted && primarySet.length==0" class="invalid-feedback">
+								<div *ngIf="primarySet.length==0">Minimum one primary skill is required</div>
 						
 							</div>	
-							<div style="padding-top: 2%;" *ngIf="submitted && f.selectedSec.errors" class="invalid-feedback">
-									<div *ngIf="f.selectedSec.errors.required">Minimum one secondary skill is required</div>
+							<div style="padding-top: 2%;" *ngIf="submitted && secondarySet.length==0" class="invalid-feedback">
+									<div *ngIf="secondarySet.length==0">Minimum one secondary skill is required</div>
 							
 								</div>	
 								
@@ -123,7 +125,7 @@
 					<div class="form-group float-right">
 						<p *ngIf="primarySkillBoolean" (click)="addSecondarySkill()" class="sec-skill-add">Add Secondary Skills</p>
 						<p *ngIf="!primarySkillBoolean" (click)="addPrimarySkill()" class="sec-skill-add">Add Primary Skills</p>
-						<button [disabled]="loading" class="btn btn-primary"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Save </button>
+						<button [disabled]="loading" class="btn save"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Save </button>
 						<button [disabled]="loading" class="btn cancel" (click)="cancelEdit()"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> cancel </button>
 					</div>
 				</form>

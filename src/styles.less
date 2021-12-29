@@ -29,7 +29,7 @@ body { margin: 0; }
 .page-item.active .page-link {
   z-index: 3;
   color: #fff;
-  background-color: #2184f5;
+  background-color: #0072c7 ;
   border-color: #f8f9fa;
 }
 .file {
@@ -90,4 +90,217 @@ body { margin: 0; font-family: Roboto; }
   border-color: #80bdff;
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+}
+.border-lable-flt {
+  display: block;
+  position: relative;
+}
+.border-lable-flt label, .border-lable-flt > span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: text;
+  font-size: 75%;
+  opacity: 1;
+  -webkit-transition: all .2s;
+          transition: all .2s;
+  top: -.5em;
+  left: 0.75rem;
+  z-index: 3;
+  line-height: 1;
+  padding: 0 1px;
+}
+.border-lable-flt label::after, .border-lable-flt > span::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  background: white;
+  height: 2px;
+  top: 50%;
+  left: -.2em;
+  right: -.2em;
+  z-index: -1;
+}
+.border-lable-flt .form-control::-webkit-input-placeholder {
+  opacity: 1;
+  -webkit-transition: all .2s;
+          transition: all .2s;
+}
+.border-lable-flt .form-control:placeholder-shown:not(:focus)::-webkit-input-placeholder {
+  opacity: 0;
+}
+.border-lable-flt .form-control:placeholder-shown:not(:focus) + * {
+  font-size: 150%;
+  opacity: .5;
+  top: .3em;
+}
+
+.input-group .border-lable-flt {
+  display: table-cell;
+}
+.input-group .border-lable-flt .form-control {
+  border-radius: 0.25rem;
+}
+.input-group .border-lable-flt:not(:last-child), .input-group .border-lable-flt:not(:last-child) .form-control {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-right: 0;
+}
+.input-group .border-lable-flt:not(:first-child), .input-group .border-lable-flt:not(:first-child) .form-control {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+input ,select {
+  // border-top-style: hidden;
+  // border-right-style: hidden;
+  // border-left-style: hidden;
+  // border-bottom-style: hidden;
+  background:white;
+  display:inline;
+  border: 1px solid;
+  color: #909192;
+
+}
+
+.cancel{
+  background: #7C7D7E 0% 0% no-repeat padding-box;
+border-radius: 10px;
+opacity: 1;
+color: #fff;
+}
+
+.save{
+  background: #0072C7 0% 0% no-repeat padding-box;
+  border-radius: 10px;
+  opacity: 1;
+  margin-right: 9px;
+  color:#fff;
+}
+.nodata{
+  font-weight: 100;
+  font-size: 12px;
+}
+
+//neethu
+.fc-h-event{
+  background-color: white !important;
+  border:none !important;
+}
+
+.fc-direction-ltr .fc-daygrid-event.fc-event-end, .fc-direction-rtl .fc-daygrid-event.fc-event-start {
+  margin-right: 2px;
+  width: 20px;
+  display: inline-block;
+}
+
+
+.fc-dayGridMonth-view  .fc-scrollgrid-sync-inner .fc-daygrid-event-harness {
+  display: inline-block;
+  // width: 35px;
+
+}
+
+ .fc-popover .fc-popover-body .fc-daygrid-event-harness {
+  width: -webkit-fill-available !important;
+  border-bottom: 1px solid;
+  padding-bottom: 6px;
+  padding-top: 6px;
+  position: relative;
+}
+.fc .fc-more-popover .fc-popover-body {
+  min-width: 220px;
+  padding: 10px;
+  background: #707070 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  // border-radius: 9px;
+  opacity: 1;
+  color: #fff
+  /* background: black; */
+}
+
+.fc-dayGridMonth-view .fc-daygrid-day-events  .fc-daygrid-event-harness .fc-h-event .fc-event-main span{
+  display: none;
+}
+
+ .fc-today-button,.fc-dayGridDay-button{
+  display: none !important;
+}
+
+.day-calender .fc-prev-button ,.day-calender .fc-next-button{
+  background: none !important;
+    border: 1px solid grey !important;
+    color: grey !important;
+    border-radius: 61px !important;
+    font-size: 11px !important;
+    padding: 0 !important;
+    margin-right: 5px !important;
+
+}
+
+.day-calender .fc-toolbar-title{
+  font-size: 11px !important;
+  color: #7C7D7E;
+}
+
+.day-calender .fc-toolbar{
+  display: block !important;
+}
+
+.day-calender  .fc-button-group{
+  float: right !important;
+}
+
+.fc-header-toolbar{
+  margin-bottom: 0 !important;
+}
+
+.leave-calender .fc-toolbar-title{
+  font-size: 15px !important;
+  color: grey !important;
+}
+.leave-calender .fc-button-group{
+  margin-bottom: 11px;
+
+}
+.leave-calender .fc-prev-button ,.leave-calender .fc-next-button{
+  color: #7C7D7E !important;
+    background: none !important;
+    border: 1px solid #7C7D7E !important;
+}
+
+.fc-daygrid-day{
+  background: none !important;
+}
+
+.fc-col-header {
+  color: #7C7D7E !important;
+}
+/** code for custom scroll **/
+::-webkit-scrollbar {
+  width: 10px;          
+}
+
+::-webkit-scrollbar-thumb {   
+ border-radius: 30px;
+ background: #ADADAD;
+ box-shadow: inset 2px 2px 2px rgba(255,255,255,.25), inset -2px -2px 2px rgba(0,0,0,.25);}
+
+::-webkit-scrollbar-track {     
+ background-color: #fff;
+ background: #E6E6E6;
+}
+
+.fc-popover-body{
+  overflow-y: scroll;
+  position: relative;
+  height: 200px;
+}
+
+.fc .fc-daygrid-day-frame{
+  cursor: pointer !important;
+}
+
+.fc-popover-header {
+  background: #707070 0% 0% no-repeat padding-box !important;
+    color: white;
 }
