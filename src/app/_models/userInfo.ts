@@ -18,8 +18,4 @@ export class UserInfo {
   techRoles: TechRole[];
   projects: Project[];
   skillSets: SkillSet[]; 
-  secondarySkill: any[];
-  primarySkill: any[];
-  projectList: any[];
-  projectCommas: string;
 }
