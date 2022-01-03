@@ -19,6 +19,8 @@ export class LeavetrackerComponent implements OnInit {
   toDate: NgbDate | null = null;
   hoveredDate: NgbDate | null = null;
   calendarApi: Calendar;
+  totalRecords:string;
+  page:number=1;
 
   //sample data
   data= [
@@ -53,6 +55,21 @@ export class LeavetrackerComponent implements OnInit {
     {date:'2021-12-17',title:'',name:'me'}
     
   ]
+
+  tableData = [
+
+    { date: '15-18-Oct 2021' },
+    { date: '15-19-Oct 2021' },
+    { date: '15-19-Oct 2021' },
+    { date: '15-19-Oct 2021' },
+    { date: '15-19-Oct 2021' },
+    { date: '15-19-Oct 2021' },
+    { date: '15-19-Oct 2021' },
+    { date: '15-19-Oct 2021' },
+    { date: '15-19-Oct 2021' },
+    { date: '15-20-Oct 2021' }
+
+  ];
 
   constructor(private calendar: NgbCalendar) {
     this.fromDate = calendar.getToday();
