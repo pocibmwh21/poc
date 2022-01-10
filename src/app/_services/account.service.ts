@@ -110,7 +110,6 @@ export class AccountService {
     }
 
 
-    
     get userInfoFields(){
         return this.userInfoData.asObservable();
     }
@@ -130,7 +129,7 @@ export class AccountService {
     }
 
     getTeamData(page){
-         this.http.get(`${environment.apiUrl}/home/userswithpagination?page=${page}`).subscribe(response=>{
+         this.http.get(`${environment.apiUrl}/home/user/getuserswithpagination?page=${page}`).subscribe(response=>{
              this.data.userInfo =  response;
              this.teamInfoData.next(this.data.userInfo.UserInfo)
              this.userInfoData.next(this.data.userInfo);

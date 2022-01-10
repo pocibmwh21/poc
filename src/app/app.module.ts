@@ -22,7 +22,10 @@ import { TeaminfoComponent } from './teaminfo/teaminfo.component'
 import { LeavetrackerComponent } from './leavetracker/leavetracker.component'
 import { AboutusComponent } from './aboutus/aboutus.component'
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {NgxPaginationModule} from 'ngx-pagination'; 
 import {IvyCarouselModule} from 'angular-responsive-carousel';
+
+
 
 
 FullCalendarModule.registerPlugins([ 
@@ -42,9 +45,9 @@ FullCalendarModule.registerPlugins([
         FullCalendarModule,
         FormsModule,
         MatTooltipModule,
+        NgxPaginationModule,
         NgMultiSelectDropDownModule.forRoot(),
-        IvyCarouselModule,
-
+ 		  IvyCarouselModule,
         ],
     declarations: [
         AppComponent,

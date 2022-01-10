@@ -140,6 +140,7 @@ export class MyinfoComponent implements OnInit {
         this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
         this.user = this.accountService.userValue;
         this.userInfo = this.user.userInfo;
+        console.log(this.userInfo)
         this.getImage();
         this.allInfos = {
             commonInfo: {
@@ -606,6 +607,12 @@ export class MyinfoComponent implements OnInit {
     //cancel edit
     cancelEdit() {
         this.isEditForm = false;
+        if (this.userInfo.gender == '') {
+            this.userInfo.gender = null;
+        }
+        if (this.userInfo.location.name == '') {
+            this.userInfo.location.name =null;
+        }
 
     }
 
