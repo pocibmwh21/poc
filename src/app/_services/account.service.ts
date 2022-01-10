@@ -106,7 +106,7 @@ export class AccountService {
             }));
     }
     deleteImage(id: string) {
-        return this.http.delete(`${environment.apiUrl}/home/photos/${id}`);
+        return this.http.delete(`${environment.apiUrl}/home/delete/${id}`);
     }
 
 
