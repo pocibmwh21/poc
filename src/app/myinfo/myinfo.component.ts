@@ -656,7 +656,7 @@ export class MyinfoComponent implements OnInit {
     }
     getImage() {
         this.loadingImage = true;
-        this.http.get(`${environment.apiUrl}/home/photos/` + this.user.id)
+        this.http.get(`${environment.apiUrl}/home/getphoto/` + this.user.id)
             .subscribe(
                 res => {
                     this.loadingImage = false;
@@ -671,7 +671,7 @@ export class MyinfoComponent implements OnInit {
                         this.noImage = false;
                         document.getElementById('remove-photo').style.display = "inline-block";
 
-                        this.base64Data = this.retrieveResonse.image.data;
+                        this.base64Data = this.retrieveResonse.data;
                         this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
                         this.commonService.sendUpdate(this.retrievedImage);
 
