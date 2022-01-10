@@ -53,7 +53,7 @@
 					</div>
 					<div class="form-row">
 						<div class="form-group col-7 data-section">
-							<label for="username">UserName:</label>
+							<label for="username">Email:</label>
 							<input title="{{f.username.value}}" disabled type="text" formControlName="username" class="form-control col-6 show-elipse" />
 						</div>
 						<div class="form-group col-5 data-section">
@@ -131,10 +131,10 @@
 				</form>
 				<ul *ngIf="!isEditForm" class="list-unstyled row">
 					<li class="list-item col-6"><b>Emp ID:&nbsp;&nbsp;</b>{{userInfo.empId}}</li>
-					<li class="list-item col-6" *ngIf="userInfo.mobileNo!='0'"> <b>Mobile No:&nbsp;&nbsp;</b>{{userInfo.mobileNo}}</li>
-					<li class="list-item col-6" *ngIf="userInfo.mobileNo=='0'"> <b>Mobile No:&nbsp;&nbsp;</b>---</li>
+					<li class="list-item col-6" *ngIf="userInfo.mobileNo!=null"> <b>Mobile No:&nbsp;&nbsp;</b>{{userInfo.mobileNo}}</li>
+					<li class="list-item col-6" *ngIf="userInfo.mobileNo==null"> <b>Mobile No:&nbsp;&nbsp;</b>---</li>
 
-					<li class="list-item col-6 show-elipse-static"  title="{{userInfo.email}}"><b>UserName:&nbsp;&nbsp;</b> {{userInfo.email}}</li>
+					<li class="list-item col-6 show-elipse-static"  title="{{userInfo.email}}"><b>Email:&nbsp;&nbsp;</b> {{userInfo.email}}</li>
 					
 					<li class="list-item col-6" *ngIf="userInfo.gender!=null"><b>Gender:&nbsp;&nbsp;</b>{{userInfo.gender}}</li>
 					<li class="list-item col-6" *ngIf="userInfo.gender==null"><b>Gender:&nbsp;&nbsp;</b>---</li>
@@ -144,7 +144,7 @@
 
 					<li class="list-item col-6" *ngIf="userInfo.location.name!=null"><b> Location :&nbsp;&nbsp;</b>{{userInfo.location.name}}</li>
 					<li class="list-item col-6" *ngIf="userInfo.location.name==null"><b> Location :&nbsp;&nbsp;</b>-</li>
-					<li class="list-item col-6 show-elipse-static" title="{{projectCommaSeparate}}"><b>Project:&nbsp;&nbsp;</b><span>{{projectCommaSeparate}}</span></li>
+					<li class="list-item col-6 show-elipse-static" title="{{projectCommaSeparate}}"><b>Project:&nbsp;&nbsp;</b><span class="project-name" (click)="onProjectSelect(project)" *ngFor="let project of userInfo.projects last as isLast" >{{project.pname}}{{isLast?'':', '}}</span></li>
 					<li style="display: inline-table;" class="list-item col-12">
 						<p><b>Skills:&nbsp;&nbsp;</b><span *ngIf="userInfo.skillSets.length==0">---</span></p>
 						<p *ngIf="userInfo.skillSets.length!=0">

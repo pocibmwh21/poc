@@ -180,6 +180,7 @@ export class MyinfoComponent implements OnInit {
         //get project array and comma seprated
         for (let k = 0; k < this.userInfo.projects.length; k++) {
             this.projects.push(this.userInfo.projects[k]['pname']);
+            console.log(this.projects)
             this.projectCommaSeparate = this.projects.join(", ")
 
         }
@@ -616,6 +617,12 @@ export class MyinfoComponent implements OnInit {
         });
     }
 
+    //on project click
+    onProjectSelect(project){
+        console.log(project)
+        this.router.navigateByUrl('/aboutus')
+
+    }
     onFileChanged(event) {
 
         this.selectedFile = event.target.files[0];
@@ -650,6 +657,7 @@ export class MyinfoComponent implements OnInit {
         this.noImage = true;
         document.getElementById('hovering').style.background = "#d5e3ea";
         document.getElementById('remove-photo').style.display = "none";
+        console.log(this.user)
         this.accountService.deleteImage(this.user.id).subscribe(res => {
             this.commonService.sendUpdate(this.retrieveResonse);
         })
@@ -672,6 +680,7 @@ export class MyinfoComponent implements OnInit {
                         document.getElementById('remove-photo').style.display = "inline-block";
 
                         this.base64Data = this.retrieveResonse.data;
+                        console.log(this.base64Data)
                         this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
                         this.commonService.sendUpdate(this.retrievedImage);
 
