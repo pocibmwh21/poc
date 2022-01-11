@@ -10,6 +10,7 @@ export class LoginComponent implements OnInit {
     form: FormGroup;
     loading = false;
     submitted = false;
+    emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
     returnUrl: string;
 
     constructor(
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this.form = this.formBuilder.group({
-            username: ['', Validators.required],
+            // username: ['', Validators.required],
+            username: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
             password: ['', Validators.required]
         });
 

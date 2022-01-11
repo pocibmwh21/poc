@@ -6,14 +6,15 @@
                 <div class="form-group col">
                     <label for="firstName">First Name<span style="color:red">*</span></label>
                     <input type="text" formControlName="firstName" class="form-control"
-                        [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" />
+                        [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" id="name" required
+                        maxlength="25" />
                     <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
                         <div *ngIf="f.firstName.errors.required">First Name is required</div>
                     </div>
                 </div>
                 <div class="form-group col">
                     <label for="middleName">Middle Name</label>
-                    <input type="text" formControlName="middleName" class="form-control" />
+                    <input type="text" formControlName="middleName" class="form-control" maxlength="25" />
                 </div>
 
             </div>
@@ -21,17 +22,19 @@
                 <div class="form-group col">
                     <label for="lastName">Last Name<span style="color:red">*</span></label>
                     <input type="text" formControlName="lastName" class="form-control"
-                        [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+                        [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" id="name" required
+                        maxlength="25" />
                     <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
                         <div *ngIf="f.lastName.errors.required">Last Name is required</div>
                     </div>
                 </div>
                 <div class="form-group col">
                     <label for="empId">Employee ID<span style="color:red">*</span></label>
-                    <input type="text" formControlName="empId" class="form-control"
-                        [ngClass]="{ 'is-invalid': submitted && f.empId.errors }" />
+                    <input type="text" formControlName="empId"  class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f.empId.errors }" id="number"  inputmode="numeric" maxlength="8">
                     <div *ngIf="submitted && f.empId.errors" class="invalid-feedback">
                         <div *ngIf="f.empId.errors.required">EmpID is required</div>
+                        <div *ngIf="f.empId.errors.pattern">EmpID is not valid</div>
                     </div>
                 </div>
 
