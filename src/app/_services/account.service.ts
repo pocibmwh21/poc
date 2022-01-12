@@ -42,7 +42,7 @@ export class AccountService {
 
 
     login(username, password) {
-        return this.http.post<User>(`${environment.apiUrl}/api/auth/signin`, { username, password })
+        return this.http.post<User>(`/api/auth/signin`, { username, password })
             .pipe(map(user => {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
@@ -59,21 +59,21 @@ export class AccountService {
     }
 
     register(user: User) {
-        return this.http.post(`${environment.apiUrl}/api/auth/register`, user);
+        return this.http.post(`/api/auth/register`, user);
     }
 
     getAll() {
-        return this.http.get<User[]>(`${environment.apiUrl}/users`);
+        return this.http.get<User[]>(`/users`);
     }
 
     getById(id: string) {
-        return this.http.get<User>(`${environment.apiUrl}/home/${id}`);
+        return this.http.get<User>(`/home/${id}`);
     }
 
     update(id, params) {
 
         
-        return this.http.put(`${environment.apiUrl}/home/user/${id}`, params)
+        return this.http.put(`/home/user/${id}`, params)
             .pipe(map(x => {
 
                 
@@ -96,7 +96,7 @@ export class AccountService {
     }
 
     delete(id: string) {
-        return this.http.delete(`${environment.apiUrl}/users/${id}`)
+        return this.http.delete(`/users/${id}`)
             .pipe(map(x => {
                 // auto logout if the logged in user deleted their own record
                 if (id == this.userValue.id) {
@@ -106,7 +106,7 @@ export class AccountService {
             }));
     }
     deleteImage(id: string) {
-        return this.http.delete(`${environment.apiUrl}/home/delete/${id}`);
+        return this.http.delete(`/home/delete/${id}`);
     }
 
 
@@ -129,7 +129,7 @@ export class AccountService {
     }
 
     getTeamData(page){
-         this.http.get(`${environment.apiUrl}/home/user/getuserswithpagination?page=${page}`).subscribe(response=>{
+         this.http.get(`/home/user/getuserswithpagination?page=${page}`).subscribe(response=>{
              this.data.userInfo =  response;
              this.teamInfoData.next(this.data.userInfo.UserInfo)
              this.userInfoData.next(this.data.userInfo);
@@ -138,13 +138,13 @@ export class AccountService {
     }
 
     getAllSkillSets(){
-        return this.http.get(`${environment.apiUrl}/home/getAllSkills`).subscribe(response=>{
+        return this.http.get(`/home/getAllSkills`).subscribe(response=>{
             this.data.allSkill = response;
             this.allSkillData.next(this.data.allSkill)
         });
     }
     getAllProjects(){
-        return this.http.get(`${environment.apiUrl}/home/getAllProjects`).subscribe(response=>{
+        return this.http.get(`/home/getAllProjects`).subscribe(response=>{
             this.data.allProjects = response;
             this.allProjectsData.next(this.data.allProjects)
         });
