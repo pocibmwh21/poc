@@ -16,7 +16,7 @@ const routes: Routes = [
     { path: 'teaminfo', component: TeaminfoComponent, canActivate: [AuthGuard]},
     { path: 'leavetracker', component: LeavetrackerComponent, canActivate: [AuthGuard]},
     { path: 'aboutus', component: AboutusComponent, canActivate: [AuthGuard]},
-    { path: 'account', loadChildren: accountModule },
+    { path: 'account', loadChildren: "./account/account.module#AccountModule" },
 
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
