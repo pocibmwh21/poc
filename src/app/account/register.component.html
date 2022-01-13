@@ -6,15 +6,17 @@
                 <div class="form-group col">
                     <label for="firstName">First Name<span style="color:red">*</span></label>
                     <input type="text" formControlName="firstName" class="form-control"
-                        [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" id="name" required
-                        maxlength="25" />
+                        [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }"  required
+                         />
                     <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
                         <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                        <div *ngIf="f.firstName.errors.maxlength">First Name should not exceed more than 20 characters</div>
+
                     </div>
                 </div>
                 <div class="form-group col">
                     <label for="middleName">Middle Name</label>
-                    <input type="text" formControlName="middleName" class="form-control" maxlength="25" />
+                    <input type="text" formControlName="middleName" class="form-control" />
                 </div>
 
             </div>
@@ -22,10 +24,11 @@
                 <div class="form-group col">
                     <label for="lastName">Last Name<span style="color:red">*</span></label>
                     <input type="text" formControlName="lastName" class="form-control"
-                        [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" id="name" required
+                        [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" required
                         maxlength="25" />
                     <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
                         <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                        <div *ngIf="f.lastName.errors.maxlength">Last Name should not exceed more than 20 characters</div>
                     </div>
                 </div>
                 <div class="form-group col">
@@ -57,7 +60,9 @@
                         [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                         <div *ngIf="f.password.errors.required">Password is required</div>
-                        <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                        <div *ngIf="f.password.errors.minlength">Password must be at least 8 characters</div>
+                        <div *ngIf="f.password.errors.maxlength">Password should not exceed more than 15 characters</div>
+
                     </div>
                 </div>
             </div>
