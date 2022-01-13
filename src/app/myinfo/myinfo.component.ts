@@ -627,6 +627,9 @@ export class MyinfoComponent implements OnInit {
 
     //on project click
     onProjectSelect(project){
+        console.log(project)
+        this.sendProject = project;
+        this.commonService.sendUpdate(this.sendProject);
         this.router.navigateByUrl('/aboutus')
 
     }
@@ -694,6 +697,12 @@ export class MyinfoComponent implements OnInit {
                     }
 
 
+                },
+                error => {
+                    this.noImage = true;
+                        document.getElementById('hovering').style.background = "#d5e3ea";
+                        document.getElementById('remove-photo').style.display = "none";
+                        this.loading = false;
                 }
 
             );

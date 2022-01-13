@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonService } from '@app/_services/common.service';
 
 @Component({
   selector: 'app-aboutus',
@@ -6,11 +7,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./aboutus.component.less']
 })
 export class AboutusComponent implements OnInit {
+  subscriptionName
+  project;
+  constructor(private commonService: CommonService) {
+    this.subscriptionName = this.commonService.getUpdate().subscribe(item => {
+      this.project = item;
+      console.log(this.project)
 
-  constructor() { }
+    });
+
+   }
 
   ngOnInit(): void {
   }
+
+
   cards = [
     {
       title: 'Card Title 1',
