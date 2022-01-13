@@ -10,7 +10,7 @@ export class LoginComponent implements OnInit {
     form: FormGroup;
     loading = false;
     submitted = false;
-    emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
+    emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
     returnUrl: string;
 
     constructor(
