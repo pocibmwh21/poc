@@ -122,7 +122,7 @@ export class MyinfoComponent implements OnInit {
     primarySet = [];
     secondarySet = [];
     allSkillSet = [];
-
+    sendProject;
 
     //intialize variables end
 
@@ -595,6 +595,7 @@ export class MyinfoComponent implements OnInit {
                         //  this.modalService.dismissAll();
                     },
                     error => {
+                        console.log(error)
                         this.alertService.error(error);
                         this.loading = false;
                     });
@@ -626,7 +627,6 @@ export class MyinfoComponent implements OnInit {
 
     //on project click
     onProjectSelect(project){
-        console.log(project)
         this.router.navigateByUrl('/aboutus')
 
     }
@@ -641,7 +641,7 @@ export class MyinfoComponent implements OnInit {
         uploadImageData.append('imageFile', this.selectedFile);
         uploadImageData.append('id', this.user.id);
 
-        this.http.post(`${environment.apiUrl}/home/upload`, uploadImageData, {
+        this.http.post(`/home/upload`, uploadImageData, {
                 observe: 'response'
             })
             .subscribe((response) => {
@@ -671,7 +671,7 @@ export class MyinfoComponent implements OnInit {
     }
     getImage() {
         this.loadingImage = true;
-        this.http.get(`${environment.apiUrl}/home/getphoto/` + this.user.id)
+        this.http.get(`/home/getphoto/` + this.user.id)
             .subscribe(
                 res => {
                     this.loadingImage = false;
