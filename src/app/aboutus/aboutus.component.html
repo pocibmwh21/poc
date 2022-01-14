@@ -52,7 +52,7 @@
             </div>
             <div class="container">
 
-                <carousel  class="ivycarousel" [cellWidth]="340" [loop]="true" [margin]="2" [cellsToShow]="5">
+                <carousel class="ivycarousel" [cellWidth]="340" [loop]="true" [margin]="2" [cellsToShow]="5">
 
                     <div *ngFor="let data of sampleData" class="carousel-cell">
                         <button (mouseenter)="onHovering(data.product)" type="button" class="btn link products" data-placement="bottom">
@@ -61,119 +61,14 @@
                         </button>
 
                     </div>
-                  
+                   
                 </carousel>
                 <div class="col-md-12 hide">
-                    {{descDetail}}
+                   {{descDetail}}
                 </div>
             </div>
 
-            <!-- <div class="col-6 text-right">
-                        <a class="btn btn-primary mb-3 mr-1" href="#carouselExampleIndicators2" role="button" data-slide="prev">
-                            <i class="fa fa-arrow-left"></i>
-                        </a>
-                        <a class="btn btn-primary mb-3 " href="#carouselExampleIndicators2" role="button" data-slide="next">
-                            <i class="fa fa-arrow-right"></i>
-                        </a>
-                    </div> -->
-            <!-- <div class="col-12">
-                        <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
-            
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <div class="row">
-            
-                                        <div class="col-md-2 mb-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h4 class="card-title">FHIR</h4>
-                                                    <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                                                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                                     when an unknown printer took a galley of type and scrambled it to make a type
-                                                      specimen book. It has survived not only five centuries, but also the leap into 
-                                                      electronic typesetting, remaining essentially unchanged. It was popularised in the 
-                                                      1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
-                                                       recently with desktop publishing software like
-                                                     Aldus PageMaker including versions of Lorem Ipsum">
-                                                        tooltip
-                                                  </button>
-                                                </div>
-            
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 mb-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h4 class="card-title">FHIR</h4>
-                                                  <button class="btn btn-primary">Read More</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 mb-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h4 class="card-title">FHIR</h4>
-                                                  <button class="btn btn-primary">Read More</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 mb-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h4 class="card-title">FHIR</h4>
-                                                  <button class="btn btn-primary">Read More</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 mb-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h4 class="card-title">FHIR</h4>
-                                                  <button class="btn btn-primary">Read More</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 mb-3">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <button  type="button" class="btn  products mr-2" placement="top" container="body"
-                                                    ngbPopover="Vivamus sagittis lacus vel augue laoreet rutrum faucibusVivamuccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccs sagittis lacus vel augue laoreet rutrum faucibusVivamus sagittis lacus vel augue laoreet rutrum faucibus." popoverTitle="Popover on bottom">
-                                                    FHIR
-                                            </button>                                                </div>
-                                            </div>
-                                        </div>
-                                        
-            
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div> -->
-
         </section>
-        <!-- <ngb-carousel>
-            <ng-template ngbSlide>
-                <div class="picsum-img-wrapper" style="height: 200px">
-                  <p>test</p>
-                  <button>fdsfds</button>
-                </div>
-                <div class="carousel-caption float-left">
-                    <span>First slide label</span>
-                    <span>Nulla vitae elit libero, a pharetra augue mollis interdum.</span>
-                    <span>fsdgsfg</span>
-                </div>
-               
-            </ng-template>
-            <ng-template ngbSlide>
-                ...
-                ...
-            </ng-template>
-            <ng-template ngbSlide>
-                ...
-                ...
-            </ng-template>
-        </ngb-carousel> -->
 
 
 
