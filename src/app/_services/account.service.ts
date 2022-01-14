@@ -140,13 +140,13 @@ export class AccountService {
     getAllSkillSets(){
         return this.http.get(`/home/getAllSkills`).subscribe(response=>{
             this.data.allSkill = response;
-            this.allSkillData.next(this.data.allSkill)
+            this.allSkillData.next(this.data.allSkill.payload)
         });
     }
     getAllProjects(){
         return this.http.get(`/home/getAllProjects`).subscribe(response=>{
             this.data.allProjects = response;
-            this.allProjectsData.next(this.data.allProjects)
+            this.allProjectsData.next(this.data.allProjects.payload)
         });
     }
 

@@ -52,64 +52,19 @@
             </div>
             <div class="container">
 
-                <carousel class="ivycarousel" [cellWidth]="340" [loop]="true" [margin]="2" [cellsToShow]="5">
+                <carousel  class="ivycarousel" [cellWidth]="340" [loop]="true" [margin]="2" [cellsToShow]="5">
 
-                    <div class="carousel-cell">
-                        <button type="button" class="btn link products" data-placement="bottom">
-                            FHIR
+                    <div *ngFor="let data of sampleData" class="carousel-cell">
+                        <button (mouseenter)="onHovering(data.product)" type="button" class="btn link products" data-placement="bottom">
+                            {{data.product}}
                             <h6>Lorem Ipsum</h6>
                         </button>
 
                     </div>
-                    <div class="carousel-cell ">
-                        <button type="button" class="btn link products" data-placement="bottom"
-                            data-tooltip="  Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500 .when an unknown printer took a galley of type and scrambled it to make a type specimen book.PageMaker including versions of Lorem Ipsum">
-                            FHIR
-                            <h6>Lorem Ipsum</h6>
-                        </button>
-                    </div>
-                    <div class="carousel-cell">
-                        <button type="button" class="btn link products" data-placement="bottom"
-                            data-tooltip="  Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500 .when an unknown printer took a galley of type and scrambled it to make a type specimen book.PageMaker including versions of Lorem Ipsum">
-                            FHIR
-                            <h6>Lorem Ipsum</h6>
-                        </button>
-                    </div>
-                    <div class="carousel-cell">
-                        <button type="button" class="btn link products" data-placement="bottom"
-                            data-tooltip="  Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500 .when an unknown printer took a galley of type and scrambled it to make a type specimen book.PageMaker including versions of Lorem Ipsum">
-                            FHIR
-                            <h6>Lorem Ipsum</h6>
-                        </button>
-                    </div>
-                    <div class="carousel-cell">
-                        <button type="button" class="btn link products" data-placement="bottom"
-                            data-tooltip="  Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500 .when an unknown printer took a galley of type and scrambled it to make a type specimen book.PageMaker including versions of Lorem Ipsum">
-                            FHIR
-                            <h6>Lorem Ipsum</h6>
-                        </button>
-                    </div>
-                    <div class="carousel-cell">
-                        <button type="button" class="btn link products" data-placement="bottom"
-                            data-tooltip="  Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industry's standard dummy text ever since the 1500 .when an unknown printer took a galley of type and scrambled it to make a type specimen book.PageMaker including versions of Lorem Ipsum">
-                            FHIR
-                            <h6>Lorem Ipsum</h6>
-                        </button>
-                    </div>
+                  
                 </carousel>
                 <div class="col-md-12 hide">
-                    I am shown when someone hovers over the div above.I am shown when someone hovers over the div
-                    above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div
-                    above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div
-                    above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div
-                    above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div
-                    above.
-                    I am shown when someone hovers over the div above.I am shown when someone hovers over the div
-                    above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div
-                    above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div
-                    above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div
-                    above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div
-                    above.
+                    {{descDetail}}
                 </div>
             </div>
 

@@ -147,6 +147,7 @@ export class TeaminfoComponent implements OnInit {
       this.accountService.teamInfoFields.subscribe(response => {
           this.gotResponse = true;
           this.userInfo = response;
+          console.log(this.userInfo)
           this.userInfo.map((obj) => {
               this.projectlist = []
               obj.projects.forEach(element => {

@@ -21,8 +21,11 @@ export class LeavetrackerComponent implements OnInit {
   calendarApi: Calendar;
   totalRecords:string;
   page:number=1;
-
+  publicHolidayData=[];
   //sample data
+
+  public_holiday = [{'2022-01-26':'Republic Day'},{'2022-04-15':'Good Friday'},{'2022-05-01':'May Day'},{'2022-05-03':'Ramzan'}]
+
   data= [
     { date: '2022-01-07', imageUrl:'../assets/img/person.jpg',name:'abc'},
     { date: '2022-01-07', imageUrl:'../assets/img/photo-2.jpg',name:'def'},
@@ -42,7 +45,6 @@ export class LeavetrackerComponent implements OnInit {
     { date: '2021-12-20', imageUrl:'../assets/img/plus-icon.png',name:'abc' },
     { date: '2021-12-20', imageUrl:'../assets/img/upload-icon.jpg',name:'abc'}, 
     { date: '2021-12-20', imageUrl:'../assets/img/ust.png',name:'abc' }, 
-
     { date: '2021-11-19', imageUrl:'../assets/img/edit.png',name:'abc'}, 
     { date: '2021-11-19', imageUrl:'../assets/img/person.jpg',name:'abc' },
     { date: '2021-11-19', imageUrl:'../assets/img/photo-2.jpg',name:'abc' },
@@ -51,8 +53,8 @@ export class LeavetrackerComponent implements OnInit {
     { date: '2021-11-19', imageUrl:'../assets/img/upload-icon.jpg',name:'abc'}, 
     { date: '2021-11-19', imageUrl:'../assets/img/ust.png',name:'abc'}, 
     { date: '2021-11-19', imageUrl:'../assets/img/edit.png',name:'zud'}, 
-    {date:'2021-12-20',title:'',name:'me'},
-    {date:'2021-12-17',title:'',name:'me'}
+    {date:'2022-01-06',title:'',name:'me'},
+    {date:'2022-01-10',title:'',name:'me'}
     
   ]
 
@@ -74,6 +76,18 @@ export class LeavetrackerComponent implements OnInit {
   constructor(private calendar: NgbCalendar) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+    for (let obj of this.public_holiday) {
+      console.log("object:", obj);
+      for (let key in obj) {
+          this.publicHolidayData.push({date:key,title:'',
+          extendedProps: {
+            holiday: 'true',
+            description: obj[key]
+          },})
+      }
+  }
+  this.data.push(...this.publicHolidayData)
+  console.log(this.data)
    }
 
 
@@ -88,6 +102,7 @@ export class LeavetrackerComponent implements OnInit {
     dayMaxEventRows: 4, // allow "more" link when too many events
     eventContent:this.renderEventContent, // This will render the event with image 
     events:this.data,
+    
     dateClick: this.getClickedSpecificDate.bind(this)
   };
   
@@ -114,7 +129,6 @@ export class LeavetrackerComponent implements OnInit {
   
 //Event Render Function
 renderEventContent(eventInfo, createElement) {
-
     var innerHtml;
        //Check if event has image
     if (eventInfo.event._def.extendedProps.imageUrl) {
@@ -123,10 +137,18 @@ renderEventContent(eventInfo, createElement) {
      //Event with rendering html
      return createElement = { html:innerHtml }
     }
+    
+    if(eventInfo.event._def.extendedProps.holiday){
+      console.log(eventInfo.event._def.extendedProps);
+
+      innerHtml = eventInfo.event._def.title+"<span></span>";
+      return createElement = { html: '<div style="width: 96px;height: 20px;background: #649614 0% 0% no-repeat padding-box;;border-radius: 4px;">'+eventInfo.event._def.extendedProps.description+'</div>' }
+    }
     else{
       innerHtml = eventInfo.event._def.title+"<span></span>";
       return createElement = { html: '<div style=" width: 96px;height: 20px;background: #BE5C5C 0% 0% no-repeat padding-box;border-radius: 4px;">'+innerHtml+'</div>' }
     }
+    
   }
 
 //Event Render Function
@@ -140,6 +162,7 @@ renderEventContentForDay(eventInfo, createElement) {
    //Event with rendering html
    return createElement = { html:innerHtml }
   }
+ 
   else{
     innerHtml = eventInfo.event._def.title+"<span></span>";
     return createElement = { html: '<div style="width: 110px;height: 20px;background: #BE5C5C 0% 0% no-repeat padding-box;border-radius: 4px;">'+innerHtml+'</div>' }

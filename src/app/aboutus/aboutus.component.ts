@@ -9,6 +9,61 @@ import { CommonService } from '@app/_services/common.service';
 export class AboutusComponent implements OnInit {
   subscriptionName
   project;
+  desc;
+  descDetail;
+  sampleData=[
+    {
+      "product": "FHIR1",
+      "ProdDesc": "Lorem Ipsum",
+      "ProdDetail":" 1. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
+    },
+    {
+      "product": "FHIR2",
+      "ProdDesc": "Lorem Ipsum",
+      "ProdDetail":" 2. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
+    },
+    {
+      "product": "FHIR3",
+      "ProdDesc": "Lorem Ipsum",
+      "ProdDetail":" 3. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
+    },
+    {
+      "product": "FHIR4",
+      "ProdDesc": "Lorem Ipsum",
+      "ProdDetail":" 4. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
+    },
+    {
+      "product": "FHIR5",
+      "ProdDesc": "Lorem Ipsum",
+      "ProdDetail":" 5. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
+    },
+    {
+      "product": "FHIR1",
+      "ProdDesc": "Lorem Ipsum",
+      "ProdDetail":" 1. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
+    },
+    {
+      "product": "FHIR2",
+      "ProdDesc": "Lorem Ipsum",
+      "ProdDetail":" 2. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
+    },
+    {
+      "product": "FHIR3",
+      "ProdDesc": "Lorem Ipsum",
+      "ProdDetail":" 3. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
+    },
+    {
+      "product": "FHIR4",
+      "ProdDesc": "Lorem Ipsum",
+      "ProdDetail":" 4. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
+    },
+    {
+      "product": "FHIR5",
+      "ProdDesc": "Lorem Ipsum",
+      "ProdDetail":" 5. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
+    }
+  ]
+
   constructor(private commonService: CommonService) {
     this.subscriptionName = this.commonService.getUpdate().subscribe(item => {
       this.project = item;
@@ -20,69 +75,15 @@ export class AboutusComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  onHovering(data){
+    console.log(data)
+    this.desc = this.sampleData.find(function(e) {
+      return e.product == data
+    })
 
+    this.descDetail = this.desc.ProdDetail;
+    console.log(this.desc)
+    
+  }
 
-  cards = [
-    {
-      title: 'Card Title 1',
-      description: 'Some quick example text to build on the card title and make up the bulk of the card content',
-      buttonText: 'Button',
-      img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'
-    },
-    {
-      title: 'Card Title 2',
-      description: 'Some quick example text to build on the card title and make up the bulk of the card content',
-      buttonText: 'Button',
-      img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'
-    },
-    {
-      title: 'Card Title 3',
-      description: 'Some quick example text to build on the card title and make up the bulk of the card content',
-      buttonText: 'Button',
-      img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'
-    },
-    {
-      title: 'Card Title 4',
-      description: 'Some quick example text to build on the card title and make up the bulk of the card content',
-      buttonText: 'Button',
-      img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'
-    },
-    {
-      title: 'Card Title 5',
-      description: 'Some quick example text to build on the card title and make up the bulk of the card content',
-      buttonText: 'Button',
-      img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'
-    },
-    {
-      title: 'Card Title 6',
-      description: 'Some quick example text to build on the card title and make up the bulk of the card content',
-      buttonText: 'Button',
-      img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'
-    },
-    {
-      title: 'Card Title 7',
-      description: 'Some quick example text to build on the card title and make up the bulk of the card content',
-      buttonText: 'Button',
-      img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'
-    },
-    {
-      title: 'Card Title 8',
-      description: 'Some quick example text to build on the card title and make up the bulk of the card content',
-      buttonText: 'Button',
-      img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'
-    },
-    {
-      title: 'Card Title 9',
-      description: 'Some quick example text to build on the card title and make up the bulk of the card content',
-      buttonText: 'Button',
-      img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(34).jpg'
-    },
-  ];
-  slides: any = [[]];
-  chunk(arr, chunkSize) {
-    let R = [];
-    for (let i = 0, len = arr.length; i < len; i += chunkSize) {
-      R.push(arr.slice(i, i + chunkSize));
-    }
-    return R;
-  }}
+ }
