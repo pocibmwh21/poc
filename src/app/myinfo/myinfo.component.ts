@@ -111,26 +111,29 @@ export class MyinfoComponent implements OnInit {
   ) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+   
+  }
+
+  ngOnInit(): void {
     this.user = this.accountService.userValue;
     this.userInfo = this.user.userInfo;
     console.log(this.userInfo);
     this.getImage();
     this.allInfos = {
       commonInfo: {
-        locations: ['Bangalore', 'Kochi', 'Trivandrum', 'Hyderabad'],
+        locations: ['Bangalore', 'Kochi', 'Trivandrum', 'Hyderabad','Pune'],
         skillSets: [],
       },
     };
 
     this.accountService.getAllSkillSets();
     this.allGender = ['Male', 'Female', 'Others'];
-  }
-
-  ngOnInit(): void {
     this.accountService.allSkillFields.subscribe(
       (data) => {
         console.log(data);
-        this.allSkillSet.push(data);
+        this.allSkillSet = [];
+
+        this.allSkillSet.push(...data);
 
         console.log('AllSkills:', this.allSkillSet);
       },
@@ -165,6 +168,8 @@ export class MyinfoComponent implements OnInit {
     }
 
     this.getSelectedPrimnSec(); //get the primary secondary slected and all skills
+console.log(this.selectedPrimItems)
+console.log(this.selectedSecItems)
 
     //initalise form controls
     this.editProfileForm = this.formBuilder.group({
@@ -229,6 +234,36 @@ export class MyinfoComponent implements OnInit {
   getSelectedPrimnSec() {
     this.dropdownListPrim = [];
     this.dropdownListSec = [];
+    this.allPrimary = [];
+    this.allSecondary =[];
+ 
+  // //retrieve All skills
+  for (let j = 0; j < this.allSkillSet.length; j++) {
+    // for (let i = 0; i < this.allSkillSet[j].length; i++) {
+      if (this.allSkillSet[j].skillCategory == 'primary') {
+        this.allPrimary.push(this.allSkillSet[j].technology);
+      }
+      if (this.allSkillSet[j].skillCategory == 'secondary') {
+        this.allSecondary.push(this.allSkillSet[j].technology);
+      }
+    // }
+  }
+
+  //making dropdown array for ng-multiseelect
+  for (var j = 0; j < this.allPrimary.length; j++) {
+    var objDrop = {};
+    objDrop['skillId'] = j;
+    objDrop['skill'] = this.allPrimary[j];
+    
+    this.dropdownListPrim.push(objDrop);
+  }
+  for (var j = 0; j < this.allSecondary.length; j++) {
+    var objDrop = {};
+    objDrop['skillId'] = j;
+    objDrop['skill'] = this.allSecondary[j];
+    this.dropdownListSec.push(objDrop);
+  }
+  
     //retrieve selected primary skills
     for (let i = 0; i < this.userInfo.skillSets.length; i++) {
       if (this.userInfo.skillSets[i].skillCategory == 'primary') {
@@ -240,44 +275,23 @@ export class MyinfoComponent implements OnInit {
         this.secondaryEdit.push(this.userInfo.skillSets[i].technology);
       }
     }
-
-    for (var j = 0; j < this.primary.length; j++) {
-      var obj = {};
-      obj['skillId'] = j;
-      obj['skill'] = this.primary[j];
-      this.selectedPrimItems.push(obj);
-    }
-    for (var j = 0; j < this.secondary.length; j++) {
-      var obj = {};
-      obj['skillId'] = j;
-      obj['skill'] = this.secondary[j];
-      this.selectedSecItems.push(obj);
-    }
-
-    // //retrieve All skills
-    for (let j = 0; j < this.allSkillSet.length; j++) {
-      for (let i = 0; i < this.allSkillSet[j].length; i++) {
-        if (this.allSkillSet[j][i].skillCategory == 'primary') {
-          this.allPrimary.push(this.allSkillSet[j][i].technology);
-        }
-        if (this.allSkillSet[j][i].skillCategory == 'secondary') {
-          this.allSecondary.push(this.allSkillSet[j][i].technology);
-        }
+    
+  console.log(this.dropdownListPrim)
+  for (var j = 0; j < this.primary.length; j++) {
+    for(var k=0;k<this.dropdownListPrim.length;k++){
+      if(this.primary[j]==this.dropdownListPrim[k].skill){
+        this.selectedPrimItems.push(this.dropdownListPrim[k]);
       }
     }
-
-    for (var j = 0; j < this.allPrimary.length; j++) {
-      var objDrop = {};
-      objDrop['skillId'] = j;
-      objDrop['skill'] = this.allPrimary[j];
-      this.dropdownListPrim.push(objDrop);
+   }
+   for (var j = 0; j < this.secondary.length; j++) {
+    for(var k=0;k<this.dropdownListSec.length;k++){
+      if(this.secondary[j]==this.dropdownListSec[k].skill){
+        this.selectedSecItems.push(this.dropdownListSec[k]);
+      }
     }
-    for (var j = 0; j < this.allSecondary.length; j++) {
-      var objDrop = {};
-      objDrop['skillId'] = j;
-      objDrop['skill'] = this.allSecondary[j];
-      this.dropdownListSec.push(objDrop);
-    }
+   }
+  
   }
   //function get the primary secondary slected and all skills ends
 
@@ -288,6 +302,16 @@ export class MyinfoComponent implements OnInit {
 
   //edit Form
   editForm() {
+    this.dropdownSettings = {
+      idField: 'skillId',
+      textField: 'skill',
+      allowSearchFilter: true,
+      itemsShowLimit: 5,
+      limitSelection: 5,
+    };
+    console.log(this.selectedPrimItems)
+    console.log(this.selectedSecItems)
+
     this.primarySkillBoolean = true;
     this.isEditForm = true;
     this.showAddNewPrimary = false;
@@ -320,13 +344,7 @@ export class MyinfoComponent implements OnInit {
     // this.primarySkillBoolean = true;
     this.getSelectedPrimnSec();
 
-    this.dropdownSettings = {
-      idField: 'skillId',
-      textField: 'skill',
-      allowSearchFilter: true,
-      itemsShowLimit: 5,
-      limitSelection: 5,
-    };
+  
   }
 
   listOfProjects(item: any) {
@@ -556,13 +574,19 @@ export class MyinfoComponent implements OnInit {
         .pipe(first())
         .subscribe(
           (data) => {
-            // this.alertService.success('Update successful', { keepAfterRouteChange: true });
+            console.log(data)
+            this.alertService.success('Your changes are saved successfully', { keepAfterRouteChange: true });
+            setTimeout (() => {
+              this.alertService.clear();
+           }, 5000);
+           
             //   this.router.navigate(['/home', { relativeTo: this.route }]);
-            this.alertService.success('Your changes are saved successfully');
+            // this.alertService.success('Your changes are saved successfully');
 
             this.router.routeReuseStrategy.shouldReuseRoute = () => false;
             this.router.onSameUrlNavigation = 'reload';
             this.router.navigate([this.router.url]);
+            
             //this.router.navigate(['/home']);
             //  this.modalService.dismissAll();
           },
