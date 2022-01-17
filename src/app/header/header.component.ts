@@ -18,6 +18,8 @@ import {
 import {
   NgbModal
 } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '@environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-header',
@@ -34,10 +36,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   newPassword: String;
   confirmPassword: String;
   newConfirmMisMatch = false;
-
+  minLengthError = false;
+  updatePswdData;
   constructor(private accountService: AccountService,
       private commonService: CommonService,
       private modalService: NgbModal,
+      private http: HttpClient
   ) {
       this.user = this.accountService.userValue;
       this.noImageAbbr = this.user.userInfo.firstName[0].toUpperCase() + this.user.userInfo.lastName[0].toUpperCase();
@@ -72,6 +76,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
       } else {
           this.newConfirmMisMatch = true;
       }
+
+      if(this.newPassword.length<8){
+        this.minLengthError = true;
+      }
+      else{
+        this.minLengthError = false;
+
+      }
+      this.updatePswdData = {
+        'id':this.user.id,
+        'old_password':this.oldPassword,
+        'new_password':this.newPassword
+      }
+
+      if(this.newConfirmMisMatch==false&&this.minLengthError ==false){
+        this.http
+        .put(`/home/user/changepassword`, this.updatePswdData)
+        .subscribe((response) => {
+          // if (response.status === 200) {
+          //   localStorage.removeItem('imgSrc');
+          //   this.getImage();
+          //   this.message = 'Image uploaded successfully';
+          // } else {
+          //   this.message = 'Image not uploaded successfully';
+          // }
+        });
+      }
+        
+      
 
   }
 

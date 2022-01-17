@@ -34,19 +34,22 @@
 			</div>
 			<div class="form-row col-12">
 				<label class="form-group border-lable-flt col-12 mb-4">
-					<input type="text" name="newPassword" class="custom-select col-12" [(ngModel)]="newPassword" [ngClass]="{ 'is-invalid':newConfirmMisMatch }" /> <span>New Password</span> </label>
+					<input type="text" name="newPassword" class="custom-select col-12" [(ngModel)]="newPassword" [ngClass]="{ 'is-invalid':newConfirmMisMatch || minLengthError}" /> <span>New Password</span> </label>
 			</div>
 			<div class="form-row col-12">
 				<label class="form-group border-lable-flt col-12 mb-4">
-					<input type="text" name="confirmPassword" class="custom-select col-12" [(ngModel)]="confirmPassword" [ngClass]="{ 'is-invalid':newConfirmMisMatch }" /> <span>Confirm Password</span> </label>
+					<input type="text" name="confirmPassword" class="custom-select col-12" [(ngModel)]="confirmPassword" [ngClass]="{ 'is-invalid':newConfirmMisMatch ||minLengthError}" /> <span>Confirm Password</span> </label>
 			</div>
 			<div *ngIf="newConfirmMisMatch" class="error">
 				<div>Mismatch in new password and confirm password</div>
 			</div>
+			<div *ngIf="minLengthError" class="error">
+				<div>Minimum 8 charecters should be there for password</div>
+			</div>
 			<div style="width:100%;margin-top: 5%;">
 				<button class="btn save float-right" (click)="saveChangePassword()">
 					<!-- <span  class="spinner-border spinner-border-sm mr-1"></span>  -->Save </button>
-				<button class="btn cancel float-right"> <span class="spinner-border spinner-border-sm mr-1"></span> cancel </button>
+				<button class="btn cancel float-right">cancel </button>
 			</div>
 		</form>
 	</div>

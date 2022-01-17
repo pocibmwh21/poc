@@ -51,7 +51,6 @@ export class TeaminfoComponent implements OnInit {
   secondarySkillArray = [];
   project;
   selectedSkills
-  allskills;
   dropdownSettings: IDropdownSettings = {};
   dropdownSettingsProject: IDropdownSettings = {};
   allProjects;
@@ -185,8 +184,12 @@ export class TeaminfoComponent implements OnInit {
 
   //apply filter
   applyFilter() {
-      console.log(this.selectedSkill)
-      console.log(this.selectedProject)
+      var skillArray = this.selectedSkill.map(item => item.technology);
+      var projectArray = this.selectedProject.map(item => item.pname);
+      console.log(skillArray)
+      console.log(projectArray)
+      var data = {'skills':skillArray,'projects':projectArray}
+      console.log(data)
   }
 
   //on page change

@@ -196,8 +196,8 @@
 					</div>
 				</div> -->
 				<div style="width:100%;margin-top: 5%;">
-						<button type="button" [disabled]="loading" class="btn cancel float-right"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Cancel </button>		
-						<button [disabled]="loading" class="btn btn-primary float-right"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Save </button>
+						<button (click)="modal.dismiss()" type="button" [disabled]="loading" class="btn cancel float-right"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Cancel </button>		
+						<button [disabled]="loading" class="btn save float-right" (click)="onLeaveUpdateSave()"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Save </button>
 
 				</div>
 				

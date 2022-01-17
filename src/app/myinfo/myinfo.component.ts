@@ -94,6 +94,9 @@ export class MyinfoComponent implements OnInit {
   allSkillSet = [];
   sendProject;
   location: any;
+  photoId;
+  fromDateFormatted;
+  toDateFormatted;
 
   //intialize variables end
 
@@ -111,7 +114,8 @@ export class MyinfoComponent implements OnInit {
   ) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
-   
+    this.fromDateFormatted =this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+    this.toDateFormatted =this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
   }
 
   ngOnInit(): void {
@@ -168,8 +172,7 @@ export class MyinfoComponent implements OnInit {
     }
 
     this.getSelectedPrimnSec(); //get the primary secondary slected and all skills
-console.log(this.selectedPrimItems)
-console.log(this.selectedSecItems)
+
 
     //initalise form controls
     this.editProfileForm = this.formBuilder.group({
@@ -199,12 +202,33 @@ console.log(this.selectedSecItems)
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
+      this.fromDateFormatted =this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+      this.toDateFormatted =this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
     } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
       this.toDate = date;
+      this.fromDateFormatted =this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+      this.toDateFormatted =this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
+    
     } else {
       this.toDate = null;
       this.fromDate = date;
+      this.fromDateFormatted =this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+      this.toDateFormatted =null
+     
     }
+
+  }
+
+  //on click of save in add leaves
+  onLeaveUpdateSave(){
+    console.log(this.fromDateFormatted)
+    console.log(this.toDateFormatted)
+    this.modalService.dismissAll();
+    this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
+            setTimeout (() => {
+              this.alertService.clear();
+           }, 3000);
+
   }
 
   isHovered(date: NgbDate) {
@@ -570,7 +594,7 @@ console.log(this.selectedSecItems)
       };
       console.log('data', this.data);
       this.accountService
-        .update(this.user.id, this.data)
+        .update(this.user.id, this.data)8
         .pipe(first())
         .subscribe(
           (data) => {
@@ -656,8 +680,8 @@ console.log(this.selectedSecItems)
     this.noImage = true;
     document.getElementById('hovering').style.background = '#d5e3ea';
     document.getElementById('remove-photo').style.display = 'none';
-    console.log(this.user);
-    this.accountService.deleteImage(this.user.id).subscribe((res) => {
+    console.log(this.photoId);
+    this.accountService.deleteImage(this.photoId).subscribe((res) => {
       this.commonService.sendUpdate(this.retrieveResonse);
     });
   }
@@ -676,6 +700,7 @@ console.log(this.selectedSecItems)
             document.getElementById('hovering').style.background = '#d5e3ea';
             document.getElementById('remove-photo').style.display = 'none';
           } else {
+            this.photoId =  this.retrieveResonse.id;
             this.noImage = false;
             document.getElementById('remove-photo').style.display =
               'inline-block';
