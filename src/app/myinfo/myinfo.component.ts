@@ -58,7 +58,7 @@ export class MyinfoComponent implements OnInit {
   selectedPrimItems = [];
   selectedSecItems = [];
   dropdownSettings: IDropdownSettings = {};
-  location: any;
+  currentLocation;
   projects = [];
   projectCommaSeparate;
   roles = [];
@@ -93,6 +93,7 @@ export class MyinfoComponent implements OnInit {
   secondarySet = [];
   allSkillSet = [];
   sendProject;
+  location: any;
 
   //intialize variables end
 
@@ -112,6 +113,7 @@ export class MyinfoComponent implements OnInit {
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
     this.user = this.accountService.userValue;
     this.userInfo = this.user.userInfo;
+    console.log(this.userInfo);
     this.getImage();
     this.allInfos = {
       commonInfo: {
@@ -127,7 +129,10 @@ export class MyinfoComponent implements OnInit {
   ngOnInit(): void {
     this.accountService.allSkillFields.subscribe(
       (data) => {
+        console.log(data);
         this.allSkillSet.push(data);
+
+        console.log('AllSkills:', this.allSkillSet);
       },
       (error) => {
         this.alertService.error(error);
@@ -150,6 +155,7 @@ export class MyinfoComponent implements OnInit {
     //get project array and comma seprated
     for (let k = 0; k < this.userInfo.projects.length; k++) {
       this.projects.push(this.userInfo.projects[k]['pname']);
+      console.log(this.projects);
       this.projectCommaSeparate = this.projects.join(', ');
     }
     //get roles array and comma seprated
@@ -504,6 +510,7 @@ export class MyinfoComponent implements OnInit {
     });
 
     this.techRoleList = this.f.techstack.value.toString().split(',');
+    this.techRoleList = this.f.techstack.value.toString().split(',');
     var techRoleListJson = [];
     if (this.techRoleList.length > 0) {
       for (let i = 0; i < this.techRoleList.length; i++) {
@@ -527,20 +534,23 @@ export class MyinfoComponent implements OnInit {
     } else {
       this.isEditForm = false;
       this.data = {
-        // "id": this.userInfo.id,
-        firstName: this.userInfo.firstName,
-        middleName: this.userInfo.middleName,
-        lastName: this.userInfo.lastName,
-        email: this.userInfo.email,
-        empId: this.userInfo.empId,
-        gender: this.f.gender.value,
-        designation: this.userInfo.designation,
-        mobileNo: this.f.mobileNo.value,
-        location: this.location,
-        techRoles: techRoleListJson,
-        projects: this.userInfo.projects,
-        skillSets: this.skillSet,
+        userInfo: {
+          id: this.userInfo.id,
+          firstName: this.userInfo.firstName,
+          middleName: this.userInfo.middleName,
+          lastName: this.userInfo.lastName,
+          email: this.userInfo.email,
+          empId: this.userInfo.empId,
+          gender: this.f.gender.value,
+          designation: this.userInfo.designation,
+          mobileNo: this.f.mobileNo.value,
+          location: this.location,
+          techRoles: techRoleListJson,
+          projects: this.userInfo.projects,
+          skillSets: this.skillSet,
+        },
       };
+      console.log('data', this.data);
       this.accountService
         .update(this.user.id, this.data)
         .pipe(first())
@@ -548,16 +558,16 @@ export class MyinfoComponent implements OnInit {
           (data) => {
             // this.alertService.success('Update successful', { keepAfterRouteChange: true });
             //   this.router.navigate(['/home', { relativeTo: this.route }]);
-
             this.alertService.success('Your changes are saved successfully');
 
             this.router.routeReuseStrategy.shouldReuseRoute = () => false;
             this.router.onSameUrlNavigation = 'reload';
             this.router.navigate([this.router.url]);
-            // this.router.navigate(['/home']);
+            //this.router.navigate(['/home']);
             //  this.modalService.dismissAll();
           },
           (error) => {
+            console.log(error);
             this.alertService.error(error);
             this.loading = false;
           }
@@ -586,6 +596,7 @@ export class MyinfoComponent implements OnInit {
 
   //on project click
   onProjectSelect(project) {
+    console.log(project);
     this.sendProject = project;
     this.commonService.sendUpdate(this.sendProject);
     this.router.navigateByUrl('/aboutus');
@@ -595,6 +606,7 @@ export class MyinfoComponent implements OnInit {
     this.upload();
   }
   upload() {
+    console.log('file: ', this.selectedFile);
     const uploadImageData: FormData = new FormData();
     uploadImageData.append('imageFile', this.selectedFile);
     uploadImageData.append('id', this.user.id);
@@ -620,6 +632,7 @@ export class MyinfoComponent implements OnInit {
     this.noImage = true;
     document.getElementById('hovering').style.background = '#d5e3ea';
     document.getElementById('remove-photo').style.display = 'none';
+    console.log(this.user);
     this.accountService.deleteImage(this.user.id).subscribe((res) => {
       this.commonService.sendUpdate(this.retrieveResonse);
     });
@@ -633,6 +646,7 @@ export class MyinfoComponent implements OnInit {
           this.loadingImage = false;
 
           this.retrieveResonse = res;
+          console.log(this.retrieveResonse);
           if (this.retrieveResonse == null) {
             this.noImage = true;
             document.getElementById('hovering').style.background = '#d5e3ea';
@@ -643,6 +657,7 @@ export class MyinfoComponent implements OnInit {
               'inline-block';
 
             this.base64Data = this.retrieveResonse.data;
+            console.log(this.base64Data);
             this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
             this.commonService.sendUpdate(this.retrievedImage);
           }
