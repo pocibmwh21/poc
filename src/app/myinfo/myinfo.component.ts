@@ -595,7 +595,7 @@ export class MyinfoComponent implements OnInit {
       console.log('data', this.data);
       this.accountService
         .update(this.user.id, this.data);
-        .pipe(first())
+        .pipe(first());
         .subscribe(
           (data) => {
             console.log(data)
