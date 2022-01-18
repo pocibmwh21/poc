@@ -17,7 +17,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 this.accountService.logout();
             }
             console.log(err);
-            if(err.url.includes('register')){
+            if(err.url.includes('register')||err.url.includes('changepassword')){
                 this.error=err.error.errors.message;
             }
             else{
