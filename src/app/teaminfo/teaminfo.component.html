@@ -1,11 +1,16 @@
 <div class="container">
 	<div class="col-12" style="margin-top: 41px;">
 		<h1 class="team-info-head float-left">Team Info</h1>
-		<div class="float-right col-8"> <img class="float-right" width="20" height="20" (click)="applyFilter()" style="cursor: pointer; margin-top: 7px;" src="../assets/img/filter.png">
+		<div class="float-right col-8"> 
+			<img class="float-right" width="20" height="20" (click)="applyFilter()" style="cursor: pointer; margin-top: 7px;" src="../assets/img/filter.png">
 			<ng-multiselect-dropdown class="float-right col-5" [placeholder]="'Select Skills'" [settings]="dropdownSettings" [data]="allSkills" [(ngModel)]="selectedSkill"> </ng-multiselect-dropdown>
 			<ng-multiselect-dropdown class="float-right col-5" [placeholder]="'Select Project'" [settings]="dropdownSettingsProject" [data]="allProjects" [(ngModel)]="selectedProject"> </ng-multiselect-dropdown>
+
 		</div>
+
 	</div>
+	<p *ngIf="teamDetails.length!=0" class="col-12 show-record-info">Showing {{userInfo.length}} records out of {{totalSize}}</p>
+
 	<table class="col-12 table table-hover table-condensed table-striped">
 		<thead>
 			<tr class="border_bottom">
@@ -13,7 +18,7 @@
 				<th>First Name</th>
 				<th>Last Name</th>
 				<th>Project</th>
-				<th>Skills</th>
+				<th>Primary Skills</th>
 				<th>Email Id</th>
 				<th>contact</th>
 				<th></th>
@@ -31,21 +36,22 @@
 					<td class="project-td" matTooltip="{{user.projectCommas}}" matTooltipClass="test" [matTooltipPosition]="'above'"> <span *ngFor="let project of user.projects last as isLast">
                             {{project.pname}}{{isLast?'':', '}}
                         </span> </td>
-					<td class="project-td" [matTooltip]="user.allSkills" [matTooltipPosition]="'above'">
+					<td class="project-td" [matTooltip]="user.primarySkill" [matTooltipPosition]="'above'">
 						<!-- <ng-container *ngFor="let skill of user.skillSet" > --><span *ngFor="let skill of user.skillSets last as isLast">
                         <span *ngIf="skill.skillCategory=='primary'">
                             {{skill.technology}}<img width="10" height="10" src="../assets/img/skill-checkmark.png">&nbsp;
-                        </span> </span> <span *ngFor="let skill of user.skillSets last as isLast">
+						</span> </span> 
+						<!-- <span *ngFor="let skill of user.skillSets last as isLast">
                         <span *ngIf="skill.skillCategory=='secondary'">
                                 {{skill.technology}}&nbsp;
-                        </span> </span>
+                        </span> </span> -->
 						<!-- <div>
                         <span>{{user.skillCommas}}</span>
                         <img width="15" height="15" *ngIf="user.skillCommas!=''" src="../assets/img/primary-skill.PNG">
                     </div> -->
 					</td>
 					<td>{{user.email}}</td>
-					<td>{{user.mobileNumber}}</td>
+					<td>{{user.mobileNo}}</td>
 					<td>
 						<a class="collapsed" data-toggle="collapse" [attr.data-target]="'#class'+user.empId+user.id" aria-expanded="true" aria-controls="collapseOne"> </a>
 					</td>
