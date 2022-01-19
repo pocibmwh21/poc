@@ -37,19 +37,9 @@
                         <p class="holiday-head">Public Holiday</p>
                     </div>
                     <div class="holiday-div">
-                        <div class="sidebarsecond">
-                            <p class="sidebarone-text" style="margin:6px">14 oct 2021 <br />
-                                Diwali</p>
-                        </div>
-        
-                        <div class="sidebarsecond">
-                            <p class="sidebarone-text" style="margin:6px">14 oct 2021 <br />
-                                Diwali</p>
-                        </div>
-        
-                        <div class="sidebarsecond">
-                            <p class="sidebarone-text" style="margin:6px">14 oct 2021 <br />
-                                Diwali</p>
+                        <div *ngFor="let holiday of publicHolidayDisplay" class="sidebarsecond">
+                            <p class="sidebarone-text" style="margin:6px">{{holiday.date}} <br />
+                                {{holiday.description}}</p>
                         </div>
                     </div>
     
