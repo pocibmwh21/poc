@@ -12,6 +12,8 @@ export class LoginComponent implements OnInit {
     submitted = false;
     emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
     returnUrl: string;
+    fieldTextType: boolean;
+
 
     constructor(
         private formBuilder: FormBuilder,
@@ -59,4 +61,7 @@ export class LoginComponent implements OnInit {
                     this.loading = false;
                 });
     }
+    toggleFieldTextType() {
+        this.fieldTextType = !this.fieldTextType;
+      }
 }
