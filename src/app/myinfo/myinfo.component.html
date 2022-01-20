@@ -21,10 +21,8 @@
 				</div> 
               <span class="details-section d-inline-block">
                         <p></p>
-                        <p class="user-name"><span class="user-name">{{userInfo.firstName}}</span>&nbsp;<span class="user-name">{{userInfo.middleName}}</span>&nbsp;<span class="user-name">{{userInfo.lastName}}</span>
+                        <p class="user-name break-word-text"><span class="user-name">{{userInfo.firstName}}</span>&nbsp;<span class="user-name">{{userInfo.middleName}}</span>&nbsp;<span class="user-name">{{userInfo.lastName}}</span>
                         <p class="text-muted">{{userInfo.designation.title}}</p>
-                        <br>
-                        <br>
                         <br>
                         <button class="addLeave-btn" (click)="openModal(addLeaveModal, user)">+&nbsp;&nbsp;Leaves</button>
                     </span> </div>
@@ -91,6 +89,8 @@
 								<input type="text" formControlName="techstack" class="custom-select col-12" [ngClass]="{ 'is-invalid': submitted && f.techstack.errors }" /> <span>Role</span> </label>
 							<div *ngIf="submitted && f.techstack.errors" class="invalid-feedback">
 								<div *ngIf="f.techstack.errors.required">Role is required</div>
+								<div *ngIf="f.techstack.errors.maxlength">Maximum length is 20</div>
+
 							</div>
 						</div>
 					</div>

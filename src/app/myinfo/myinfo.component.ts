@@ -178,7 +178,11 @@ export class MyinfoComponent implements OnInit {
     this.editProfileForm = this.formBuilder.group({
       empId: ['', Validators.required],
       username: ['', Validators.required],
-      techstack: ['', Validators.required],
+      techstack: ['', 
+      [Validators.required,
+        Validators.maxLength(20),
+      ]
+    ],
       mobileNo: [
         '',
         [

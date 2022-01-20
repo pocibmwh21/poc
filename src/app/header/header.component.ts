@@ -119,7 +119,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           console.log(response)
           this.modalService.dismissAll();
 
-          this.alertService.success('Password changed Successfully..!! Redirecting to Login page', { keepAfterRouteChange: true });
+           this.alertService.success('Password changed Successfully..!!', { keepAfterRouteChange: true });
           setTimeout (() => {
             this.alertService.clear();
 			this.logout();
