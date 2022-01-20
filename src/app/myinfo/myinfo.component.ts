@@ -28,7 +28,7 @@ export class MyinfoComponent implements OnInit {
     try {
       this.myScrollContainer.nativeElement.scrollTop =
         this.myScrollContainer.nativeElement.scrollHeight;
-    } catch (err) {}
+    } catch (err) { }
   }
   userInfo: UserInfo;
   isEditForm = false;
@@ -98,6 +98,8 @@ export class MyinfoComponent implements OnInit {
   fromDateFormatted;
   toDateFormatted;
 
+  registerForm: any = FormGroup;
+
   //intialize variables end
 
   //get user details on constructor
@@ -114,8 +116,8 @@ export class MyinfoComponent implements OnInit {
   ) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
-    this.fromDateFormatted =this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
-    this.toDateFormatted =this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
+    this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+    this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
   }
 
   ngOnInit(): void {
@@ -125,7 +127,7 @@ export class MyinfoComponent implements OnInit {
     this.getImage();
     this.allInfos = {
       commonInfo: {
-        locations: ['Bangalore', 'Kochi', 'Trivandrum', 'Hyderabad','Pune'],
+        locations: ['Bangalore', 'Kochi', 'Trivandrum', 'Hyderabad', 'Pune'],
         skillSets: [],
       },
     };
@@ -198,6 +200,12 @@ export class MyinfoComponent implements OnInit {
       selectedPrim: [this.selectedPrimItems],
       selectedSec: [this.selectedSecItems],
     });
+
+    //Add User form validations
+    this.registerForm = this.formBuilder.group({
+      imageInput: ['', [Validators.required]],
+
+    });
   }
 
   //ngOnit ends
@@ -206,32 +214,32 @@ export class MyinfoComponent implements OnInit {
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
-      this.fromDateFormatted =this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
-      this.toDateFormatted =this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
+      this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+      this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
     } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
       this.toDate = date;
-      this.fromDateFormatted =this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
-      this.toDateFormatted =this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
-    
+      this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+      this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
+
     } else {
       this.toDate = null;
       this.fromDate = date;
-      this.fromDateFormatted =this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
-      this.toDateFormatted =null
-     
+      this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+      this.toDateFormatted = null
+
     }
 
   }
 
   //on click of save in add leaves
-  onLeaveUpdateSave(){
+  onLeaveUpdateSave() {
     console.log(this.fromDateFormatted)
     console.log(this.toDateFormatted)
     this.modalService.dismissAll();
     this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
-            setTimeout (() => {
-              this.alertService.clear();
-           }, 3000);
+    setTimeout(() => {
+      this.alertService.clear();
+    }, 3000);
 
   }
 
@@ -263,35 +271,35 @@ export class MyinfoComponent implements OnInit {
     this.dropdownListPrim = [];
     this.dropdownListSec = [];
     this.allPrimary = [];
-    this.allSecondary =[];
- 
-  // //retrieve All skills
-  for (let j = 0; j < this.allSkillSet.length; j++) {
-    // for (let i = 0; i < this.allSkillSet[j].length; i++) {
+    this.allSecondary = [];
+
+    // //retrieve All skills
+    for (let j = 0; j < this.allSkillSet.length; j++) {
+      // for (let i = 0; i < this.allSkillSet[j].length; i++) {
       if (this.allSkillSet[j].skillCategory == 'primary') {
         this.allPrimary.push(this.allSkillSet[j].technology);
       }
       if (this.allSkillSet[j].skillCategory == 'secondary') {
         this.allSecondary.push(this.allSkillSet[j].technology);
       }
-    // }
-  }
+      // }
+    }
 
-  //making dropdown array for ng-multiseelect
-  for (var j = 0; j < this.allPrimary.length; j++) {
-    var objDrop = {};
-    objDrop['skillId'] = j;
-    objDrop['skill'] = this.allPrimary[j];
-    
-    this.dropdownListPrim.push(objDrop);
-  }
-  for (var j = 0; j < this.allSecondary.length; j++) {
-    var objDrop = {};
-    objDrop['skillId'] = j;
-    objDrop['skill'] = this.allSecondary[j];
-    this.dropdownListSec.push(objDrop);
-  }
-  
+    //making dropdown array for ng-multiseelect
+    for (var j = 0; j < this.allPrimary.length; j++) {
+      var objDrop = {};
+      objDrop['skillId'] = j;
+      objDrop['skill'] = this.allPrimary[j];
+
+      this.dropdownListPrim.push(objDrop);
+    }
+    for (var j = 0; j < this.allSecondary.length; j++) {
+      var objDrop = {};
+      objDrop['skillId'] = j;
+      objDrop['skill'] = this.allSecondary[j];
+      this.dropdownListSec.push(objDrop);
+    }
+
     //retrieve selected primary skills
     for (let i = 0; i < this.userInfo.skillSets.length; i++) {
       if (this.userInfo.skillSets[i].skillCategory == 'primary') {
@@ -303,23 +311,23 @@ export class MyinfoComponent implements OnInit {
         this.secondaryEdit.push(this.userInfo.skillSets[i].technology);
       }
     }
-    
-  console.log(this.dropdownListPrim)
-  for (var j = 0; j < this.primary.length; j++) {
-    for(var k=0;k<this.dropdownListPrim.length;k++){
-      if(this.primary[j]==this.dropdownListPrim[k].skill){
-        this.selectedPrimItems.push(this.dropdownListPrim[k]);
+
+    console.log(this.dropdownListPrim)
+    for (var j = 0; j < this.primary.length; j++) {
+      for (var k = 0; k < this.dropdownListPrim.length; k++) {
+        if (this.primary[j] == this.dropdownListPrim[k].skill) {
+          this.selectedPrimItems.push(this.dropdownListPrim[k]);
+        }
       }
     }
-   }
-   for (var j = 0; j < this.secondary.length; j++) {
-    for(var k=0;k<this.dropdownListSec.length;k++){
-      if(this.secondary[j]==this.dropdownListSec[k].skill){
-        this.selectedSecItems.push(this.dropdownListSec[k]);
+    for (var j = 0; j < this.secondary.length; j++) {
+      for (var k = 0; k < this.dropdownListSec.length; k++) {
+        if (this.secondary[j] == this.dropdownListSec[k].skill) {
+          this.selectedSecItems.push(this.dropdownListSec[k]);
+        }
       }
     }
-   }
-  
+
   }
   //function get the primary secondary slected and all skills ends
 
@@ -372,7 +380,7 @@ export class MyinfoComponent implements OnInit {
     // this.primarySkillBoolean = true;
     this.getSelectedPrimnSec();
 
-  
+
   }
 
   listOfProjects(item: any) {
@@ -604,17 +612,17 @@ export class MyinfoComponent implements OnInit {
           (data) => {
             console.log(data)
             this.alertService.success('Your changes are saved successfully', { keepAfterRouteChange: true });
-            setTimeout (() => {
+            setTimeout(() => {
               this.alertService.clear();
-           }, 5000);
-           
+            }, 5000);
+
             //   this.router.navigate(['/home', { relativeTo: this.route }]);
             // this.alertService.success('Your changes are saved successfully');
 
             this.router.routeReuseStrategy.shouldReuseRoute = () => false;
             this.router.onSameUrlNavigation = 'reload';
             this.router.navigate([this.router.url]);
-            
+
             //this.router.navigate(['/home']);
             //  this.modalService.dismissAll();
           },
@@ -653,9 +661,26 @@ export class MyinfoComponent implements OnInit {
     this.commonService.sendUpdate(this.sendProject);
     this.router.navigateByUrl('/aboutus');
   }
-  onFileChanged(event) {
-    this.selectedFile = event.target.files[0];
-    this.upload();
+  onFileChanged($event: any) {
+    this.selectedFile = $event.target.files[0];
+
+    if ($event.target.files && $event.target.files[0]) {
+      let file = $event.target.files[0];
+
+      if (file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/jpg") {
+        this.upload();
+      }
+
+      else {
+        this.alertService.error('please upload valid format', { keepAfterRouteChange: false });
+
+      }
+      const fileSize = file.size / 1024 / 1024; 
+      if (fileSize > 2) {
+        this.alertService.error('File size exceeds 2 MB', { keepAfterRouteChange: false });
+      }
+    }
+
   }
   upload() {
     console.log('file: ', this.selectedFile);
@@ -704,7 +729,7 @@ export class MyinfoComponent implements OnInit {
             document.getElementById('hovering').style.background = '#d5e3ea';
             document.getElementById('remove-photo').style.display = 'none';
           } else {
-            this.photoId =  this.retrieveResonse.id;
+            this.photoId = this.retrieveResonse.id;
             this.noImage = false;
             document.getElementById('remove-photo').style.display =
               'inline-block';

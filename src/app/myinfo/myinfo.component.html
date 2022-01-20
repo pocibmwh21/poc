@@ -1,22 +1,25 @@
 <div class="jumbotron jumbotron-fluid">
 	<div class="container text-center text-lg-left">
-         <img *ngIf="!isEditForm" width="20" height="20" src="../assets/img/edit.png" style="margin-bottom: 1%;
+		<img *ngIf="!isEditForm" width="20" height="20" src="../assets/img/edit.png" style="margin-bottom: 1%;
             margin-left:96%;cursor: pointer;" (click)="editForm()">
-        <img *ngIf="isEditForm" width="20" height="20" src="../assets/img/edit-active.png" style="margin-bottom: 1%;
+		<img *ngIf="isEditForm" width="20" height="20" src="../assets/img/edit-active.png" style="margin-bottom: 1%;
             margin-left:96%;cursor: pointer;" (click)="editForm()">
 		<div class="row">
 			<div class="col-lg-6 user-content">
 				<div id="hovering" class="hovereffect">
-				  <p  *ngIf="noImage" class="no-image">{{noImageAbbr}}</p>
-				  <p *ngIf="loadingImage"  class="spinner-border spinner-border-lg align-center" style="margin-top: 43%;"></p>
+					<p *ngIf="noImage" class="no-image">{{noImageAbbr}}</p>
+					<p *ngIf="loadingImage" class="spinner-border spinner-border-lg align-center"
+						style="margin-top: 43%;"></p>
 
-                  <img *ngIf="!loadingImage" width="200" height="200" class="rounded-circle article-img img-responsive" src={{retrievedImage}}>
+					<img *ngIf="!loadingImage" width="200" height="200"
+						class="rounded-circle article-img img-responsive" src={{retrievedImage}}>
 					<div class="overlay">
-						<input type="file" id="upload" (change)="onFileChanged($event)" hidden/>
+						<input type="file" id="upload" (change)="onFileChanged($event)" hidden />
 						<label class="info info-label" for="upload"><img src="../assets/img/upload-icon.png"></label>
 						<div>
-							<img (click)="removePhoto()"  id="remove-photo" class="info" src="../assets/img/del-icon.png">
-						</div> 
+							<img (click)="removePhoto()" id="remove-photo" class="info"
+								src="../assets/img/del-icon.png">
+						</div>
 					</div>
 				</div> 
               <span class="details-section d-inline-block">
@@ -31,14 +34,17 @@
 					<div class="form-row">
 						<div class="form-group  data-section col-7">
 							<label for="empId">EmpID:</label>
-							<input disabled type="text" formControlName="empId" class="col-6 form-control no-outline" [ngClass]="{ 'is-invalid': submitted && f.empId.errors }" />
+							<input disabled type="text" formControlName="empId" class="col-6 form-control no-outline"
+								[ngClass]="{ 'is-invalid': submitted && f.empId.errors }" />
 							<div *ngIf="submitted && f.empId.errors" class="invalid-feedback">
 								<div *ngIf="f.empId.errors.required">First Name is required</div>
 							</div>
 						</div>
 						<div class="form-group col-5 data-section">
 							<label class="form-group border-lable-flt">
-								<input type="text" formControlName="mobileNo" class="custom-select col-12" [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" /> <span>Mobile No</span> </label>
+								<input type="text" formControlName="mobileNo" class="custom-select col-12"
+									[ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }" /> <span>Mobile
+									No</span> </label>
 							<div *ngIf="submitted && f.mobileNo.errors" class="invalid-feedback">
 								<div *ngIf="f.mobileNo.errors.required">Mobile No is required</div>
 								<div *ngIf="f.mobileNo.errors.minlength">Minimum length is 10</div>
@@ -46,47 +52,57 @@
 								<div *ngIf="f.mobileNo.errors.pattern">Alphabets not allowed</div>
 
 							</div>
-							
+
 						</div>
 					</div>
 					<div class="form-row">
 						<div class="form-group col-7 data-section">
 							<label for="username">Email:</label>
-							<input title="{{f.username.value}}" disabled type="text" formControlName="username" class="form-control col-6 show-elipse" />
+							<input title="{{f.username.value}}" disabled type="text" formControlName="username"
+								class="form-control col-6 show-elipse" />
 						</div>
 						<div class="form-group col-5 data-section">
 							<label class="form-group border-lable-flt">
-										<select class="col-12 select-cust" formControlName="gender" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
-												<option value="">Select Gender</option>
-												<option *ngFor="let gender of allGender" [ngValue]="gender" [attr.selected]="gender==userInfo.gender?'selected':null">{{gender}}</option>
-								</select> 
-								
+								<select class="col-12 select-cust" formControlName="gender"
+									[ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
+									<option value="">Select Gender</option>
+									<option *ngFor="let gender of allGender" [ngValue]="gender"
+										[attr.selected]="gender==userInfo.gender?'selected':null">{{gender}}</option>
+								</select>
+
 								<span>Gender</span> </label>
-								<div *ngIf="submitted && f.gender.errors" class="invalid-feedback">
-										<div *ngIf="f.gender.errors.required">Gender is required</div>
-									</div>
+							<div *ngIf="submitted && f.gender.errors" class="invalid-feedback">
+								<div *ngIf="f.gender.errors.required">Gender is required</div>
+							</div>
 						</div>
 					</div>
 					<div class="form-row">
 						<div class="form-group col-7 data-section">
 							<label for="project">Project :</label>
-							<input disabled type="text" title="{{f.project.value}}" formControlName="project" class="form-control col-6 show-elipse" [ngClass]="{ 'is-invalid': submitted && f.project.errors }" />
+							<input disabled type="text" title="{{f.project.value}}" formControlName="project"
+								class="form-control col-6 show-elipse"
+								[ngClass]="{ 'is-invalid': submitted && f.project.errors }" />
 						</div>
 						<div class="form-group col-5 data-section">
 							<label class="form-group border-lable-flt">
-								<select class="select-cust col-12" formControlName="location"  [ngClass]="{ 'is-invalid': submitted && f.location.errors }">
-										<option value="">Select Location</option>
-									<option *ngFor="let location of allInfos.commonInfo.locations" [value]="location" [attr.selected]="location==userInfo.location.name?'selected':null">{{location}}</option>
+								<select class="select-cust col-12" formControlName="location"
+									[ngClass]="{ 'is-invalid': submitted && f.location.errors }">
+									<option value="">Select Location</option>
+									<option *ngFor="let location of allInfos.commonInfo.locations" [value]="location"
+										[attr.selected]="location==userInfo.location.name?'selected':null">{{location}}
+									</option>
 								</select> <span>Location</span> </label>
-								<div *ngIf="submitted && f.location.errors" class="invalid-feedback">
-										<div *ngIf="f.location.errors.required">Location is required</div>
-									</div>
+							<div *ngIf="submitted && f.location.errors" class="invalid-feedback">
+								<div *ngIf="f.location.errors.required">Location is required</div>
+							</div>
 						</div>
 					</div>
 					<div class="form-row">
 						<div class="form-group data-section col-5">
 							<label class="form-group border-lable-flt">
-								<input type="text" formControlName="techstack" class="custom-select col-12" [ngClass]="{ 'is-invalid': submitted && f.techstack.errors }" /> <span>Role</span> </label>
+								<input type="text" formControlName="techstack" class="custom-select col-12"
+									[ngClass]="{ 'is-invalid': submitted && f.techstack.errors }" /> <span>Role</span>
+							</label>
 							<div *ngIf="submitted && f.techstack.errors" class="invalid-feedback">
 								<div *ngIf="f.techstack.errors.required">Role is required</div>
 								<div *ngIf="f.techstack.errors.maxlength">Maximum length is 20</div>
@@ -96,88 +112,121 @@
 					</div>
 					<div class="form-row">
 						<div class="col-11 data-section">
-							<label for="skills">Skills : <span *ngIf="primarySkillBoolean">Primary</span> <span *ngIf="!primarySkillBoolean">Secondary</span> </label>
-							<ng-multiselect-dropdown class="prim-drop" *ngIf="primarySkillBoolean" [placeholder]="'Select Primary Skills'" [settings]="dropdownSettings" [data]="dropdownListPrim" [(ngModel)]="selectedPrimItems" formControlName="selectedPrim" (onSelect)="onItemSelectPrimary($event)" (onDeSelect)="onItemDeSelectPrimary($event)" (onFilterChange)="onFilterChangPrimaryeSearch($event)" (onDropDownClose)="onDropDownClosePrimary()"> </ng-multiselect-dropdown>
-							<ng-multiselect-dropdown class="sec-drop" *ngIf="!primarySkillBoolean" [placeholder]="'Select Secondary Skills'" [settings]="dropdownSettings" [data]="dropdownListSec" [(ngModel)]="selectedSecItems" formControlName="selectedSec" (onSelect)="onItemSelectSecondary($event)" (onDeSelect)="onItemDeSelectSecondary($event)" (onFilterChange)="onFilterChangSecondarySearch($event)" (onDropDownClose)="onDropDownCloseSecondary()"> </ng-multiselect-dropdown> 
+							<label for="skills">Skills : <span *ngIf="primarySkillBoolean">Primary</span> <span
+									*ngIf="!primarySkillBoolean">Secondary</span> </label>
+							<ng-multiselect-dropdown class="prim-drop" *ngIf="primarySkillBoolean"
+								[placeholder]="'Select Primary Skills'" [settings]="dropdownSettings"
+								[data]="dropdownListPrim" [(ngModel)]="selectedPrimItems" formControlName="selectedPrim"
+								(onSelect)="onItemSelectPrimary($event)" (onDeSelect)="onItemDeSelectPrimary($event)"
+								(onFilterChange)="onFilterChangPrimaryeSearch($event)"
+								(onDropDownClose)="onDropDownClosePrimary()"> </ng-multiselect-dropdown>
+							<ng-multiselect-dropdown class="sec-drop" *ngIf="!primarySkillBoolean"
+								[placeholder]="'Select Secondary Skills'" [settings]="dropdownSettings"
+								[data]="dropdownListSec" [(ngModel)]="selectedSecItems" formControlName="selectedSec"
+								(onSelect)="onItemSelectSecondary($event)"
+								(onDeSelect)="onItemDeSelectSecondary($event)"
+								(onFilterChange)="onFilterChangSecondarySearch($event)"
+								(onDropDownClose)="onDropDownCloseSecondary()"> </ng-multiselect-dropdown>
 							<p *ngIf="showAddNewPrimary" class="btn btn-primary" (click)="addNewPrimarySkills()">+</p>
-							<p *ngIf="showAddNewSecondary" class="btn btn-primary" (click)="addNewSecondarySkills()">+</p>
-						<div>
-								
-                          <span id=prim{{i}} *ngFor="let primskill of primaryEdit ; let i = index" class="skill sec-skill">
-                                   {{primskill}}
-                                   <img  (click)="deletePrimarySkill(primskill,i)" class="primclose" width="8" height="8" src="../assets/img/close-icon.png">
-                                </span> <span id=sec{{j}} *ngFor="let secskill of secondaryEdit ; let j = index" class="skill">
-                                   {{secskill}}
-                                   <img  (click)="deleteSecondarySkill(secskill,j)"class="primclose" width="10" height="10" src="../assets/img/close-icon.png">
-                                </span>
-						  </div>
-						  <div  style="padding-top: 4%;" *ngIf="submitted && primarySet.length==0" class="invalid-feedback">
+							<p *ngIf="showAddNewSecondary" class="btn btn-primary" (click)="addNewSecondarySkills()">+
+							</p>
+							<div>
+
+								<span id=prim{{i}} *ngFor="let primskill of primaryEdit ; let i = index"
+									class="skill sec-skill">
+									{{primskill}}
+									<img (click)="deletePrimarySkill(primskill,i)" class="primclose" width="8"
+										height="8" src="../assets/img/close-icon.png">
+								</span> <span id=sec{{j}} *ngFor="let secskill of secondaryEdit ; let j = index"
+									class="skill">
+									{{secskill}}
+									<img (click)="deleteSecondarySkill(secskill,j)" class="primclose" width="10"
+										height="10" src="../assets/img/close-icon.png">
+								</span>
+							</div>
+							<div style="padding-top: 4%;" *ngIf="submitted && primarySet.length==0"
+								class="invalid-feedback">
 								<div *ngIf="primarySet.length==0">Minimum one primary skill is required</div>
-						
-							</div>	
-							<div style="padding-top: 2%;" *ngIf="submitted && secondarySet.length==0" class="invalid-feedback">
-									<div *ngIf="secondarySet.length==0">Minimum one secondary skill is required</div>
-							
-								</div>	
-								
+
+							</div>
+							<div style="padding-top: 2%;" *ngIf="submitted && secondarySet.length==0"
+								class="invalid-feedback">
+								<div *ngIf="secondarySet.length==0">Minimum one secondary skill is required</div>
+
+							</div>
+
 						</div>
 					</div>
 					<div class="form-group float-right">
-						<p *ngIf="primarySkillBoolean" (click)="addSecondarySkill()" class="sec-skill-add">Add Secondary Skills</p>
-						<p *ngIf="!primarySkillBoolean" (click)="addPrimarySkill()" class="sec-skill-add">Add Primary Skills</p>
-						<button [disabled]="loading" class="btn save"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Save </button>
-						<button [disabled]="loading" class="btn cancel" (click)="cancelEdit()"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> cancel </button>
+						<p *ngIf="primarySkillBoolean" (click)="addSecondarySkill()" class="sec-skill-add">Add Secondary
+							Skills</p>
+						<p *ngIf="!primarySkillBoolean" (click)="addPrimarySkill()" class="sec-skill-add">Add Primary
+							Skills</p>
+						<button [disabled]="loading" class="btn save"> <span *ngIf="loading"
+								class="spinner-border spinner-border-sm mr-1"></span> Save </button>
+						<button [disabled]="loading" class="btn cancel" (click)="cancelEdit()"> <span *ngIf="loading"
+								class="spinner-border spinner-border-sm mr-1"></span> cancel </button>
 					</div>
 				</form>
 				<ul *ngIf="!isEditForm" class="list-unstyled row">
 					<li class="list-item col-6"><b>Emp ID:&nbsp;&nbsp;</b>{{userInfo.empId}}</li>
-					<li class="list-item col-6" *ngIf="userInfo.mobileNo!=null"> <b>Mobile No:&nbsp;&nbsp;</b>{{userInfo.mobileNo}}</li>
+					<li class="list-item col-6" *ngIf="userInfo.mobileNo!=null"> <b>Mobile
+							No:&nbsp;&nbsp;</b>{{userInfo.mobileNo}}</li>
 					<li class="list-item col-6" *ngIf="userInfo.mobileNo==null"> <b>Mobile No:&nbsp;&nbsp;</b>---</li>
 
-					<li class="list-item col-6 show-elipse-static"  title="{{userInfo.email}}"><b>Email:&nbsp;&nbsp;</b> {{userInfo.email}}</li>
-					
-					<li class="list-item col-6" *ngIf="userInfo.gender!=null"><b>Gender:&nbsp;&nbsp;</b>{{userInfo.gender}}</li>
+					<li class="list-item col-6 show-elipse-static" title="{{userInfo.email}}"><b>Email:&nbsp;&nbsp;</b>
+						{{userInfo.email}}</li>
+
+					<li class="list-item col-6" *ngIf="userInfo.gender!=null">
+						<b>Gender:&nbsp;&nbsp;</b>{{userInfo.gender}}</li>
 					<li class="list-item col-6" *ngIf="userInfo.gender==null"><b>Gender:&nbsp;&nbsp;</b>---</li>
 
-					<li class="list-item col-6 show-elipse-static" *ngIf="userInfo.techRoles.length!=0" title="{{techRolesCommaSeparate}}"><b>Roles:&nbsp;&nbsp;</b><span>{{techRolesCommaSeparate}}</span></li>
-					<li class="list-item col-6 show-elipse-static" *ngIf="userInfo.techRoles.length==0"><b>Roles:&nbsp;&nbsp;</b><span>---</span></li>
+					<li class="list-item col-6 show-elipse-static" *ngIf="userInfo.techRoles.length!=0"
+						title="{{techRolesCommaSeparate}}">
+						<b>Roles:&nbsp;&nbsp;</b><span>{{techRolesCommaSeparate}}</span></li>
+					<li class="list-item col-6 show-elipse-static" *ngIf="userInfo.techRoles.length==0">
+						<b>Roles:&nbsp;&nbsp;</b><span>---</span></li>
 
-					<li class="list-item col-6" *ngIf="userInfo.location.name!=null"><b> Location :&nbsp;&nbsp;</b>{{userInfo.location.name}}</li>
-					<li class="list-item col-6" *ngIf="userInfo.location.name==null"><b> Location :&nbsp;&nbsp;</b>---</li>
-					<li class="list-item col-6 show-elipse-static" title="{{projectCommaSeparate}}"><b>Project:&nbsp;&nbsp;</b><span class="project-name" (click)="onProjectSelect(project)" *ngFor="let project of userInfo.projects last as isLast" >{{project.pname}}{{isLast?'':', '}}</span></li>
+					<li class="list-item col-6" *ngIf="userInfo.location.name!=null"><b> Location
+							:&nbsp;&nbsp;</b>{{userInfo.location.name}}</li>
+					<li class="list-item col-6" *ngIf="userInfo.location.name==null"><b> Location :&nbsp;&nbsp;</b>---
+					</li>
+					<li class="list-item col-6 show-elipse-static" title="{{projectCommaSeparate}}">
+						<b>Project:&nbsp;&nbsp;</b><span class="project-name" (click)="onProjectSelect(project)"
+							*ngFor="let project of userInfo.projects last as isLast">{{project.pname}}{{isLast?'':', '}}</span>
+					</li>
 					<li style="display: inline-table;" class="list-item col-12">
 						<p><b>Skills:&nbsp;&nbsp;</b><span *ngIf="userInfo.skillSets.length==0">---</span></p>
 						<p *ngIf="userInfo.skillSets.length!=0">
-						<span *ngFor="let primskill of primary" class="skill sec-skill">{{primskill}}</span>
-						 <span *ngFor="let secskill of secondary" class="skill">{{secskill}}</span> 
+							<span *ngFor="let primskill of primary" class="skill sec-skill">{{primskill}}</span>
+							<span *ngFor="let secskill of secondary" class="skill">{{secskill}}</span>
 						</p>
-						
-						</li>
+
+					</li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<ng-template #addLeaveModal let-modal>
 		<div class="modal-header">
-				<h5 class="modal-title">Update Leaves</h5>
-			<button type="button" class="close" (click)="modal.dismiss()" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+			<h5 class="modal-title">Update Leaves</h5>
+			<button type="button" class="close" (click)="modal.dismiss()" aria-label="Close"> <span
+					aria-hidden="true">&times;</span> </button>
 		</div>
 		<div class="modal-body">
 			<form class="form-inline">
 				<div class="form-row">
-						<ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden">
-							</ngb-datepicker>
-							
-							<ng-template #t let-date let-focused="focused">
-							  <span class="custom-day"
-									[class.focused]="focused"
-									[class.range]="isRange(date)"
-									[class.faded]="isHovered(date) || isInside(date)"
-									(mouseenter)="hoveredDate = date"
-									(mouseleave)="hoveredDate = null">
-								{{ date.day }}
-							  </span>
-							</ng-template>
+					<ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+						outsideDays="hidden">
+					</ngb-datepicker>
+
+					<ng-template #t let-date let-focused="focused">
+						<span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+							[class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+							(mouseleave)="hoveredDate = null">
+							{{ date.day }}
+						</span>
+					</ng-template>
 					<!-- <div class="input-group from-date-block">
 						<label for="from">From&nbsp;:&nbsp; </label>
 						<input class="form-control" id="from" placeholder="yyyy-mm-dd" name="from" [(ngModel)]="fromDate" ngbDatepicker #from="ngbDatepicker">
@@ -196,13 +245,15 @@
 					</div>
 				</div> -->
 				<div style="width:100%;margin-top: 5%;">
-						<button (click)="modal.dismiss()" type="button" [disabled]="loading" class="btn cancel float-right"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Cancel </button>		
-						<button [disabled]="loading" class="btn save float-right" (click)="onLeaveUpdateSave()"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Save </button>
+					<button (click)="modal.dismiss()" type="button" [disabled]="loading" class="btn cancel float-right">
+						<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Cancel </button>
+					<button [disabled]="loading" class="btn save float-right" (click)="onLeaveUpdateSave()"> <span
+							*ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> Save </button>
 
 				</div>
-				
+
 			</form>
 		</div>
 	</ng-template>
-	
+
 </div>
