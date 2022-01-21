@@ -7,7 +7,7 @@
                 <input type="text" formControlName="username" [pattern]="emailPattern" class="form-control"
                     [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
                 <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                    <div *ngIf="f.username.errors.required">Username is required</div>
+                    <div *ngIf="f.username.errors?.required && !f.password.errors">Username is required</div>
                     <div *ngIf="f.username.errors.pattern">Username is not valid</div>
 
                 </div>
@@ -28,10 +28,11 @@
                               }" (click)="toggleFieldTextType()"></i>
                         </span>
                     </div>
-
                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                        <div *ngIf="f.password.errors.required">Password is required</div>
+                    <div *ngIf="f.password.errors.required && !f.username.errors " >Password is required</div>
+                    <div *ngIf="f.username.errors.required && f.password.errors.required" >Username and Password both are mandatory fields</div>
                     </div>
+
                 </div>
             </div>
             <div class="form-row">
@@ -39,7 +40,12 @@
                     <button [disabled]="loading" class="btn btn-primary">
                         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                         Login
+
                     </button>
+                    <div *ngIf="form.errors?.unauthenticated">
+                        Username or Password incorrect!
+                    </div>
+
                 </div>
                 <div class="form-group col">
                     <label>Not a member yet?&nbsp;</label>
