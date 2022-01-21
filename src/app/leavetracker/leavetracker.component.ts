@@ -51,6 +51,9 @@ export class LeavetrackerComponent implements OnInit {
   listDates = [];
   user;
   publicHolidayDisplay = [];
+  
+  daysSelected: any[] = [];
+  event: any;
   //sample data
 
   public_holiday = [{
@@ -221,6 +224,7 @@ export class LeavetrackerComponent implements OnInit {
               for (let leaves of obj[key]['leaves']) {
                   if (leaves.fromDate == leaves.toDate) {
                       if (key == this.user.id) {
+                          this.daysSelected.push(leaves.fromDate)
                           this.data.push({
                               name: obj[key]['userName'],
                               project: obj[key]['projectName'],
@@ -242,6 +246,7 @@ export class LeavetrackerComponent implements OnInit {
                       this.listDates = this.getDates(new Date(leaves.fromDate), new Date(leaves.toDate))
                       for (var j = 0; j < this.listDates.length; j++) {
                           if (key == this.user.id) {
+                            this.daysSelected.push(this.listDates[j].toISOString().slice(0, 10))
                               this.data.push({
                                   name: obj[key]['userName'],
                                   project: obj[key]['projectName'],
@@ -354,7 +359,7 @@ export class LeavetrackerComponent implements OnInit {
       //Check if event has image
       if (eventInfo.event._def.extendedProps.imageUrl) {
           // Store custom html code in variable
-          innerHtml = eventInfo.event._def.title + "<div style='margin-bottom:53% !important;margin-left: 3px;display: block;width: 278px;background: #7eb9e6 0% 0% no-repeat padding-box;border-radius: 4px;padding: 2px;'><div style='float:left'><img style='display:inline;width:28px;height:34px;border-radius: 50%;' src='" + eventInfo.event._def.extendedProps.imageUrl + "'></div>" + "<div><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span><br/><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.project + "</span></div></div>";
+          innerHtml = eventInfo.event._def.title + "<div style='margin-bottom:53% !important;margin-left: 3px;display: block;width: 278px;background: #7eb9e6 0% 0% no-repeat padding-box;border-radius: 4px;'><div style='float:left'><img style='display:inline;width:28px;height:34px;border-radius: 50%;' src='" + eventInfo.event._def.extendedProps.imageUrl + "'></div>" + "<div><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span><br/><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.project + "</span></div></div>";
           //Event with rendering html
           return createElement = {
               html: innerHtml
@@ -397,4 +402,29 @@ export class LeavetrackerComponent implements OnInit {
           this.fromDate = date;
       }
   }
+
+  isSelected = (event: any) => {
+    const date =
+      event.getFullYear() +
+      "-" +
+      ("00" + (event.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("00" + event.getDate()).slice(-2);
+    return this.daysSelected.find(x => x == date) ? "selected" : null;
+  };
+
+  select(event: any, calendardate: any) {
+    const date =
+      event.getFullYear() +
+      "-" +
+      ("00" + (event.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("00" + event.getDate()).slice(-2);
+    const index = this.daysSelected.findIndex(x => x == date);
+    if (index < 0) this.daysSelected.push(date);
+    else this.daysSelected.splice(index, 1);
+
+    calendardate.updateTodaysDate();
+  }
+
 }

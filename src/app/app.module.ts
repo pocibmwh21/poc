@@ -24,6 +24,11 @@ import { AboutusComponent } from './aboutus/aboutus.component'
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {NgxPaginationModule} from 'ngx-pagination'; 
 import {IvyCarouselModule} from 'angular-responsive-carousel';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+
+import {MatMenuModule} from '@angular/material/menu';
+import {MatNativeDateModule} from '@angular/material/core';
 
 
 
@@ -47,7 +52,12 @@ FullCalendarModule.registerPlugins([
         MatTooltipModule,
         NgxPaginationModule,
         NgMultiSelectDropDownModule.forRoot(),
- 		  IvyCarouselModule,
+       IvyCarouselModule,
+       MatDatepickerModule,
+       MatInputModule,
+       MatMenuModule,
+       MatNativeDateModule
+
         ],
     declarations: [
         AppComponent,

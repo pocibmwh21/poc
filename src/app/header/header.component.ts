@@ -100,7 +100,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   } else {
     this.emptyOldPswd = false;
   }
-      if(this.newPassword.length<8){
+      if((this.newPassword.length<8 || this.newPassword.length>15)){
         this.minLengthError = true;
       }
       else{

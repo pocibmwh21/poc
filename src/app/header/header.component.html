@@ -44,8 +44,9 @@
 				<div>Mismatch in new password and confirm password</div>
 			</div>
 			<div *ngIf="minLengthError" class="error">
-				<div>Minimum 8 charecters should be there for password</div>
+				<div>Password should be  in between 8 and 15 charecters</div>
 			</div>
+			
 			<div *ngIf="oldNewSame" class="error">
 				<div>New Password should not be same as old password</div>
 			</div>

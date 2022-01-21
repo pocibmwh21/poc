@@ -9,6 +9,7 @@ import {
   NgbDateStruct,
   NgbCalendar,
   NgbDate,
+  NgbDatepickerConfig
 } from '@ng-bootstrap/ng-bootstrap';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { UserInfo } from '@app/_models/userInfo';
@@ -97,8 +98,10 @@ export class MyinfoComponent implements OnInit {
   photoId;
   fromDateFormatted;
   toDateFormatted;
-
+  daysSelected: any[] = [];
+  event: any;
   registerForm: any = FormGroup;
+  leaveData;
 
   //intialize variables end
 
@@ -112,8 +115,14 @@ export class MyinfoComponent implements OnInit {
     private alertService: AlertService,
     private http: HttpClient,
     private commonService: CommonService,
-    private calendar: NgbCalendar
+    private calendar: NgbCalendar,
+    private config: NgbDatepickerConfig
   ) {
+    const current = new Date();
+  config.minDate = { year: current.getFullYear(), month: 
+  current.getMonth() + 1, day: current.getDate() };
+    //config.maxDate = { year: 2099, month: 12, day: 31 };
+  config.outsideDays = 'hidden';
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
     this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
@@ -236,10 +245,24 @@ export class MyinfoComponent implements OnInit {
     console.log(this.fromDateFormatted)
     console.log(this.toDateFormatted)
     this.modalService.dismissAll();
-    this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
-    setTimeout(() => {
-      this.alertService.clear();
-    }, 3000);
+    this.leaveData ={"fromDate":this.fromDateFormatted,"toDate":this.toDateFormatted,"user":{"id":this.user.id}}
+    this.http
+    .post(`/home/user/addleave`,this.leaveData)
+    .subscribe((response) => {
+      if(response){
+        this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
+      setTimeout(() => {
+        this.alertService.clear();
+      }, 3000);
+      }
+      
+     
+    },
+    (error) => {
+      console.log(error)
+      this.alertService.error(error, { keepAfterRouteChange: false });
+    });
+   
 
   }
 
@@ -694,7 +717,6 @@ export class MyinfoComponent implements OnInit {
       })
       .subscribe((response) => {
         if (response.status === 200) {
-          localStorage.removeItem('imgSrc');
           this.getImage();
           this.message = 'Image uploaded successfully';
         } else {
@@ -748,4 +770,33 @@ export class MyinfoComponent implements OnInit {
         }
       );
   }
+
+  isSelected = (event: any) => {
+    const date =
+      event.getFullYear() +
+      "-" +
+      ("00" + (event.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("00" + event.getDate()).slice(-2);
+    return this.daysSelected.find(x => x == date) ? "selected" : null;
+  };
+
+  select(event: any, calendardate: any) {
+    const date =
+      event.getFullYear() +
+      "-" +
+      ("00" + (event.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("00" + event.getDate()).slice(-2);
+    const index = this.daysSelected.findIndex(x => x == date);
+    if (index < 0) this.daysSelected.push(date);
+    else this.daysSelected.splice(index, 1);
+
+    calendardate.updateTodaysDate();
+  }
+  // addLeaves(){
+  //   console.log(this.daysSelected)
+  //    this.sorteddaysSelected= this.daysSelected.sort((a, b) => b > a ? 1: -1);
+
+  // }
 }

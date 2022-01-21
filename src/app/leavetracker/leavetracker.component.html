@@ -13,6 +13,19 @@
 
         </div>
 
+        <!-- <button [matMenuTriggerFor]="appMenu">
+           calendar_today
+          </button>
+          <mat-menu #appMenu="matMenu" class="drop-calendar" >
+              <div (click)="$event.stopPropagation()">
+                  <mat-calendar #calendar (selectedChange)="select($event,calendar)" [dateClass]="isSelected"></mat-calendar>
+              </div>
+          </mat-menu>
+          <pre>
+          {{daysSelected|json}}
+          </pre> -->
+        
+
         <div class="col-md-3 delete-icon-position">
 
             
@@ -22,9 +35,20 @@
             </button> -->
             <div class="availabilityUpdate">
                 <div class="update-del-section">
-                      <button class="btn btn-primary" data-toggle="modal"
+                      <!-- <button class="btn btn-primary" data-toggle="modal"
                       data-target="#myModal2">Update Leaves</button><button class="delete-icon" data-toggle="modal" data-target="#myModal"><i
-                          class="fa fa-trash-o icon"></i></button>
+                          class="fa fa-trash-o icon"></i></button> -->
+                          <button class="btn btn-primary" [matMenuTriggerFor]="appMenu"
+                         >Update Leaves</button>
+                         <mat-menu #appMenu="matMenu" class="drop-calendar" >
+                            <div (click)="$event.stopPropagation()">
+                                <mat-calendar #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar>
+                                <button style="float: right;margin: 20px;" class="btn btn-primary btn3">Save</button>
+                            </div>
+                        </mat-menu>
+                         <button class="delete-icon" data-toggle="modal" data-target="#myModal"><i
+                              class="fa fa-trash-o icon"></i></button>
+                            
                 </div> 
                 <p style="font-size: 14px;font-weight: bolder; ">Availability Update</p>
             </div>
@@ -95,7 +119,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-row">
-                            <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+                                <!-- <mat-calendar #calendar (selectedChange)="select($event,calendar)" [dateClass]="isSelected"></mat-calendar> -->
+                            <!-- <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
                                 outsideDays="hidden">
                             </ngb-datepicker>
     
@@ -105,7 +130,7 @@
                                     (mouseleave)="hoveredDate = null">
                                     {{ date.day }}
                                 </span>
-                            </ng-template>
+                            </ng-template> -->
                         </div>
                     </div>
                     <div class="modal-footer">
