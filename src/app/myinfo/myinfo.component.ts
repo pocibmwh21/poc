@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AccountService, AlertService } from '@app/_services';
@@ -31,6 +31,7 @@ export class MyinfoComponent implements OnInit {
         this.myScrollContainer.nativeElement.scrollHeight;
     } catch (err) { }
   }
+  @ViewChild('myFileInput') myFileInput;
   userInfo: UserInfo;
   isEditForm = false;
   user;
@@ -102,7 +103,11 @@ export class MyinfoComponent implements OnInit {
   event: any;
   registerForm: any = FormGroup;
   leaveData;
-
+  range = new FormGroup({
+    start: new FormControl(),
+    end: new FormControl(),
+  });
+  markDisabled;
   //intialize variables end
 
   //get user details on constructor
@@ -118,11 +123,14 @@ export class MyinfoComponent implements OnInit {
     private calendar: NgbCalendar,
     private config: NgbDatepickerConfig
   ) {
+    this.markDisabled = (date: NgbDate) => calendar.getWeekday(date) >= 6;
     const current = new Date();
-  config.minDate = { year: current.getFullYear(), month: 
-  current.getMonth() + 1, day: current.getDate() };
+    config.minDate = {
+      year: current.getFullYear(), month:
+        current.getMonth() + 1, day: current.getDate()
+    };
     //config.maxDate = { year: 2099, month: 12, day: 31 };
-  config.outsideDays = 'hidden';
+    config.outsideDays = 'hidden';
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
     this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
@@ -189,11 +197,11 @@ export class MyinfoComponent implements OnInit {
     this.editProfileForm = this.formBuilder.group({
       empId: ['', Validators.required],
       username: ['', Validators.required],
-      techstack: ['', 
-      [Validators.required,
+      techstack: ['',
+        [Validators.required,
         Validators.maxLength(20),
-      ]
-    ],
+        ]
+      ],
       mobileNo: [
         '',
         [
@@ -245,24 +253,24 @@ export class MyinfoComponent implements OnInit {
     console.log(this.fromDateFormatted)
     console.log(this.toDateFormatted)
     this.modalService.dismissAll();
-    this.leaveData ={"fromDate":this.fromDateFormatted,"toDate":this.toDateFormatted,"user":{"id":this.user.id}}
+    this.leaveData = { "fromDate": this.fromDateFormatted, "toDate": this.toDateFormatted, "user": { "id": this.user.id } }
     this.http
-    .post(`/home/user/addleave`,this.leaveData)
-    .subscribe((response) => {
-      if(response){
-        this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
-      setTimeout(() => {
-        this.alertService.clear();
-      }, 3000);
-      }
-      
-     
-    },
-    (error) => {
-      console.log(error)
-      this.alertService.error(error, { keepAfterRouteChange: false });
-    });
-   
+      .post(`/home/user/addleave`, this.leaveData)
+      .subscribe((response) => {
+        if (response) {
+          this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
+          setTimeout(() => {
+            this.alertService.clear();
+          }, 3000);
+        }
+
+
+      },
+        (error) => {
+          console.log(error)
+          this.alertService.error(error, { keepAfterRouteChange: false });
+        });
+
 
   }
 
@@ -685,6 +693,7 @@ export class MyinfoComponent implements OnInit {
     this.router.navigateByUrl('/aboutus');
   }
   onFileChanged($event: any) {
+
     this.selectedFile = $event.target.files[0];
 
     if ($event.target.files && $event.target.files[0]) {
@@ -695,10 +704,11 @@ export class MyinfoComponent implements OnInit {
       }
 
       else {
+        this.myFileInput.nativeElement.value = '';
         this.alertService.error('please upload valid format', { keepAfterRouteChange: false });
-
       }
-      const fileSize = file.size / 1024 / 1024; 
+
+      const fileSize = file.size / 1024 / 1024;
       if (fileSize > 2) {
         this.alertService.error('File size exceeds 2 MB', { keepAfterRouteChange: false });
       }
@@ -706,6 +716,8 @@ export class MyinfoComponent implements OnInit {
 
   }
   upload() {
+    this.myFileInput.nativeElement.value = '';
+    this.alertService.error(null);
     console.log('file: ', this.selectedFile);
     const uploadImageData: FormData = new FormData();
     uploadImageData.append('imageFile', this.selectedFile);

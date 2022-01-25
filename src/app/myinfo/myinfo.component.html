@@ -14,7 +14,7 @@
 					<img *ngIf="!loadingImage" width="200" height="200"
 						class="rounded-circle article-img img-responsive" src={{retrievedImage}}>
 					<div class="overlay">
-						<input type="file" id="upload" (change)="onFileChanged($event)" hidden />
+						<input type="file" id="upload" (change)="onFileChanged($event)" hidden #myFileInput/>
 						<label class="info info-label" for="upload"><img src="../assets/img/upload-icon.png"></label>
 						<div>
 							<img (click)="removePhoto()" id="remove-photo" class="info"
@@ -216,7 +216,7 @@
 		<div class="modal-body">
 			<form class="form-inline">
 				<div class="form-row">
-					<ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+					<ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" [markDisabled]="markDisabled"
 						outsideDays="hidden">
 					</ngb-datepicker>
 

@@ -5,7 +5,7 @@
             <div class="leave-tracker-text">LEAVE TRACKER</div>
 
             <div class="calendra-margin">
-                <full-calendar class="leave-calender" [options]="calendarOptions"></full-calendar>
+                <full-calendar #monthcalender class="leave-calender" [options]="calendarOptions"></full-calendar>
 
             </div>
         </div>
@@ -35,19 +35,19 @@
             </button> -->
             <div class="availabilityUpdate">
                 <div class="update-del-section">
-                      <!-- <button class="btn btn-primary" data-toggle="modal"
+                      <button class="btn btn-primary" data-toggle="modal"
                       data-target="#myModal2">Update Leaves</button><button class="delete-icon" data-toggle="modal" data-target="#myModal"><i
-                          class="fa fa-trash-o icon"></i></button> -->
-                          <button class="btn btn-primary" [matMenuTriggerFor]="appMenu"
-                         >Update Leaves</button>
-                         <mat-menu #appMenu="matMenu" class="drop-calendar" >
+                          class="fa fa-trash-o icon"></i></button>
+                          <!-- <button class="btn btn-primary" [matMenuTriggerFor]="appMenu"
+                         >Update Leaves</button> -->
+                         <!-- <mat-menu #appMenu="matMenu" class="drop-calendar" >
                             <div (click)="$event.stopPropagation()">
                                 <mat-calendar #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar>
-                                <button style="float: right;margin: 20px;" class="btn btn-primary btn3">Save</button>
+                                <button (click)="updateLeaves()"style="float: right;margin: 20px;" class="btn btn-primary btn3">Save</button>
                             </div>
-                        </mat-menu>
-                         <button class="delete-icon" data-toggle="modal" data-target="#myModal"><i
-                              class="fa fa-trash-o icon"></i></button>
+                        </mat-menu> -->
+                         <!-- <button class="delete-icon" data-toggle="modal" data-target="#myModal"><i
+                              class="fa fa-trash-o icon"></i></button> -->
                             
                 </div> 
                 <p style="font-size: 14px;font-weight: bolder; ">Availability Update</p>
@@ -119,6 +119,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-row">
+                                <mat-calendar class="update-calender" [minDate]="todayDate" [dateFilter]="weekendsDatesFilter" #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar>
                                 <!-- <mat-calendar #calendar (selectedChange)="select($event,calendar)" [dateClass]="isSelected"></mat-calendar> -->
                             <!-- <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
                                 outsideDays="hidden">
@@ -135,7 +136,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn2" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-primary btn3">Save</button>
+                        <button (click)="updateLeaves()" class="btn btn-primary btn3">Save</button>
                     </div>
                 </div>
             </div>

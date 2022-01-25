@@ -26,6 +26,7 @@ import {
 import {
   AccountService
 } from '@app/_services';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-leavetracker',
@@ -38,11 +39,17 @@ export class LeavetrackerComponent implements OnInit {
       static: false
   }) calendarComponent: FullCalendarComponent;
 
+    // references the #calendar in the template
+    @ViewChild('monthcalender', {
+        static: false
+    }) monthcalendarComponent: FullCalendarComponent;
+
   handelDateClick: any;
   fromDate: NgbDate;
   toDate: NgbDate | null = null;
   hoveredDate: NgbDate | null = null;
   calendarApi: Calendar;
+  monthcalenderApi: Calendar;
   totalRecords: string;
   page: number = 1;
   publicHolidayData = [];
@@ -54,6 +61,17 @@ export class LeavetrackerComponent implements OnInit {
   
   daysSelected: any[] = [];
   event: any;
+  currentMonth;
+  currentYear;
+  updatedLeaves = [];
+  daysSelectedLid = [];
+  sorteddaysSelected = [];
+  formatedarray = [];
+  from;
+  to;
+  index;
+  formatedarraySet:any;
+  todayDate;
   //sample data
 
   public_holiday = [{
@@ -177,8 +195,12 @@ export class LeavetrackerComponent implements OnInit {
   ];
 
   constructor(private calendar: NgbCalendar,
-      private accountService: AccountService) {
+      private accountService: AccountService,
+      private http: HttpClient,
+      ) {
       this.user = this.accountService.userValue;
+      this.todayDate = new Date();
+
       this.fromDate = calendar.getToday();
       this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
       
@@ -211,84 +233,128 @@ export class LeavetrackerComponent implements OnInit {
 
 
   ngOnInit(): void {
-      // Usage
-      let currentDate = new Date();
-      let cDay = currentDate.getDate()
-      let cMonth = this.month[currentDate.getMonth()]
-      let cYear = currentDate.getFullYear()
-
-      //conerting data from back end to data for full calender
-      for (let obj of this.backEnddata[cYear][0][cMonth]) {
-          console.log(obj)
-          for (let key in obj) {
-              for (let leaves of obj[key]['leaves']) {
-                  if (leaves.fromDate == leaves.toDate) {
-                      if (key == this.user.id) {
-                          this.daysSelected.push(leaves.fromDate)
-                          this.data.push({
-                              name: obj[key]['userName'],
-                              project: obj[key]['projectName'],
-                              date: leaves.fromDate,
-                              title: '',
-                              display: 'background',
-                              color: '#f27878'
-                          })
-                      } else {
-                          this.data.push({
-                              name: obj[key]['userName'],
-                              project: obj[key]['projectName'],
-                              date: leaves.fromDate,
-                              imageUrl: '../assets/img/person.jpg'
-                          })
-                      }
-
-                  } else {
-                      this.listDates = this.getDates(new Date(leaves.fromDate), new Date(leaves.toDate))
-                      for (var j = 0; j < this.listDates.length; j++) {
-                          if (key == this.user.id) {
-                            this.daysSelected.push(this.listDates[j].toISOString().slice(0, 10))
-                              this.data.push({
-                                  name: obj[key]['userName'],
-                                  project: obj[key]['projectName'],
-                                  date: this.listDates[j].toISOString().slice(0, 10),
-                                  title: '',
-                                  display: 'background',
-                                  color: '#f27878'
-                              })
-                          } else {
-                              this.data.push({
-                                  name: obj[key]['userName'],
-                                  project: obj[key]['projectName'],
-                                  date: this.listDates[j].toISOString().slice(0, 10),
-                                  imageUrl: '../assets/img/person.jpg'
-                              })
-
-                          }
-
-                      }
-                  }
-
-              }
-
-          }
-      }
-      console.log(this.data)
+    let currentDate = new Date();
+    let cDay = currentDate.getDate()
+    let cMonth = this.month[currentDate.getMonth()]
+    let cYear = currentDate.getFullYear()
+     this.convertJsonData(cMonth,cYear);
+     this.http.get(`/home/user/getAllLeaves`).subscribe(response=>{
+       
+    });
   }
   ngAfterViewChecked() {
       this.calendarApi = this.calendarComponent.getApi();
+      this.monthcalenderApi =  this.monthcalendarComponent.getApi();
+    // this.calendarApi.next();
   }
 
+  convertJsonData(cMonth,cYear){
+     //conerting data from back end to data for full calender
+     for (let obj of this.backEnddata[cYear][0][cMonth]) {
+         console.log(obj)
+         for (let key in obj) {
+             for (let leaves of obj[key]['leaves']) {
+                 if (leaves.fromDate == leaves.toDate) {
+                     if (key == this.user.id) {
+                         this.daysSelectedLid.push({"date":leaves.fromDate,"lid":leaves.lid})
+                         this.daysSelected.push(leaves.fromDate)
+                         this.data.push({
+                             name: obj[key]['userName'],
+                             project: obj[key]['projectName'],
+                             date: leaves.fromDate,
+                             title: '',
+                             display: 'background',
+                             color: '#f27878'
+                         })
+                     } else {
+                         this.data.push({
+                             name: obj[key]['userName'],
+                             project: obj[key]['projectName'],
+                             date: leaves.fromDate,
+                             imageUrl: '../assets/img/person.jpg'
+                         })
+                     }
 
+                 } else {
+                     this.listDates = this.getDates(new Date(leaves.fromDate), new Date(leaves.toDate))
+                     for (var j = 0; j < this.listDates.length; j++) {
+                         if (key == this.user.id) {
+                            this.daysSelectedLid.push({"date":leaves.fromDate,"lid":leaves.lid})
+                           this.daysSelected.push(this.listDates[j].toISOString().slice(0, 10))
+                             this.data.push({
+                                 name: obj[key]['userName'],
+                                 project: obj[key]['projectName'],
+                                 date: this.listDates[j].toISOString().slice(0, 10),
+                                 title: '',
+                                 display: 'background',
+                                 color: '#f27878'
+                             })
+                         } else {
+                             this.data.push({
+                                 name: obj[key]['userName'],
+                                 project: obj[key]['projectName'],
+                                 date: this.listDates[j].toISOString().slice(0, 10),
+                                 imageUrl: '../assets/img/person.jpg'
+                             })
+
+                         }
+
+                     }
+                 }
+
+             }
+
+         }
+     }
+     console.log(this.data)
+  }
   calendarOptions: CalendarOptions = {
       initialView: 'dayGridMonth',
       dayMaxEventRows: 4, // allow "more" link when too many events
       eventContent: this.renderEventContent, // This will render the event with image 
       events: this.data,
-
+      customButtons: {
+        next: {
+            click: this.nextMonth.bind(this),
+        },
+        prev: {
+            click: this.prevMonth.bind(this),
+        }
+    },
       dateClick: this.getClickedSpecificDate.bind(this)
   };
 
+  //on click of next month
+  nextMonth(): void {
+    this.monthcalenderApi.next();
+    this.getCurrentMonthYear(this.monthcalenderApi.currentData.viewTitle.split(" "))
+    this.updateData()
+   
 
+
+  }
+  //on click of prev month
+  prevMonth(): void {
+    this.monthcalenderApi.prev();
+    this.getCurrentMonthYear(this.monthcalenderApi.currentData.viewTitle.split(" "))
+    this.updateData()
+
+  }
+
+  getCurrentMonthYear(arrayMonthYear){
+    for(var i=0;i<arrayMonthYear.length;i++){
+        this.currentMonth = arrayMonthYear[0]
+        this.currentYear = arrayMonthYear[1]
+
+    }
+  }
+
+  updateData(){
+      console.log(this.currentMonth);
+      console.log(this.currentYear);
+      this. convertJsonData(this.currentMonth,this.currentYear)
+      
+  }
   calendarOptionstest: CalendarOptions = {
       initialView: 'dayGridDay',
       eventContent: this.renderEventContentForDay, // This will render the event with image
@@ -423,8 +489,77 @@ export class LeavetrackerComponent implements OnInit {
     const index = this.daysSelected.findIndex(x => x == date);
     if (index < 0) this.daysSelected.push(date);
     else this.daysSelected.splice(index, 1);
-
     calendardate.updateTodaysDate();
   }
+ 
+  updateLeaves(){
 
+      this.updatedLeaves = [];
+      this.formatedarray = [];
+      this.index=0;
+      console.log(this.daysSelected)
+//  ['2022-01-01', '2022-01-02', '2022-01-04', '2022-01-05', '2022-01-27', '2022-01-06', '2022-01-07'] i 
+// ['2022-01-01', '2022-01-02', '2022-01-04', '2022-01-05', '2022-01-27', '2022-01-06', '2022-01-07'] j
+// from = 1
+// count 0
+// ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05', '2022-01-11', '2022-01-13', '2022-01-23', '2022-01-25', '2022-01-27']
+//  ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05', '2022-01-11', '2022-01-13', '2022-01-23', '2022-01-25', '2022-01-27']
+
+      this.sorteddaysSelected = this.daysSelected.sort((a, b) => b < a ? 1: -1);
+      var j,i
+      console.log(this.sorteddaysSelected)
+      for(i=this.index;i<this.sorteddaysSelected.length;i++){
+          console.log(this.index)
+          i=this.index;
+        this.from = this.sorteddaysSelected[i]
+        var count=0;
+        var first_iteration = true;
+          for( j=this.index;j<this.sorteddaysSelected.length;j++){
+            count++
+            console.log(new Date(this.sorteddaysSelected[j+1]).getDate())
+            console.log(new Date(this.sorteddaysSelected[i]).getDate()+count);
+            if(new Date(this.sorteddaysSelected[j+1]).getDate()== new Date(this.sorteddaysSelected[i]).getDate()+count){
+                this.to = this.sorteddaysSelected[j+1]
+                first_iteration = false;
+            }
+           
+         else if(first_iteration ==true && new Date(this.sorteddaysSelected[j+1]).getDate()!= new Date(this.sorteddaysSelected[i]).getDate()+count){
+            this.to=this.from;
+            this.formatedarray.push({"fromDate":this.from,"toDate":this.to})
+            break;
+         }           
+         else{
+            this.formatedarray.push({"fromDate":this.from,"toDate":this.to})
+            break;
+        }
+         
+
+          }
+
+          this.index =this.sorteddaysSelected.indexOf(this.to)+1
+
+          console.log(this.index)
+
+          
+      }
+       this.formatedarraySet = new Set(this.formatedarray)
+       this.formatedarray = Array.from(this.formatedarraySet)
+
+    console.log(this.formatedarray)
+    for(var k=0;k<this.formatedarray.length;k++){
+        
+        
+    }
+    // var day = new Date(key);
+    // console.log(day)
+    // var date = day.getDate() + ' ' + this.month[day.getMonth()] + ' ' + day.getFullYear();
+
+  }
+
+  weekendsDatesFilter = (d: Date): boolean => {
+    const day = d.getDay();
+
+    /* Prevent Saturday and Sunday for select. */
+    return day !== 0 && day !== 6 ;
+}
 }
