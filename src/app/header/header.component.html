@@ -13,7 +13,7 @@
 				<li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
 					<a style="pointer-events: none;" routerLink="/leavetracker" class="nav-link"><img width="15" height="15" src="../assets/img/notification.png"></a>
 				</li>
-				<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">{{user.userInfo.firstName}}</a>
+				<li class="nav-item dropdown"> <a style="color: #0072c7 !important;" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">{{user.userInfo.firstName}}</a>
 					<div class="dropdown-menu"> <a class="dropdown-item" (click)="openModal(changePassword)">Change Password</a> <a class="dropdown-item" (click)="logout()">Logout</a> </div>
 				</li>
 				<li> <img *ngIf="retrievedImage!=null" width="40" height="40" class="rounded-circle article-img" src={{retrievedImage}} id="img"> <span *ngIf="retrievedImage==null" class="no-image-header">{{noImageAbbr}}</span> </li>
