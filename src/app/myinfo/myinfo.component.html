@@ -144,14 +144,14 @@
 										height="10" src="../assets/img/close-icon.png">
 								</span>
 							</div>
-							<div style="padding-top: 4%;" *ngIf="submitted && primarySet.length==0"
+							<div style="padding-top: 4%;" *ngIf="submitted && primarySet.length==0 || submitted && primarySet.length>5 "
 								class="invalid-feedback">
-								<div *ngIf="primarySet.length==0">Minimum one primary skill is required</div>
+								<div *ngIf="primarySet.length==0||primarySet.length>5">Mininum 1 primary skill is required and maximum 5 primary skills can be added </div>
 
 							</div>
-							<div style="padding-top: 2%;" *ngIf="submitted && secondarySet.length==0"
+							<div style="padding-top: 2%;" *ngIf="submitted && secondarySet.length==0 || submitted && secondarySet.length>5"
 								class="invalid-feedback">
-								<div *ngIf="secondarySet.length==0">Minimum one secondary skill is required</div>
+								<div *ngIf="secondarySet.length==0||secondarySet.length>5">Mininum 1 secondary skill is required and maximum 5 secondary skills can be added </div>
 
 							</div>
 
@@ -216,6 +216,7 @@
 		<div class="modal-body">
 			<form class="form-inline">
 				<div class="form-row">
+						
 					<ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" [markDisabled]="markDisabled"
 						outsideDays="hidden">
 					</ngb-datepicker>

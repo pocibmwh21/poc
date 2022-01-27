@@ -374,7 +374,6 @@ export class MyinfoComponent implements OnInit {
       textField: 'skill',
       allowSearchFilter: true,
       itemsShowLimit: 5,
-      limitSelection: 5,
     };
     console.log(this.selectedPrimItems)
     console.log(this.selectedSecItems)
@@ -613,7 +612,9 @@ export class MyinfoComponent implements OnInit {
     if (
       this.editProfileForm.invalid ||
       this.primarySet.length == 0 ||
-      this.secondarySet.length == 0
+      this.primarySet.length >5||
+      this.secondarySet.length == 0||
+      this.secondarySet.length>5
     ) {
       return;
     } else {
