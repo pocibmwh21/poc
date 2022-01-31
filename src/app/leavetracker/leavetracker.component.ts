@@ -1,7 +1,8 @@
 import {
   Component,
   OnInit,
-  ViewChild
+  ViewChild,
+  Renderer2
 } from '@angular/core';
 import {
   FullCalendarComponent,
@@ -71,7 +72,13 @@ export class LeavetrackerComponent implements OnInit {
   to;
   index;
   formatedarraySet:any;
+  daysSelectedset:any;
+  daysSelectedLidset:any;
   todayDate;
+  inBtwnDates = [];
+  inBtwnDatesFormatted = [];
+  found;
+  notFound;
   //sample data
 
   public_holiday = [{
@@ -148,9 +155,19 @@ export class LeavetrackerComponent implements OnInit {
                           },
                           {
                               "lid": 8,
-                              "fromDate": "2022-01-01",
-                              "toDate": "2022-01-05"
-                          }
+                              "fromDate": "2022-02-01",
+                              "toDate": "2022-02-05"
+                          },
+                          {
+                            "lid": 4,
+                            "fromDate": "2022-03-01",
+                            "toDate": "2022-03-05"
+                        },
+                        {
+                            "lid": 4,
+                            "fromDate": "2022-03-01",
+                            "toDate": "2022-03-05"
+                        }
                       ]
                   }
               }
@@ -197,6 +214,7 @@ export class LeavetrackerComponent implements OnInit {
   constructor(private calendar: NgbCalendar,
       private accountService: AccountService,
       private http: HttpClient,
+      private renderer:Renderer2
       ) {
       this.user = this.accountService.userValue;
       this.todayDate = new Date();
@@ -223,7 +241,7 @@ export class LeavetrackerComponent implements OnInit {
                       description: obj[key]
                   },
                   display: 'background',
-                  color: '#649615 0% 0% no-repeat padding-box'
+                  color: '#649615'
               })
           }
       }
@@ -247,7 +265,30 @@ export class LeavetrackerComponent implements OnInit {
       this.monthcalenderApi =  this.monthcalendarComponent.getApi();
     // this.calendarApi.next();
   }
+  ngAfterViewInit() {
+    const monthPrevBtn = document.querySelectorAll(
+      '.mat-calendar-previous-button'
+    );
+    const monthNextBtn = document.querySelectorAll('.mat-calendar-next-button');
 
+    if (monthPrevBtn) {
+      Array.from(monthPrevBtn).forEach((button) => {
+        this.renderer.listen(button, 'click', (event) => {
+         console.log("pre",event)
+        });
+      });
+    }
+
+    if (monthNextBtn) {
+      Array.from(monthNextBtn).forEach((button) => {
+        this.renderer.listen(button, 'click', (event) => {
+            console.log("net",event)
+
+        });
+      });
+    }
+  }
+ 
   convertJsonData(cMonth,cYear){
      //conerting data from back end to data for full calender
      for (let obj of this.backEnddata[cYear][0][cMonth]) {
@@ -279,7 +320,7 @@ export class LeavetrackerComponent implements OnInit {
                      this.listDates = this.getDates(new Date(leaves.fromDate), new Date(leaves.toDate))
                      for (var j = 0; j < this.listDates.length; j++) {
                          if (key == this.user.id) {
-                            this.daysSelectedLid.push({"date":leaves.fromDate,"lid":leaves.lid})
+                            this.daysSelectedLid.push({"date":this.listDates[j].toISOString().slice(0, 10),"lid":leaves.lid})
                            this.daysSelected.push(this.listDates[j].toISOString().slice(0, 10))
                              this.data.push({
                                  name: obj[key]['userName'],
@@ -498,13 +539,11 @@ export class LeavetrackerComponent implements OnInit {
       this.formatedarray = [];
       this.index=0;
       console.log(this.daysSelected)
-//  ['2022-01-01', '2022-01-02', '2022-01-04', '2022-01-05', '2022-01-27', '2022-01-06', '2022-01-07'] i 
-// ['2022-01-01', '2022-01-02', '2022-01-04', '2022-01-05', '2022-01-27', '2022-01-06', '2022-01-07'] j
-// from = 1
-// count 0
-// ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05', '2022-01-11', '2022-01-13', '2022-01-23', '2022-01-25', '2022-01-27']
-//  ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05', '2022-01-11', '2022-01-13', '2022-01-23', '2022-01-25', '2022-01-27']
 
+      this.daysSelectedset = new Set(this.daysSelected)
+       this.daysSelected = Array.from(this.daysSelectedset)
+       this.daysSelectedLidset= new Set(this.daysSelectedLid)
+       this.daysSelectedLid = Array.from(this.daysSelectedLidset)
       this.sorteddaysSelected = this.daysSelected.sort((a, b) => b < a ? 1: -1);
       var j,i
       console.log(this.sorteddaysSelected)
@@ -544,12 +583,44 @@ export class LeavetrackerComponent implements OnInit {
       }
        this.formatedarraySet = new Set(this.formatedarray)
        this.formatedarray = Array.from(this.formatedarraySet)
-
+      
     console.log(this.formatedarray)
+    console.log(this.daysSelectedLid)
     for(var k=0;k<this.formatedarray.length;k++){
-        
+        this.inBtwnDates = this.getDates(new Date(this.formatedarray[k].fromDate),new Date(this.formatedarray[k].toDate))
+        this.inBtwnDatesFormatted = [];
+        for(var l=0;l<this.inBtwnDates.length;l++){
+            this.inBtwnDatesFormatted.push(this.inBtwnDates[l].toISOString().slice(0, 10))
+        }
+
+        // console.log(this.inBtwnDatesFormatted)
+        // this.daysSelectedLid.filter(function(item) {
+        //     return item.indexOf(this.inBtwnDatesFormatted) === -1;
+        // });
+            for(var w=0;w<this.daysSelectedLid.length;w++){
+                this.found =0;
+                this.notFound =0;
+                console.log(this.daysSelectedLid[w].lid)
+                for(var f=0;f<this.inBtwnDatesFormatted.length;f++){
+                    if(this.inBtwnDatesFormatted[f].indexOf(this.daysSelectedLid[w].date) > -1){
+                        this.found++;
+                        this.formatedarray[k]['lid'] = this.daysSelectedLid[w].lid
+                        break;
+                       }
+                       else{
+                         this.notFound++
+                       }
+                       if(this.notFound+1==this.daysSelectedLid.length){
+                           this.formatedarray[k]['lid'] = null
+                       }
+                       
+                }
+            }
+            
+           
         
     }
+    console.log(this.formatedarray)
     // var day = new Date(key);
     // console.log(day)
     // var date = day.getDate() + ' ' + this.month[day.getMonth()] + ' ' + day.getFullYear();

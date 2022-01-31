@@ -119,7 +119,9 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-row">
-                                <mat-calendar class="update-calender" [minDate]="todayDate" [dateFilter]="weekendsDatesFilter" #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar>
+                                <mat-calendar class="update-calender"  [minDate]="todayDate" [dateFilter]="weekendsDatesFilter" #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar>
+
+                                <!-- <mat-calendar class="update-calender" (monthSelected)="handleMonthSelected($event)" [minDate]="todayDate" [dateFilter]="weekendsDatesFilter" #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar> -->
                                 <!-- <mat-calendar #calendar (selectedChange)="select($event,calendar)" [dateClass]="isSelected"></mat-calendar> -->
                             <!-- <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
                                 outsideDays="hidden">
