@@ -1,6 +1,6 @@
 {
     "context":["/api/*","**"],
-    "target":"http://20.120.86.203:8080",
+    "target":"http://52.152.166.205:8080",
     "secure":false,
     "logLevel":"debug",
     "changeOrigin":true
