@@ -672,7 +672,7 @@ console.log(eventInfo)
 
       else{
         // innerHtml = eventInfo.event._def.title+"<span>"+eventInfo.event._def.extendedProps.name+"</span>";
-        return createElement = { html: '<div>'+eventInfo.event._def.extendedProps.name+'</div>' }
+        return createElement = { html: '<div style="color: white;font-weight: 500;text-align: center;">'+eventInfo.event._def.extendedProps.name+'</div>' }
       }
   }
 
