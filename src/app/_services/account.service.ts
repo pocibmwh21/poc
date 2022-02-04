@@ -17,13 +17,16 @@ export class AccountService {
         userInfo:null,
         teamInfo:null,
         allSkill:null,
-        allProjects:null
+        allProjects:null,
+        allLeavesYear:null
     }
 
     private userInfoData =  new BehaviorSubject([]);
     private teamInfoData =  new BehaviorSubject([]);
     private allSkillData = new BehaviorSubject([]);
     private allProjectsData = new BehaviorSubject([]);
+    private allLeavesDataYear = new BehaviorSubject(this.data.allLeavesYear);
+
 
 
 
@@ -109,7 +112,10 @@ export class AccountService {
         return this.http.delete(`/home/delete/${id}`);
     }
 
-
+    deleteLeave(lid){
+        console.log(lid)
+        return this.http.delete(`/home/leave/deleteLeaves`,lid);
+    }
     get userInfoFields(){
         return this.userInfoData.asObservable();
     }
@@ -128,6 +134,11 @@ export class AccountService {
 
     }
 
+    get allLeavesYearFields(){
+        return this.allLeavesDataYear.asObservable();
+
+    }
+
     getTeamData(page){
          this.http.get(`/home/user/getuserswithpagination?page=${page}`).subscribe(response=>{
              this.data.userInfo =  response;
@@ -139,6 +150,7 @@ export class AccountService {
 
     getAllSkillSets(){
         return this.http.get(`/home/getAllSkills`).subscribe(response=>{
+            console.log(response)
             this.data.allSkill = response;
             this.allSkillData.next(this.data.allSkill.payload)
         });
@@ -150,5 +162,13 @@ export class AccountService {
         });
     }
 
-    
+    getAllLeaves(month,year){
+        return this.http.get(`/home/leave/getUserLeavesByMonthAndYear?month=${month}&year=${year}`)
+        .pipe(map(response=>{
+            console.log( response[year])
+            this.data.allLeavesYear = response[year];
+            this.allLeavesDataYear.next(this.data.allLeavesYear)
+            return this.data.allLeavesYear
+        }))
+}
 }

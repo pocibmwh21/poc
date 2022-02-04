@@ -35,9 +35,13 @@
             </button> -->
             <div class="availabilityUpdate">
                 <div class="update-del-section">
-                      <button class="btn btn-primary" data-toggle="modal"
+                        <button class="btn btn-primary" (click)="openModal(addLeaveModal)">Update Leaves</button>
+                        <button class="delete-icon" data-toggle="modal" data-target="#myModal"><i
+                            class="fa fa-trash-o icon"></i></button>
+
+                      <!-- <button class="btn btn-primary" data-toggle="modal"
                       data-target="#myModal2">Update Leaves</button><button class="delete-icon" data-toggle="modal" data-target="#myModal"><i
-                          class="fa fa-trash-o icon"></i></button>
+                          class="fa fa-trash-o icon"></i></button> -->
                           <!-- <button class="btn btn-primary" [matMenuTriggerFor]="appMenu"
                          >Update Leaves</button> -->
                          <!-- <mat-menu #appMenu="matMenu" class="drop-calendar" >
@@ -50,7 +54,7 @@
                               class="fa fa-trash-o icon"></i></button> -->
                             
                 </div> 
-                <p style="font-size: 14px;font-weight: bolder; ">Availability Update</p>
+                <p style="font-size: 14px;font-weight: bolder; ">Leaves Update</p>
             </div>
             <div>
                     <full-calendar #calendar class="day-calender" [options]="calendarOptionstest"></full-calendar>
@@ -83,25 +87,40 @@
                 </div>
 
                 <div style="margin-left:48%;margin-top: 2%">
-                    <pagination-controls id="data_table" maxsize="5" directionLinks="true" (pageChange)="page=$event">
+                    <pagination-controls  *ngIf="deleteLeavesData.length>5" id="data_table" maxsize="5" directionLinks="true" (pageChange)="page=$event">
                     </pagination-controls>
                 </div>
 
                 <div class="modal-body modal-body2">
                     <table class="table">
-                        <tr *ngFor="let tableDatas of tableData | 
+                        <tr *ngFor="let tableDatas of deleteLeavesData | 
                         paginate:{id:'data_table',
                             itemsPerPage:5,currentPage:page,
                             totalItems:totalRecords}">
-                            <td>{{tableDatas.date}}</td>
+                            <td *ngIf="tableDatas.fromDate == tableDatas.toDate">{{tableDatas.fromDate}}</td>
+                            <td *ngIf="tableDatas.fromDate != tableDatas.toDate">{{tableDatas.fromDate}} - {{tableDatas.toDate}}</td>
+
+                            
                             <td>
-                                <button style="border: none;background: white;">
-                                    <i class="fa fa-trash-o icon" style="font-size: 18px;margin-right: -135px"></i>
-                                </button>
+                                    <input type="checkbox"
+                                    name="item-{{tableDatas.lid}}"
+                                    #deleteItem
+                                   (change)="OnCheckboxSelect(tableDatas.lid, $event)"
+                                  >
+                                <!-- <button (click)="deleteLeaves(tableDatas.lid)" style="border: none;background: white;">
+                                    <i class="fa fa-trash-o icon" style="font-size: 18px"></i>
+                                </button> -->
                             </td>
                         </tr>
                     </table>
+                    
                 </div>
+                <div style="width: 100%;margin-bottom: 5%;margin-left: -25px;">
+                            <button data-dismiss="modal" type="button"  class="btn cancel float-right">
+                                Cancel </button>
+                            <button class="btn save float-right" (click)="deleteLeaves()">  Save </button>
+        
+                        </div>
             </div>
         </div>
     </div>
@@ -119,7 +138,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-row">
-                                <mat-calendar class="update-calender"  [minDate]="todayDate" [dateFilter]="weekendsDatesFilter" #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar>
+                                <!-- <mat-calendar class="update-calender"  [minDate]="todayDate" [dateFilter]="weekendsDatesFilter" #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar> -->
 
                                 <!-- <mat-calendar class="update-calender" (monthSelected)="handleMonthSelected($event)" [minDate]="todayDate" [dateFilter]="weekendsDatesFilter" #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar> -->
                                 <!-- <mat-calendar #calendar (selectedChange)="select($event,calendar)" [dateClass]="isSelected"></mat-calendar> -->
@@ -138,9 +157,53 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn2" data-dismiss="modal">Cancel</button>
-                        <button (click)="updateLeaves()" class="btn btn-primary btn3">Save</button>
+                        <button  class="btn btn-primary btn3">Save</button>
                     </div>
                 </div>
             </div>
         </div>
+        <ng-template #addLeaveModal let-modal>
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Leaves</h5>
+                    <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close"> <span
+                            aria-hidden="true">&times;</span> </button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline">
+                        <div class="form-row">
+                            <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" [markDisabled]="markDisabled"
+						outsideDays="hidden">
+					</ngb-datepicker>
+
+					<ng-template #t let-date let-focused="focused">
+						<span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+							[class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+							(mouseleave)="hoveredDate = null">
+							{{ date.day }}
+						</span>
+					</ng-template>
+                            <!-- <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="tr" [markDisabled]="markDisabled"
+                                outsideDays="hidden">
+                            </ngb-datepicker>
+        
+                            <ng-template #tr let-date let-focused="focused">
+                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                    (mouseleave)="hoveredDate = null">
+                                    {{ date.day }}
+                                </span>
+                            </ng-template> -->
+                           
+                        </div>
+                       
+                        <div style="width:100%;margin-top: 5%;">
+                            <button (click)="modal.dismiss()" type="button"  class="btn cancel float-right">
+                                Cancel </button>
+                            <button class="btn save float-right" (click)="onLeaveUpdateSave()">  Save </button>
+        
+                        </div>
+        
+                    </form>
+                </div>
+            </ng-template>
 </div>

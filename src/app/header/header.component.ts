@@ -43,7 +43,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   oldIncorrect=false;
   updatePswdData;
   emptyOldPswd =false;
+  fieldTextType: boolean;
+  fieldTextType2: boolean;
+  fieldTextType3: boolean;
   oldIncorrectMsg;
+
   constructor(private accountService: AccountService,
       private commonService: CommonService,
       private modalService: NgbModal,
@@ -136,6 +140,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   }
 
+  toggleFieldTextType() {
+    this.fieldTextType = !this.fieldTextType;
+  }
+  toggleFieldTextType2() {
+    this.fieldTextType2 = !this.fieldTextType2;
+  }
+  toggleFieldTextType3() {
+    this.fieldTextType3 = !this.fieldTextType3;
+  }
 
   ngOnDestroy(): void {
       this.subscriptionName.unsubscribe();

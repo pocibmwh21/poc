@@ -15,7 +15,7 @@
 }
 a{
     color: #707070;
-
+    
 }
 a:visited{
     color: #0072c7 !important;
@@ -36,7 +36,7 @@ a:visited{
 
 label{
     color: #909192;
-    font-weight: bold;
+    font-weight: 300;
 }
 input{
     background: white;
@@ -44,6 +44,10 @@ input{
     border: 1px solid;
     color: #909192;
 }
+input::-ms-reveal,
+      input::-ms-clear {
+        display: none;
+     }
 
 .modal-title{
     font-size: 18px;

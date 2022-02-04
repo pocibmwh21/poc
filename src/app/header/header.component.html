@@ -1,22 +1,32 @@
 <div class="navbar navbar-expand-lg navbar-dark nav-custom header-section">
 	<div class="container">
-		<a href="" class="navbar-brand"> <img width="255" src="../assets/img/logo-image.png"> 
-			<img style="margin-top: 6px;"width="35" src="../assets/img/ust.png"> 
+		<a href="" class="navbar-brand"> <img width="255" src="../assets/img/logo-image.png">
+			<img style="margin-top: 6px;" width="35" src="../assets/img/ust.png">
 		</a>
-		<button class="navbar-toggler" data-toggle="collapse" data-target="#main-navbar" aria-expanded="true"> <span class="ti-menu"></span> </button>
+		<button class="navbar-toggler" data-toggle="collapse" data-target="#main-navbar" aria-expanded="true"> <span
+				class="ti-menu"></span> </button>
 		<div class="collapse navbar-collapse" id="main-navbar">
 			<ul class="navbar-nav ml-auto">
-				<li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"> <a routerLink="/" class="nav-link">My Info</a> </li>
-				<li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"> <a routerLink="/teaminfo" class="nav-link">Team Info</a> </li>
-				<li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"> <a routerLink="/leavetracker" class="nav-link">Leave Tracker</a> </li>
-				<li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"> <a routerLink="/aboutus" class="nav-link">About</a> </li>
+				<li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"> <a
+						routerLink="/" class="nav-link">My Info</a> </li>
+				<li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"> <a
+						routerLink="/teaminfo" class="nav-link">Team Info</a> </li>
+				<li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"> <a
+						routerLink="/leavetracker" class="nav-link">Leave Tracker</a> </li>
+				<li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}"> <a
+						routerLink="/aboutus" class="nav-link">About</a> </li>
 				<li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
-					<a style="pointer-events: none;" routerLink="/leavetracker" class="nav-link"><img width="15" height="15" src="../assets/img/notification.png"></a>
+					<a style="pointer-events: none;" routerLink="/leavetracker" class="nav-link"><img width="15"
+							height="15" src="../assets/img/notification.png"></a>
 				</li>
-				<li class="nav-item dropdown"> <a style="color: #0072c7 !important;" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">{{user.userInfo.firstName}}</a>
-					<div class="dropdown-menu"> <a class="dropdown-item" (click)="openModal(changePassword)">Change Password</a> <a class="dropdown-item" (click)="logout()">Logout</a> </div>
+				<li class="nav-item dropdown"> <a style="color: #0072c7 !important;" class="nav-link dropdown-toggle"
+						data-toggle="dropdown" href="#">{{user.userInfo.firstName}}</a>
+					<div class="dropdown-menu"> <a class="dropdown-item" (click)="openModal(changePassword)">Change
+							Password</a> <a class="dropdown-item" (click)="logout()">Logout</a> </div>
 				</li>
-				<li> <img *ngIf="retrievedImage!=null" width="40" height="40" class="rounded-circle article-img" src={{retrievedImage}} id="img"> <span *ngIf="retrievedImage==null" class="no-image-header">{{noImageAbbr}}</span> </li>
+				<li> <img *ngIf="retrievedImage!=null" width="40" height="40" class="rounded-circle article-img"
+						src={{retrievedImage}} id="img"> <span *ngIf="retrievedImage==null"
+						class="no-image-header">{{noImageAbbr}}</span> </li>
 			</ul>
 		</div>
 	</div>
@@ -24,29 +34,60 @@
 <ng-template #changePassword let-modal>
 	<div class="modal-header">
 		<h5 class="modal-title">Change Password</h5>
-		<button type="button" class="close" (click)="modal.dismiss()" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+		<button type="button" class="close" (click)="modal.dismiss()" aria-label="Close"> <span
+				aria-hidden="true">&times;</span> </button>
 	</div>
 	<div class="modal-body">
 		<form class="form-inline">
 			<div class="form-row col-12">
-				<label class="form-group border-lable-flt col-12 mb-4">
-					<input type="password" name="oldPassword" class="custom-select col-12" [(ngModel)]="oldPassword" /> <span>Old Password</span> </label>
+				<label class="form-group border-lable-flt col-10 mb-4">
+					<input type="password" name="oldPassword" class="custom-select col-12" [type]="fieldTextType ? 'text' : 'password'" [(ngModel)]="oldPassword" />
+					<span>Old Password</span> </label>
+					<div class="input-group-append col-2 mb-4">
+                        <span class="input-group-text">
+                            <i class="fa" [ngClass]="{
+                                'fa-eye-slash': !fieldTextType,
+                                'fa-eye': fieldTextType
+                              }" (click)="toggleFieldTextType()"></i>
+                        </span>
+                    </div>
+			</div>
+
+			<div class="form-row col-12">
+				<label class="form-group border-lable-flt col-10 mb-4">
+					<input type="password" name="newPassword" class="custom-select col-12" [type]="fieldTextType2 ? 'text' : 'password'" [(ngModel)]="newPassword"
+						[ngClass]="{ 'is-invalid':newConfirmMisMatch || minLengthError}" /> <span>New Password</span>
+				</label>
+				<div class="input-group-append col-2 mb-4">
+					<span class="input-group-text">
+						<i class="fa" [ngClass]="{
+							'fa-eye-slash': !fieldTextType2,
+							'fa-eye': fieldTextType2
+						  }" (click)="toggleFieldTextType2()"></i>
+					</span>
+				</div>
 			</div>
 			<div class="form-row col-12">
-				<label class="form-group border-lable-flt col-12 mb-4">
-					<input type="password" name="newPassword" class="custom-select col-12" [(ngModel)]="newPassword" [ngClass]="{ 'is-invalid':newConfirmMisMatch || minLengthError}" /> <span>New Password</span> </label>
-			</div>
-			<div class="form-row col-12">
-				<label class="form-group border-lable-flt col-12 mb-4">
-					<input type="password" name="confirmPassword" class="custom-select col-12" [(ngModel)]="confirmPassword" [ngClass]="{ 'is-invalid':newConfirmMisMatch ||minLengthError}" /> <span>Confirm Password</span> </label>
+				<label class="form-group border-lable-flt col-10 mb-4">
+					<input type="password" name="confirmPassword" class="custom-select col-12" [type]="fieldTextType3 ? 'text' : 'password'"
+						[(ngModel)]="confirmPassword" [ngClass]="{ 'is-invalid':newConfirmMisMatch ||minLengthError}" />
+					<span>Confirm Password</span> </label>
+					<div class="input-group-append col-2 mb-4">
+                        <span class="input-group-text">
+                            <i class="fa" [ngClass]="{
+                                'fa-eye-slash': !fieldTextType3,
+                                'fa-eye': fieldTextType3
+                              }" (click)="toggleFieldTextType3()"></i>
+                        </span>
+                    </div>
 			</div>
 			<div *ngIf="newConfirmMisMatch" class="error">
 				<div>Mismatch in new password and confirm password</div>
 			</div>
 			<div *ngIf="minLengthError" class="error">
-				<div>Password should be  in between 8 and 15 charecters</div>
+				<div>Password should be in between 8 and 15 charecters</div>
 			</div>
-			
+
 			<div *ngIf="oldNewSame" class="error">
 				<div>New Password should not be same as old password</div>
 			</div>
@@ -55,7 +96,8 @@
 			</div>
 			<div style="width:100%;margin-top: 5%;">
 				<button class="btn save float-right" (click)="saveChangePassword()">
-					<!-- <span  class="spinner-border spinner-border-sm mr-1"></span>  -->Save </button>
+					<!-- <span  class="spinner-border spinner-border-sm mr-1"></span>  -->Save
+				</button>
 				<button class="btn cancel float-right" (click)="modal.dismiss()">cancel </button>
 			</div>
 		</form>

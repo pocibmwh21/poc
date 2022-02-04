@@ -255,7 +255,7 @@ export class MyinfoComponent implements OnInit {
     this.modalService.dismissAll();
     this.leaveData = { "fromDate": this.fromDateFormatted, "toDate": this.toDateFormatted, "user": { "id": this.user.id } }
     this.http
-      .post(`/home/user/addleave`, this.leaveData)
+      .post(`/home/leave/addleave`, this.leaveData)
       .subscribe((response) => {
         if (response) {
           this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
@@ -735,7 +735,13 @@ export class MyinfoComponent implements OnInit {
         } else {
           this.message = 'Image not uploaded successfully';
         }
-      });
+      },
+      (error) => {
+        console.log(error)
+        this.alertService.error(error);
+
+      }
+      );
   }
   //remove photo
   removePhoto() {
