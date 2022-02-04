@@ -6,30 +6,42 @@
             margin-left:96%;cursor: pointer;" (click)="editForm()">
 		<div class="row">
 			<div class="col-lg-6 user-content">
-				<div id="hovering" class="hovereffect">
-					<p *ngIf="noImage" class="no-image">{{noImageAbbr}}</p>
-					<p *ngIf="loadingImage" class="spinner-border spinner-border-lg align-center"
-						style="margin-top: 43%;"></p>
+				<div class="row">
+					<div class="col-lg-6">
+						<div id="hovering" class="hovereffect">
+							<p *ngIf="noImage" class="no-image">{{noImageAbbr}}</p>
+							<p *ngIf="loadingImage" class="spinner-border spinner-border-lg align-center"
+								style="margin-top: 43%;"></p>
 
-					<img *ngIf="!loadingImage" width="200" height="200"
-						class="rounded-circle article-img img-responsive" src={{retrievedImage}}>
-					<div class="overlay">
-						<input type="file" id="upload" (change)="onFileChanged($event)" hidden #myFileInput/>
-						<label class="info info-label" for="upload"><img src="../assets/img/upload-icon.png"></label>
-						<div>
-							<img (click)="removePhoto()" id="remove-photo" class="info"
-								src="../assets/img/del-icon.png">
+							<img *ngIf="!loadingImage" width="200" height="200"
+								class="rounded-circle article-img img-responsive" src={{retrievedImage}}>
+							<div class="overlay">
+								<input type="file" id="upload" (change)="onFileChanged($event)" hidden #myFileInput />
+								<label class="info info-label" for="upload"><img
+										src="../assets/img/upload-icon.png"></label>
+								<div>
+									<img (click)="removePhoto()" id="remove-photo" class="info"
+										src="../assets/img/del-icon.png">
+								</div>
+							</div>
 						</div>
 					</div>
-				</div> 
-              <span class="details-section d-inline-block">
-                        <p></p>
-                        <p class="user-name break-word-text"><span class="user-name">{{userInfo.firstName}}</span>&nbsp;<span class="user-name">{{userInfo.middleName}}</span>&nbsp;<span class="user-name">{{userInfo.lastName}}</span>
-                        <p class="text-muted">{{userInfo.designation.title}}</p>
-                        <br>
-                        <button class="addLeave-btn" (click)="openModal(addLeaveModal, user)">+&nbsp;&nbsp;Leaves</button>
-                    </span> </div>
-			<div  class="col-lg-6 align-items-center d-flex">
+
+					<div class="col-lg-6">
+						<div class="user-name">
+							<p>{{userInfo.firstName}} {{userInfo.middleName}} {{userInfo.lastName}}</p>
+
+						
+							<div>
+								<p class="text-muted p-designation">{{userInfo.designation.title}}</p>
+								<button class="addLeave-btn"
+									(click)="openModal(addLeaveModal, user)">+&nbsp;&nbsp;Leaves</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6 align-items-center d-flex">
 				<form class="edit-form" *ngIf="isEditForm" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
 					<div class="form-row">
 						<div class="form-group  data-section col-7">
@@ -67,7 +79,8 @@
 									[ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
 									<option value="">Select Gender</option>
 									<option *ngFor="let gender of allGender" [ngValue]="gender"
-										[attr.selected]="gender==userInfo.gender?'selected':null">{{gender}}</option>
+										[attr.selected]="gender==userInfo.gender?'selected':null">{{gender}}
+									</option>
 								</select>
 
 								<span>Gender</span> </label>
@@ -89,7 +102,8 @@
 									[ngClass]="{ 'is-invalid': submitted && f.location.errors }">
 									<option value="">Select Location</option>
 									<option *ngFor="let location of allInfos.commonInfo.locations" [value]="location"
-										[attr.selected]="location==userInfo.location.name?'selected':null">{{location}}
+										[attr.selected]="location==userInfo.location.name?'selected':null">
+										{{location}}
 									</option>
 								</select> <span>Location</span> </label>
 							<div *ngIf="submitted && f.location.errors" class="invalid-feedback">
@@ -101,7 +115,8 @@
 						<div class="form-group data-section col-5">
 							<label class="form-group border-lable-flt">
 								<input type="text" formControlName="techstack" class="custom-select col-12"
-									[ngClass]="{ 'is-invalid': submitted && f.techstack.errors }" /> <span>Role</span>
+									[ngClass]="{ 'is-invalid': submitted && f.techstack.errors }" />
+								<span>Role</span>
 							</label>
 							<div *ngIf="submitted && f.techstack.errors" class="invalid-feedback">
 								<div *ngIf="f.techstack.errors.required">Role is required</div>
@@ -127,7 +142,8 @@
 								(onDeSelect)="onItemDeSelectSecondary($event)"
 								(onFilterChange)="onFilterChangSecondarySearch($event)"
 								(onDropDownClose)="onDropDownCloseSecondary()"> </ng-multiselect-dropdown>
-							<p *ngIf="showAddNewPrimary" class="btn btn-primary" (click)="addNewPrimarySkills()">+</p>
+							<p *ngIf="showAddNewPrimary" class="btn btn-primary" (click)="addNewPrimarySkills()">+
+							</p>
 							<p *ngIf="showAddNewSecondary" class="btn btn-primary" (click)="addNewSecondarySkills()">+
 							</p>
 							<div>
@@ -144,37 +160,47 @@
 										height="10" src="../assets/img/close-icon.png">
 								</span>
 							</div>
-							<div style="padding-top: 4%;" *ngIf="submitted && primarySet.length==0 || submitted && primarySet.length>5 "
+							<div style="padding-top: 4%;"
+								*ngIf="submitted && primarySet.length==0 || submitted && primarySet.length>5 "
 								class="invalid-feedback">
-								<div *ngIf="primarySet.length==0||primarySet.length>5">Mininum 1 primary skill is required and maximum 5 primary skills can be added </div>
+								<div *ngIf="primarySet.length==0||primarySet.length>5">Mininum 1 primary skill is
+									required and maximum 5 primary skills can be added </div>
 
 							</div>
-							<div style="padding-top: 2%;" *ngIf="submitted && secondarySet.length==0 || submitted && secondarySet.length>5"
+							<div style="padding-top: 2%;"
+								*ngIf="submitted && secondarySet.length==0 || submitted && secondarySet.length>5"
 								class="invalid-feedback">
-								<div *ngIf="secondarySet.length==0||secondarySet.length>5">Mininum 1 secondary skill is required and maximum 5 secondary skills can be added </div>
+								<div *ngIf="secondarySet.length==0||secondarySet.length>5">Mininum 1 secondary skill
+									is
+									required and maximum 5 secondary skills can be added </div>
 
 							</div>
 
 						</div>
 					</div>
 					<div class="form-group float-right">
-						<p *ngIf="primarySkillBoolean" (click)="addSecondarySkill()" class="sec-skill-add">Add Secondary
+						<p *ngIf="primarySkillBoolean" (click)="addSecondarySkill()" class="sec-skill-add">Add
+							Secondary
 							Skills</p>
-						<p *ngIf="!primarySkillBoolean" (click)="addPrimarySkill()" class="sec-skill-add">Add Primary
+						<p *ngIf="!primarySkillBoolean" (click)="addPrimarySkill()" class="sec-skill-add">Add
+							Primary
 							Skills</p>
 						<button [disabled]="loading" class="btn save"> <span *ngIf="loading"
 								class="spinner-border spinner-border-sm mr-1"></span> Save </button>
 						<button [disabled]="loading" class="btn cancel" (click)="cancelEdit()"> <span *ngIf="loading"
-								class="spinner-border spinner-border-sm mr-1"></span> cancel </button>
+								class="spinner-border spinner-border-sm mr-1"></span> cancel
+						</button>
 					</div>
 				</form>
 				<ul *ngIf="!isEditForm" class="list-unstyled row">
 					<li class="list-item col-6"><b>Emp ID:&nbsp;&nbsp;</b>{{userInfo.empId}}</li>
 					<li class="list-item col-6" *ngIf="userInfo.mobileNo!=null"> <b>Mobile
 							No:&nbsp;&nbsp;</b>{{userInfo.mobileNo}}</li>
-					<li class="list-item col-6" *ngIf="userInfo.mobileNo==null"> <b>Mobile No:&nbsp;&nbsp;</b>---</li>
+					<li class="list-item col-6" *ngIf="userInfo.mobileNo==null"> <b>Mobile No:&nbsp;&nbsp;</b>---
+					</li>
 
-					<li class="list-item col-6 show-elipse-static" title="{{userInfo.email}}"><b>Email:&nbsp;&nbsp;</b>
+					<li class="list-item col-6 show-elipse-static" title="{{userInfo.email}}">
+						<b>Email:&nbsp;&nbsp;</b>
 						{{userInfo.email}}</li>
 
 					<li class="list-item col-6" *ngIf="userInfo.gender!=null">
@@ -189,7 +215,8 @@
 
 					<li class="list-item col-6" *ngIf="userInfo.location.name!=null"><b> Location
 							:&nbsp;&nbsp;</b>{{userInfo.location.name}}</li>
-					<li class="list-item col-6" *ngIf="userInfo.location.name==null"><b> Location :&nbsp;&nbsp;</b>---
+					<li class="list-item col-6" *ngIf="userInfo.location.name==null"><b> Location
+							:&nbsp;&nbsp;</b>---
 					</li>
 					<li class="list-item col-6 show-elipse-static" title="{{projectCommaSeparate}}">
 						<b>Project:&nbsp;&nbsp;</b><span class="project-name" (click)="onProjectSelect(project)"
@@ -216,9 +243,9 @@
 		<div class="modal-body">
 			<form class="form-inline">
 				<div class="form-row">
-						
-					<ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" [markDisabled]="markDisabled"
-						outsideDays="hidden">
+
+					<ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t"
+						[markDisabled]="markDisabled" outsideDays="hidden">
 					</ngb-datepicker>
 
 					<ng-template #t let-date let-focused="focused">
