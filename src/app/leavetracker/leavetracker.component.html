@@ -5,6 +5,7 @@
             <div class="leave-tracker-text">LEAVE TRACKER</div>
 
             <div class="calendra-margin">
+                    <span *ngIf="insideData==false" class="spinner-border spinner-border-lg align-center"></span> 
                 <full-calendar #monthcalender class="leave-calender" [options]="calendarOptions"></full-calendar>
 
             </div>
@@ -13,26 +14,8 @@
 
         </div>
 
-        <!-- <button [matMenuTriggerFor]="appMenu">
-           calendar_today
-          </button>
-          <mat-menu #appMenu="matMenu" class="drop-calendar" >
-              <div (click)="$event.stopPropagation()">
-                  <mat-calendar #calendar (selectedChange)="select($event,calendar)" [dateClass]="isSelected"></mat-calendar>
-              </div>
-          </mat-menu>
-          <pre>
-          {{daysSelected|json}}
-          </pre> -->
-        
-
         <div class="col-md-3 delete-icon-position">
 
-            
-            <!-- <button class="date-button"><i class="fa fa-angle-left icon"></i>
-                <span>OCT-2021</span>
-                <i class="fa fa-angle-right icon"></i>
-            </button> -->
             <div class="availabilityUpdate">
                 <div class="update-del-section">
                         <button class="btn btn-primary" (click)="openModal(addLeaveModal)">Update Leaves</button>
@@ -163,7 +146,7 @@
                                 </tr>
                             </table>
 
-                            <div style="width: 100%;margin-bottom: 5%;margin-left: -25px;">
+                            <div *ngIf ="deleteLeavesData.length!=0" style="width: 100%;margin-bottom: 5%;margin-left: -25px;">
                                     <button (click)="modal.dismiss()" type="button"  class="btn cancel float-right">
                                         Cancel </button>
                                     <button  class="btn save float-right" (click)="deleteLeaves()">  Save </button>

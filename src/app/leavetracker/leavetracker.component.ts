@@ -108,6 +108,7 @@ base64Data;
   toDateFormatted;
   markDisabled;
   leaveData;
+  insideData = false;
   //sample data
 
   public_holiday = [{
@@ -311,9 +312,12 @@ base64Data;
 
   //get leave data from api
   getLeaveData(cMonth,cYear,cMonthName){
+    this.insideData =false;
+
     this.accountService.getAllLeaves(cMonth,cYear).subscribe(
         (data) => {
             this.dataFromBackend = {...data};
+            this.insideData =true;
             this.convertJsonData(cMonthName,cYear);
 
     
@@ -517,17 +521,14 @@ base64Data;
     // console.log(this.leaveLid)
     this.modalService.dismissAll();
     this.accountService.deleteLeave(this.selectedIds).subscribe((res) => {
-      if (res) {
           
-        this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
         setTimeout(() => {
           this.alertService.clear();
         }, 5000);
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
           this.router.navigate([this.router.url]);
-        
-      }
+          this.alertService.success('Leaves deleted successfully', { keepAfterRouteChange: false });
 
 
     },
@@ -598,13 +599,14 @@ openModal(targetModal) {
       .subscribe((response) => {
         if (response) {
           
-          this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
           setTimeout(() => {
             this.alertService.clear();
           }, 5000);
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
             this.router.onSameUrlNavigation = 'reload';
             this.router.navigate([this.router.url]);
+            this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
+
           
         }
 
