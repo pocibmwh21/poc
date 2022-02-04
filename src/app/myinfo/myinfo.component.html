@@ -45,7 +45,7 @@
 				<form class="edit-form" *ngIf="isEditForm" [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
 					<div class="form-row">
 						<div class="form-group  data-section col-7">
-							<label for="empId">EmpID:</label>
+							<label for="empId">Emp ID:</label>
 							<input disabled type="text" formControlName="empId" class="col-6 form-control no-outline"
 								[ngClass]="{ 'is-invalid': submitted && f.empId.errors }" />
 							<div *ngIf="submitted && f.empId.errors" class="invalid-feedback">
