@@ -1,6 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -114,7 +114,13 @@ export class AccountService {
 
     deleteLeave(lid){
         console.log(lid)
-        return this.http.delete(`/home/leave/deleteLeaves`,lid);
+        let options = {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+            }),
+            body: lid,
+          };
+        return this.http.delete(`/home/leave/deleteLeaves`,options);
     }
     get userInfoFields(){
         return this.userInfoData.asObservable();
@@ -167,7 +173,7 @@ export class AccountService {
         .pipe(map(response=>{
             console.log( response[year])
             this.data.allLeavesYear = response[year];
-            this.allLeavesDataYear.next(this.data.allLeavesYear)
+            this.allLeavesDataYear.next(this.data.allLeavesYear);
             return this.data.allLeavesYear
         }))
 }

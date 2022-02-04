@@ -512,11 +512,28 @@ base64Data;
       
   }
   deleteLeaves(){
+
     // this.leaveLid.push(lid)
     // console.log(this.leaveLid)
-    console.log(this.selectedIds)
+    this.modalService.dismissAll();
     this.accountService.deleteLeave(this.selectedIds).subscribe((res) => {
+      if (res) {
+          
+        this.alertService.success('Leaves updated saved successfully', { keepAfterRouteChange: false });
+        setTimeout(() => {
+          this.alertService.clear();
+        }, 5000);
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigate([this.router.url]);
         
+      }
+
+
+    },
+      (error) => {
+        console.log(error)
+        this.alertService.error(error, { keepAfterRouteChange: false });
       });
   }
 //open add Leave model
@@ -526,6 +543,7 @@ openModal(targetModal) {
       centered: true,
       backdrop: 'static',
     });
+
   }
 
   onDateSelection(date: NgbDate) {
@@ -712,127 +730,127 @@ console.log(eventInfo)
   // }
 
 
-//   isSelected = (event: any) => {
-//     const date =
-//       event.getFullYear() +
-//       "-" +
-//       ("00" + (event.getMonth() + 1)).slice(-2) +
-//       "-" +
-//       ("00" + event.getDate()).slice(-2);
-//     return this.daysSelected.find(x => x == date) ? "selected" : null;
-//   };
+  isSelected = (event: any) => {
+    const date =
+      event.getFullYear() +
+      "-" +
+      ("00" + (event.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("00" + event.getDate()).slice(-2);
+    return this.daysSelected.find(x => x == date) ? "selected" : null;
+  };
 
-//   select(event: any, calendardate: any) {
-//     const date =
-//       event.getFullYear() +
-//       "-" +
-//       ("00" + (event.getMonth() + 1)).slice(-2) +
-//       "-" +
-//       ("00" + event.getDate()).slice(-2);
-//     const index = this.daysSelected.findIndex(x => x == date);
-//     if (index < 0) this.daysSelected.push(date);
-//     else this.daysSelected.splice(index, 1);
-//     calendardate.updateTodaysDate();
-//   }
+  select(event: any, calendardate: any) {
+    const date =
+      event.getFullYear() +
+      "-" +
+      ("00" + (event.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("00" + event.getDate()).slice(-2);
+    const index = this.daysSelected.findIndex(x => x == date);
+    if (index < 0) this.daysSelected.push(date);
+    else this.daysSelected.splice(index, 1);
+    calendardate.updateTodaysDate();
+  }
  
-//   updateLeaves(){
+  updateLeaves(){
 
-//       this.updatedLeaves = [];
-//       this.formatedarray = [];
-//       this.index=0;
-//       console.log(this.daysSelected)
+      this.updatedLeaves = [];
+      this.formatedarray = [];
+      this.index=0;
+      console.log(this.daysSelected)
 
-//       this.daysSelectedset = new Set(this.daysSelected)
-//        this.daysSelected = Array.from(this.daysSelectedset)
-//        this.daysSelectedLidset= new Set(this.daysSelectedLid)
-//        this.daysSelectedLid = Array.from(this.daysSelectedLidset)
-//       this.sorteddaysSelected = this.daysSelected.sort((a, b) => b < a ? 1: -1);
-//       var j,i
-//       console.log(this.sorteddaysSelected)
-//       for(i=this.index;i<this.sorteddaysSelected.length;i++){
-//           console.log(this.index)
-//           i=this.index;
-//         this.from = this.sorteddaysSelected[i]
-//         var count=0;
-//         var first_iteration = true;
-//           for( j=this.index;j<this.sorteddaysSelected.length;j++){
-//             count++
-//             console.log(new Date(this.sorteddaysSelected[j+1]).getDate())
-//             console.log(new Date(this.sorteddaysSelected[i]).getDate()+count);
-//             if(new Date(this.sorteddaysSelected[j+1]).getDate()== new Date(this.sorteddaysSelected[i]).getDate()+count){
-//                 this.to = this.sorteddaysSelected[j+1]
-//                 first_iteration = false;
-//             }
+      this.daysSelectedset = new Set(this.daysSelected)
+       this.daysSelected = Array.from(this.daysSelectedset)
+      //  this.daysSelectedLidset= new Set(this.daysSelectedLid)
+      //  this.daysSelectedLid = Array.from(this.daysSelectedLidset)
+      this.sorteddaysSelected = this.daysSelected.sort((a, b) => b < a ? 1: -1);
+      var j,i
+      console.log(this.sorteddaysSelected)
+      for(i=this.index;i<this.sorteddaysSelected.length;i++){
+          console.log(this.index)
+          i=this.index;
+        this.from = this.sorteddaysSelected[i]
+        var count=0;
+        var first_iteration = true;
+          for( j=this.index;j<this.sorteddaysSelected.length;j++){
+            count++
+            console.log(new Date(this.sorteddaysSelected[j+1]).getDate())
+            console.log(new Date(this.sorteddaysSelected[i]).getDate()+count);
+            if(new Date(this.sorteddaysSelected[j+1]).getDate()== new Date(this.sorteddaysSelected[i]).getDate()+count){
+                this.to = this.sorteddaysSelected[j+1]
+                first_iteration = false;
+            }
            
-//          else if(first_iteration ==true && new Date(this.sorteddaysSelected[j+1]).getDate()!= new Date(this.sorteddaysSelected[i]).getDate()+count){
-//             this.to=this.from;
-//             this.formatedarray.push({"fromDate":this.from,"toDate":this.to})
-//             break;
-//          }           
-//          else{
-//             this.formatedarray.push({"fromDate":this.from,"toDate":this.to})
-//             break;
-//         }
+         else if(first_iteration ==true && new Date(this.sorteddaysSelected[j+1]).getDate()!= new Date(this.sorteddaysSelected[i]).getDate()+count){
+            this.to=this.from;
+            this.formatedarray.push({"fromDate":this.from,"toDate":this.to})
+            break;
+         }           
+         else{
+            this.formatedarray.push({"fromDate":this.from,"toDate":this.to})
+            break;
+        }
          
 
-//           }
+          }
 
-//           this.index =this.sorteddaysSelected.indexOf(this.to)+1
+          this.index =this.sorteddaysSelected.indexOf(this.to)+1
 
-//           console.log(this.index)
+          console.log(this.index)
 
           
-//       }
-//        this.formatedarraySet = new Set(this.formatedarray)
-//        this.formatedarray = Array.from(this.formatedarraySet)
+      }
+       this.formatedarraySet = new Set(this.formatedarray)
+       this.formatedarray = Array.from(this.formatedarraySet)
       
-//     console.log(this.formatedarray)
-//     console.log(this.daysSelectedLid)
-//     for(var k=0;k<this.formatedarray.length;k++){
-//         this.inBtwnDates = this.getDates(new Date(this.formatedarray[k].fromDate),new Date(this.formatedarray[k].toDate))
-//         this.inBtwnDatesFormatted = [];
-//         for(var l=0;l<this.inBtwnDates.length;l++){
-//             this.inBtwnDatesFormatted.push(this.inBtwnDates[l].toISOString().slice(0, 10))
-//         }
+    console.log(this.formatedarray)
+    console.log(this.daysSelectedLid)
+    for(var k=0;k<this.formatedarray.length;k++){
+        this.inBtwnDates = this.getDates(new Date(this.formatedarray[k].fromDate),new Date(this.formatedarray[k].toDate))
+        this.inBtwnDatesFormatted = [];
+        for(var l=0;l<this.inBtwnDates.length;l++){
+            this.inBtwnDatesFormatted.push(this.inBtwnDates[l].toISOString().slice(0, 10))
+        }
 
-//         // console.log(this.inBtwnDatesFormatted)
-//         // this.daysSelectedLid.filter(function(item) {
-//         //     return item.indexOf(this.inBtwnDatesFormatted) === -1;
-//         // });
-//             for(var w=0;w<this.daysSelectedLid.length;w++){
-//                 this.found =0;
-//                 this.notFound =0;
-//                 console.log(this.daysSelectedLid[w].lid)
-//                 for(var f=0;f<this.inBtwnDatesFormatted.length;f++){
-//                     if(this.inBtwnDatesFormatted[f].indexOf(this.daysSelectedLid[w].date) > -1){
-//                         this.found++;
-//                         this.formatedarray[k]['lid'] = this.daysSelectedLid[w].lid
-//                         break;
-//                        }
-//                        else{
-//                          this.notFound++
-//                        }
-//                        if(this.notFound+1==this.daysSelectedLid.length){
-//                            this.formatedarray[k]['lid'] = null
-//                        }
+        // console.log(this.inBtwnDatesFormatted)
+        // this.daysSelectedLid.filter(function(item) {
+        //     return item.indexOf(this.inBtwnDatesFormatted) === -1;
+        // });
+            for(var w=0;w<this.daysSelectedLid.length;w++){
+                this.found =0;
+                this.notFound =0;
+                console.log(this.daysSelectedLid[w].lid)
+                for(var f=0;f<this.inBtwnDatesFormatted.length;f++){
+                    if(this.inBtwnDatesFormatted[f].indexOf(this.daysSelectedLid[w].date) > -1){
+                        this.found++;
+                        this.formatedarray[k]['lid'] = this.daysSelectedLid[w].lid
+                        break;
+                       }
+                       else{
+                         this.notFound++
+                       }
+                       if(this.notFound+1==this.daysSelectedLid.length){
+                           this.formatedarray[k]['lid'] = null
+                       }
                        
-//                 }
-//             }
+                }
+            }
             
            
         
-//     }
-//     console.log(this.formatedarray)
-//     // var day = new Date(key);
-//     // console.log(day)
-//     // var date = day.getDate() + ' ' + this.month[day.getMonth()] + ' ' + day.getFullYear();
+    }
+    console.log(this.formatedarray)
+    // var day = new Date(key);
+    // console.log(day)
+    // var date = day.getDate() + ' ' + this.month[day.getMonth()] + ' ' + day.getFullYear();
 
-//   }
+  }
 
-//   weekendsDatesFilter = (d: Date): boolean => {
-//     const day = d.getDay();
+  weekendsDatesFilter = (d: Date): boolean => {
+    const day = d.getDay();
 
-//     /* Prevent Saturday and Sunday for select. */
-//     return day !== 0 && day !== 6 ;
-// }
+    /* Prevent Saturday and Sunday for select. */
+    return day !== 0 && day !== 6 ;
+}
 }
