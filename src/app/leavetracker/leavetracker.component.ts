@@ -89,6 +89,7 @@ export class LeavetrackerComponent implements OnInit {
   notFound;
   userid;
   dataFromBackend ={};
+  allLeaves = {};
   calendarOptions :CalendarOptions
   calendarOptionstest:CalendarOptions = {
     initialView: 'dayGridDay',
@@ -109,6 +110,9 @@ base64Data;
   markDisabled;
   leaveData;
   insideData = false;
+  listDatesUser = [];
+  allUserLeaves = [];
+  isDisabled;
   //sample data
 
   public_holiday = [{
@@ -240,6 +244,13 @@ base64Data;
       }
 
   ];
+
+  date: {year: number, month: number};
+  
+  disabledDates: NgbDateStruct[] = [ 
+    {year: 2050, month:4, day:10},
+  
+  ]
   @ViewChildren('deleteItem') item;
   selectedIds = [];
   constructor(private calendar: NgbCalendar,
@@ -253,7 +264,9 @@ base64Data;
       private router: Router,
       ) {
       this.user = this.accountService.userValue;
-      this.markDisabled = (date: NgbDate) => calendar.getWeekday(date) >= 6;
+      this.markDisabled = (date: NgbDate) =>{
+        calendar.getWeekday(date) >= 6;
+      } 
     const current = new Date();
     config.minDate = {
       year: current.getFullYear(), month:
@@ -277,9 +290,9 @@ base64Data;
       let cDay = currentDate.getDate()
       let cMonthName = this.month[currentDate.getMonth()].toUpperCase();
       let cMonth = currentDate.getMonth()+1
-      let cYear = currentDate.getFullYear()
+      let cYear = currentDate.getFullYear();
+      this.getAllLeaves();
       this.getLeaveData(cMonth,cYear,cMonthName)
-   
   }
   ngAfterViewChecked() {
       this.calendarApi = this.calendarComponent.getApi();
@@ -314,7 +327,7 @@ base64Data;
   getLeaveData(cMonth,cYear,cMonthName){
     this.insideData =false;
 
-    this.accountService.getAllLeaves(cMonth,cYear).subscribe(
+    this.accountService.getAllLeavesByMonthYear(cMonth,cYear).subscribe(
         (data) => {
             this.dataFromBackend = {...data};
             this.insideData =true;
@@ -327,8 +340,60 @@ base64Data;
         }
     );
   }
- 
- 
+  getAllLeaves(){
+    this.accountService.getAllLeaves().subscribe(
+      (data) => {
+          this.allLeaves = {...data};
+          this.processAllLeaves()
+        console.log(this.allLeaves)
+  
+      },
+      (error) => {
+          // this.alertService.error(error);
+      }
+  );
+}
+processAllLeaves(){
+  for(let yearkey in this.allLeaves){
+
+    for(let monthkey in this.allLeaves[yearkey]){
+      for(let idkey in this.allLeaves[yearkey][monthkey]){
+        if(idkey == this.user.id){
+          console.log(this.allLeaves[yearkey][monthkey][idkey]['leaves'])
+          for(let item of this.allLeaves[yearkey][monthkey][idkey]['leaves']){
+
+            this.allUserLeaves.push(item)
+          }
+
+        }
+      }
+    }
+  }
+  console.log(this.allUserLeaves)
+  this.convertUserLeaveNgbDateArray();
+}
+convertUserLeaveNgbDateArray(){
+  for(var leaves of  this.allUserLeaves){
+    if(!(leaves.hasOwnProperty('toDate'))){
+      console.log(new Date(leaves.fromDate).getFullYear(),new Date(leaves.fromDate).getMonth()+1,new Date(leaves.fromDate).getDate());
+      console.log({year:new Date(leaves.fromDate).getFullYear(),month:new Date(leaves.fromDate).getMonth()+1,day:new Date(leaves.fromDate).getDate()})
+      this.disabledDates.push({year:new Date(leaves.fromDate).getFullYear(),month:new Date(leaves.fromDate).getMonth()+1,day:new Date(leaves.fromDate).getDate()})
+    }
+    else{
+      this.listDatesUser = this.getDates(new Date(leaves.fromDate), new Date(leaves.toDate))
+      for(var list=0;list<this.listDatesUser.length;list++){
+        this.disabledDates.push({year:new Date(this.listDatesUser[list]).getFullYear(),month:new Date(this.listDatesUser[list]).getMonth()+1,day:new Date(this.listDatesUser[list]).getDate()})
+      }
+
+    }
+  }
+  this.isDisabled = (date: NgbDateStruct,dates:NgbDate, current: {month: number,year: number})=> {
+
+    return this.disabledDates.find(x => NgbDate.from(x).equals(date)) || this.calendar.getWeekday(dates) >= 6? true: false;
+  }
+
+  console.log(this.disabledDates)
+}
   convertJsonData(cMonth,cYear){
       this.data = [];
       this.publicHolidayData = [];
@@ -420,6 +485,9 @@ base64Data;
                          } else {
                             this.base64Data =  this.dataFromBackend[cMonth][key]['photo'];
                             this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+                           
+                           
+                          //  if(this.base64Data != undefined ){
                             if(new Date(this.listDates[j]).getDay()!=6 && new Date(this.listDates[j]).getDay()!=0){
 
                              this.data.push({
@@ -429,6 +497,23 @@ base64Data;
                                  imageUrl: this.retrievedImage
                              })
                             }
+                          //  }
+
+                          //  else{
+                          //   console.log(this.dataFromBackend[cMonth][key]['userName'])
+                          //   if(new Date(this.listDates[j]).getDay()!=6 && new Date(this.listDates[j]).getDay()!=0){
+
+                          //     this.data.push({
+                          //         name: this.dataFromBackend[cMonth][key]['userName'],
+                          //         project: this.dataFromBackend[cMonth][key]['projectName'],
+                          //         date: this.listDates[j].toISOString().slice(0, 10),
+                          //             nophoto: 'true',
+                                
+                          //     })
+                          //    }
+                          //  }
+                            
+                          
 
                          }
 
@@ -476,6 +561,8 @@ base64Data;
    
 
 }
+
+
 
   //on click of next month
   nextMonth(): void {
@@ -577,6 +664,7 @@ openModal(targetModal) {
   isRange(date: NgbDate) {
     return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
   }
+ 
 
   //delete leaves
   OnCheckboxSelect(id, event) {
@@ -643,7 +731,15 @@ openModal(targetModal) {
   renderEventContent(eventInfo, createElement) {
       var innerHtml;
       //Check if event has image
-      if (eventInfo.event._def.extendedProps.imageUrl) {
+      if (eventInfo.event._def.extendedProps.holiday) {
+        console.log(eventInfo.event._def.extendedProps);
+
+        innerHtml = eventInfo.event._def.title + "<span></span>";
+        return createElement = {
+            html: '<div style="margin-top: 29%;text-align: center;font-weight: bold;">' + eventInfo.event._def.extendedProps.description + '</div>'
+        }
+    }
+      if (eventInfo.event._def.extendedProps.imageUrl && eventInfo.event._def.extendedProps.imageUrl!="data:image/jpeg;base64,undefined") {
           // Store custom html code in variable
           innerHtml = eventInfo.event._def.title + "<img style='display:inline;width:20px;height:20px;border-radius: 50%;opacity: 1;/* opacity: 8; */' src='" + eventInfo.event._def.extendedProps.imageUrl + "'>" + "<span style='color:black;color: #FFFFFF;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span>";
           //Event with rendering html
@@ -651,15 +747,20 @@ openModal(targetModal) {
               html: innerHtml
           }
       }
+      
+      if (eventInfo.event._def.extendedProps.imageUrl && eventInfo.event._def.extendedProps.imageUrl=="data:image/jpeg;base64,undefined"){
 
-      if (eventInfo.event._def.extendedProps.holiday) {
-          console.log(eventInfo.event._def.extendedProps);
+        console.log(eventInfo.event._def.extendedProps.name.substring(eventInfo.event._def.extendedProps.name.indexOf(' ') + 1)[0].toUpperCase())
+        // Store custom html code in variable
+        innerHtml = eventInfo.event._def.title + '<div style="background:red;display:inline;width: 72px;height: 57px;border-radius: 50%;opacity: 1;font-size: 13px;/* font-weight: bold; */padding: 4px;background: #d5e3ea;height: 40px;width: 40px;border-radius: 45px;text-align: center;line-height: 38px;color: #274750;margin-right:2px">' + eventInfo.event._def.extendedProps.name[0].toUpperCase()+eventInfo.event._def.extendedProps.name.substring(eventInfo.event._def.extendedProps.name.indexOf(' ') + 1)[0].toUpperCase() + '</div>'+ "<span style='color:black;color: #FFFFFF;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span>";;
+        //Event with rendering html
+        return createElement = {
+            html: innerHtml
+        }
+    }
 
-          innerHtml = eventInfo.event._def.title + "<span></span>";
-          return createElement = {
-              html: '<div style="margin-top: 29%;text-align: center;font-weight: bold;">' + eventInfo.event._def.extendedProps.description + '</div>'
-          }
-      }
+      
+
     //   else{
     //     innerHtml = eventInfo.event._def.title+"<span></span>";
     //     return createElement = { html: '<div style=" width: 96px;height: 20px;background: #BE5C5C 0% 0% no-repeat padding-box;border-radius: 4px;">'+innerHtml+'</div>' }
@@ -672,14 +773,35 @@ openModal(targetModal) {
 console.log(eventInfo)
       var innerHtml;
       //Check if event has image
-      if (eventInfo.event._def.extendedProps.imageUrl) {
-          // Store custom html code in variable
-          innerHtml = eventInfo.event._def.title + "<div style='margin-bottom:53% !important;margin-left: 3px;display: block;width: 278px;background: #7eb9e6 0% 0% no-repeat padding-box;border-radius: 4px;'><div style='float:left'><img style='display:inline;width:28px;height:34px;border-radius: 50%;' src='" + eventInfo.event._def.extendedProps.imageUrl + "'></div>" + "<div><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span><br/><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.project + "</span></div></div>";
-          //Event with rendering html
-          return createElement = {
-              html: innerHtml
-          }
+      if (eventInfo.event._def.extendedProps.imageUrl && eventInfo.event._def.extendedProps.imageUrl!="data:image/jpeg;base64,undefined") {
+        // Store custom html code in variable
+        innerHtml = eventInfo.event._def.title + "<div style='margin-bottom:53% !important;margin-left: 3px;display: block;width: 278px;background: #7eb9e6 0% 0% no-repeat padding-box;border-radius: 4px;'><div style='float:left'><img style='display:inline;width:28px;height:34px;border-radius: 50%;' src='" + eventInfo.event._def.extendedProps.imageUrl + "'></div>" + "<div><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span><br/><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.project + "</span></div></div>";
+        //Event with rendering html
+        return createElement = {
+            html: innerHtml
+        }
+    }
+    
+    if (eventInfo.event._def.extendedProps.imageUrl && eventInfo.event._def.extendedProps.imageUrl=="data:image/jpeg;base64,undefined"){
+
+      console.log(eventInfo.event._def.extendedProps.name.substring(eventInfo.event._def.extendedProps.name.indexOf(' ') + 1)[0].toUpperCase())
+      // Store custom html code in variable
+      innerHtml = eventInfo.event._def.title + "<div style='margin-bottom:53% !important;margin-left: 3px;display: block;width: 278px;background: #7eb9e6 0% 0% no-repeat padding-box;border-radius: 4px;'><div style='float:left'><span style='margin-left:5px;background:red;display:inline;width: 72px;height: 57px;border-radius: 50%;opacity: 1;font-size: 11px;font-weight: bold;padding: 2px;background: #d5e3ea;height: 40px;width: 40px;border-radius: 45px;text-align: center;line-height: 38px;color: #274750;'>" + eventInfo.event._def.extendedProps.name[0].toUpperCase()+eventInfo.event._def.extendedProps.name.substring(eventInfo.event._def.extendedProps.name.indexOf(' ') + 1)[0].toUpperCase() +"</span></div>" + "<div><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span><br/><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.project + "</span></div></div>";
+
+      // innerHtml = eventInfo.event._def.title + '<div style="background:red;display:inline;width: 72px;height: 57px;border-radius: 50%;opacity: 1;font-size: 11px;font-weight: bold;padding: 2px;background: #d5e3ea;height: 40px;width: 40px;border-radius: 45px;text-align: center;line-height: 38px;color: #274750;">' + eventInfo.event._def.extendedProps.name[0].toUpperCase()+eventInfo.event._def.extendedProps.name.substring(eventInfo.event._def.extendedProps.name.indexOf(' ') + 1)[0].toUpperCase() + '</div>';
+      //Event with rendering html
+      return createElement = {
+          html: innerHtml
       }
+  }
+      // if (eventInfo.event._def.extendedProps.imageUrl) {
+      //     // Store custom html code in variable
+      //     innerHtml = eventInfo.event._def.title + "<div style='margin-bottom:53% !important;margin-left: 3px;display: block;width: 278px;background: #7eb9e6 0% 0% no-repeat padding-box;border-radius: 4px;'><div style='float:left'><img style='display:inline;width:28px;height:34px;border-radius: 50%;' src='" + eventInfo.event._def.extendedProps.imageUrl + "'></div>" + "<div><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span><br/><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.project + "</span></div></div>";
+      //     //Event with rendering html
+      //     return createElement = {
+      //         html: innerHtml
+      //     }
+      // }
 
       if (eventInfo.event._def.extendedProps.holiday) {
           console.log(eventInfo.event._def.extendedProps);

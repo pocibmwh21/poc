@@ -166,12 +166,12 @@
                     <form class="form-inline">
                         <div class="form-row">
                             <!-- <mat-calendar class="update-calender"  [minDate]="todayDate" [dateFilter]="weekendsDatesFilter" #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar>  -->
-                            <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" [markDisabled]="markDisabled"
+                            <ngb-datepicker  #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" [markDisabled]="isDisabled" 
 						outsideDays="hidden">
 					</ngb-datepicker>
 
-					<ng-template #t let-date let-focused="focused">
-						<span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+					<ng-template #t let-date let-focused="focused" let-selected="selected" let-disabled="disabled">
+						<span class="custom-day"   [class.focused]="focused" [class.range]="isRange(date)"
 							[class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
 							(mouseleave)="hoveredDate = null">
 							{{ date.day }}

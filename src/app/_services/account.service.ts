@@ -18,14 +18,15 @@ export class AccountService {
         teamInfo:null,
         allSkill:null,
         allProjects:null,
-        allLeavesYear:null
+        allLeavesYear:null,
+        allLeaves:null
     }
 
     private userInfoData =  new BehaviorSubject([]);
     private teamInfoData =  new BehaviorSubject([]);
     private allSkillData = new BehaviorSubject([]);
     private allProjectsData = new BehaviorSubject([]);
-    private allLeavesDataYear = new BehaviorSubject(this.data.allLeavesYear);
+    // private allLeavesDataYear = new BehaviorSubject(this.data.allLeavesYear);
 
 
 
@@ -140,10 +141,10 @@ export class AccountService {
 
     }
 
-    get allLeavesYearFields(){
-        return this.allLeavesDataYear.asObservable();
+    // get allLeavesYearFields(){
+    //     return this.allLeavesDataYear.asObservable();
 
-    }
+    // }
 
     getTeamData(page){
          this.http.get(`/home/user/getuserswithpagination?page=${page}`).subscribe(response=>{
@@ -168,13 +169,18 @@ export class AccountService {
         });
     }
 
-    getAllLeaves(month,year){
+    getAllLeavesByMonthYear(month,year){
         return this.http.get(`/home/leave/getUserLeavesByMonthAndYear?month=${month}&year=${year}`)
         .pipe(map(response=>{
-            console.log( response[year])
             this.data.allLeavesYear = response[year];
-            this.allLeavesDataYear.next(this.data.allLeavesYear);
             return this.data.allLeavesYear
         }))
 }
+    getAllLeaves(){
+        return this.http.get(`/home/leave/getAllLeaves`)
+        .pipe(map(response=>{
+            this.data.allLeaves = response;
+            return this.data.allLeaves
+        }))
+    }
 }
