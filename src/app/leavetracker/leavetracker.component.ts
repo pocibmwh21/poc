@@ -107,14 +107,23 @@ base64Data;
 
   fromDateFormatted;
   toDateFormatted;
-  markDisabled;
   leaveData;
   insideData = false;
   listDatesUser = [];
   allUserLeaves = [];
   isDisabled;
-  //sample data
-
+  today: NgbDate;
+  holidays: {month: number, day: number, text: string}[] = [
+    {month: 1, day: 26, text: 'New Years Day'},
+    {month: 4, day: 15, text: 'Good Friday (hi, Alsace!)'},
+    {month: 5, day: 1, text: 'Labour Day'},
+    {month: 5, day: 3, text: 'V-E Day'},
+    {month: 8, day: 31, text: 'Bastille Day'},
+    {month: 10, day: 2, text: 'Assumption Day'},
+    {month: 10, day: 5, text: 'All Saints Day'},
+    {month: 10, day: 26, text: 'Armistice Day'},
+    {month: 11, day: 1, text: 'Christmas Day'}
+  ];
   public_holiday = [{
       '2022-01-26': 'Republic Day'
   }, {
@@ -139,112 +148,6 @@ base64Data;
 
   month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-//   backEnddata = {
-//       "2022": [{
-//           "January": [{
-//                   "1": {
-//                       "userName": "Neethu",
-//                       "projectName": "FHIR",
-//                       "photo": "fasfasdfa",
-//                       "leaves": [{
-//                               "lid": 5,
-//                               "fromDate": "2022-01-20",
-//                               "toDate": "2022-01-20"
-//                           },
-//                           {
-//                               "lid": 8,
-//                               "fromDate": "2022-01-23",
-//                               "toDate": "2022-01-25"
-//                           }
-//                       ]
-//                   }
-//               },
-//               {
-//                   "16": {
-//                       "userName": "Jonah",
-//                       "projectName": "FHIR",
-//                       "photo": "fasfasdfa",
-//                       "leaves": [{
-//                               "lid": 5,
-//                               "fromDate": "2022-01-20",
-//                               "toDate": "2022-01-20"
-//                           },
-//                           {
-//                               "lid": 8,
-//                               "fromDate": "2022-01-23",
-//                               "toDate": "2022-01-25"
-//                           }
-//                       ]
-//                   }
-//               },
-//               {
-//                   "17": {
-//                       "userName": "Test",
-//                       "projectName": "IBMW",
-//                       "photo": "fasfasdfa",
-//                       "leaves": [{
-//                               "lid": 5,
-//                               "fromDate": "2022-01-27",
-//                               "toDate": "2022-01-27"
-//                           },
-//                           {
-//                               "lid": 8,
-//                               "fromDate": "2022-02-01",
-//                               "toDate": "2022-02-05"
-//                           },
-//                           {
-//                             "lid": 4,
-//                             "fromDate": "2022-03-01",
-//                             "toDate": "2022-03-05"
-//                         },
-//                         {
-//                             "lid": 4,
-//                             "fromDate": "2022-03-01",
-//                             "toDate": "2022-03-05"
-//                         }
-//                       ]
-//                   }
-//               }
-//           ]
-//       }]
-
-//   }
-
-  tableData = [
-
-      {
-          date: '15-18-Oct 2021'
-      },
-      {
-          date: '15-19-Oct 2021'
-      },
-      {
-          date: '15-19-Oct 2021'
-      },
-      {
-          date: '15-19-Oct 2021'
-      },
-      {
-          date: '15-19-Oct 2021'
-      },
-      {
-          date: '15-19-Oct 2021'
-      },
-      {
-          date: '15-19-Oct 2021'
-      },
-      {
-          date: '15-19-Oct 2021'
-      },
-      {
-          date: '15-19-Oct 2021'
-      },
-      {
-          date: '15-20-Oct 2021'
-      }
-
-  ];
-
   date: {year: number, month: number};
   
   disabledDates: NgbDateStruct[] = [ 
@@ -253,6 +156,8 @@ base64Data;
   ]
   @ViewChildren('deleteItem') item;
   selectedIds = [];
+
+  //constructor
   constructor(private calendar: NgbCalendar,
       private accountService: AccountService,
       private http: HttpClient,
@@ -264,26 +169,23 @@ base64Data;
       private router: Router,
       ) {
       this.user = this.accountService.userValue;
-      this.markDisabled = (date: NgbDate) =>{
-        calendar.getWeekday(date) >= 6;
-      } 
-    const current = new Date();
-    config.minDate = {
-      year: current.getFullYear(), month:
-        current.getMonth() + 1, day: current.getDate()
-    };
-    //config.maxDate = { year: 2099, month: 12, day: 31 };
+      this.markDisabled = this.markDisabled.bind(this);
+      const current = new Date();
+      config.minDate = {
+        year: current.getFullYear(), 
+        month:current.getMonth() + 1,
+        day: current.getDate()
+      };
     config.outsideDays = 'hidden';
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+    this.today = calendar.getToday();
+
+    this.fromDate = this.getFirstAvailableDate(this.today);
+    this.toDate = this.getFirstAvailableDate(this.today);
     this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
     this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
       
-     
-   
-      // console.log(this.data)
   }
-
+//constructor ends
 
   ngOnInit(): void {
     let currentDate = new Date();
@@ -299,29 +201,6 @@ base64Data;
       this.monthcalenderApi =  this.monthcalendarComponent.getApi();
     // this.calendarApi.next();
   }
-  ngAfterViewInit() {
-    const monthPrevBtn = document.querySelectorAll(
-      '.mat-calendar-previous-button'
-    );
-    const monthNextBtn = document.querySelectorAll('.mat-calendar-next-button');
-
-    if (monthPrevBtn) {
-      Array.from(monthPrevBtn).forEach((button) => {
-        this.renderer.listen(button, 'click', (event) => {
-         console.log("pre",event)
-        });
-      });
-    }
-
-    if (monthNextBtn) {
-      Array.from(monthNextBtn).forEach((button) => {
-        this.renderer.listen(button, 'click', (event) => {
-            console.log("net",event)
-
-        });
-      });
-    }
-  }
 
   //get leave data from api
   getLeaveData(cMonth,cYear,cMonthName){
@@ -336,7 +215,7 @@ base64Data;
     
         },
         (error) => {
-            // this.alertService.error(error);
+            this.alertService.error(error);
         }
     );
   }
@@ -353,6 +232,8 @@ base64Data;
       }
   );
 }
+
+//get all leaves of loggedin user in an array
 processAllLeaves(){
   for(let yearkey in this.allLeaves){
 
@@ -369,31 +250,29 @@ processAllLeaves(){
       }
     }
   }
-  console.log(this.allUserLeaves)
   this.convertUserLeaveNgbDateArray();
 }
+
+
+//convert all leaves of logginuser array to NGBDate array format
 convertUserLeaveNgbDateArray(){
   for(var leaves of  this.allUserLeaves){
     if(!(leaves.hasOwnProperty('toDate'))){
-      console.log(new Date(leaves.fromDate).getFullYear(),new Date(leaves.fromDate).getMonth()+1,new Date(leaves.fromDate).getDate());
-      console.log({year:new Date(leaves.fromDate).getFullYear(),month:new Date(leaves.fromDate).getMonth()+1,day:new Date(leaves.fromDate).getDate()})
       this.disabledDates.push({year:new Date(leaves.fromDate).getFullYear(),month:new Date(leaves.fromDate).getMonth()+1,day:new Date(leaves.fromDate).getDate()})
     }
     else{
       this.listDatesUser = this.getDates(new Date(leaves.fromDate), new Date(leaves.toDate))
       for(var list=0;list<this.listDatesUser.length;list++){
+        if(this.listDatesUser[list].getDay()!=6 && this.listDatesUser[list].getDay()!=0)
         this.disabledDates.push({year:new Date(this.listDatesUser[list]).getFullYear(),month:new Date(this.listDatesUser[list]).getMonth()+1,day:new Date(this.listDatesUser[list]).getDate()})
       }
 
     }
   }
-  this.isDisabled = (date: NgbDateStruct,dates:NgbDate, current: {month: number,year: number})=> {
-
-    return this.disabledDates.find(x => NgbDate.from(x).equals(date)) || this.calendar.getWeekday(dates) >= 6? true: false;
-  }
-
-  console.log(this.disabledDates)
 }
+
+
+//convert response from backend to executable in full calender
   convertJsonData(cMonth,cYear){
       this.data = [];
       this.publicHolidayData = [];
@@ -433,12 +312,6 @@ convertUserLeaveNgbDateArray(){
                     if(!(leaves.hasOwnProperty('toDate'))){
                       leaves['toDate'] = leaves.fromDate
                     }
-                    // var fromDateday = new Date(leaves.fromDate);
-                    // var toDateday = new Date(leaves.toDate);
-
-                    // console.log(day)
-                    // leaves.fromDate = fromDateday.getDate() + ' ' + this.month[fromDateday.getMonth()].substring(0,3) + ' ' + fromDateday.getFullYear();
-                    // leaves.toDate = toDateday.getDate() + ' ' + this.month[toDateday.getMonth()].substring(0,3) + ' ' + toDateday.getFullYear();
 
                      this.deleteLeavesData.push(leaves)
                  }
@@ -469,7 +342,6 @@ convertUserLeaveNgbDateArray(){
                      this.listDates = this.getDates(new Date(leaves.fromDate), new Date(leaves.toDate))
                      for (var j = 0; j < this.listDates.length; j++) {
                          if (key == this.user.id) {
-                           console.log(new Date(this.listDates[j]).getDay())
                             this.daysSelectedLid.push({"date":this.listDates[j].toISOString().slice(0, 10),"lid":leaves.lid})
                            this.daysSelected.push(this.listDates[j].toISOString().slice(0, 10))
                            if(new Date(this.listDates[j]).getDay()!=6 && new Date(this.listDates[j]).getDay()!=0){
@@ -486,8 +358,6 @@ convertUserLeaveNgbDateArray(){
                             this.base64Data =  this.dataFromBackend[cMonth][key]['photo'];
                             this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
                            
-                           
-                          //  if(this.base64Data != undefined ){
                             if(new Date(this.listDates[j]).getDay()!=6 && new Date(this.listDates[j]).getDay()!=0){
 
                              this.data.push({
@@ -497,23 +367,6 @@ convertUserLeaveNgbDateArray(){
                                  imageUrl: this.retrievedImage
                              })
                             }
-                          //  }
-
-                          //  else{
-                          //   console.log(this.dataFromBackend[cMonth][key]['userName'])
-                          //   if(new Date(this.listDates[j]).getDay()!=6 && new Date(this.listDates[j]).getDay()!=0){
-
-                          //     this.data.push({
-                          //         name: this.dataFromBackend[cMonth][key]['userName'],
-                          //         project: this.dataFromBackend[cMonth][key]['projectName'],
-                          //         date: this.listDates[j].toISOString().slice(0, 10),
-                          //             nophoto: 'true',
-                                
-                          //     })
-                          //    }
-                          //  }
-                            
-                          
 
                          }
 
@@ -522,13 +375,20 @@ convertUserLeaveNgbDateArray(){
 
              }
 
+             //unique elements in data
+
+             this.data = this.data.reduce((filter, current) => {
+              var dk = filter.find(item => item.name === current.name && item.date === current.date);
+              if (!dk) {
+                return filter.concat([current]);
+              } else {
+                return filter;
+              }
+            }, []);
+
          }
 
-         //remove duplicates
-        this.dataSet= new Set(this.data)
-        console.log(this.dataSet)
-        this.data = Array.from(this.dataSet)
-        console.log(this.data)     
+        
          
         // update calender
         this.calendarOptions = {
@@ -554,6 +414,9 @@ convertUserLeaveNgbDateArray(){
 
         
   }
+
+
+  //change the day calender on click of date in main calender
   getClickedSpecificDate(arg) {
     console.log(arg.date)
     console.log(this.data)
@@ -591,9 +454,9 @@ convertUserLeaveNgbDateArray(){
     }
   }
 
+
+  //update the data from backend
   updateData(){
-      console.log(this.currentMonth);
-      console.log(this.currentYear);
       let cMonthName = this.currentMonth.toUpperCase();
       let curentMonthIndex = (element) => element == this.currentMonth;
       let cMonth = this.month.findIndex(curentMonthIndex)+1
@@ -602,13 +465,11 @@ convertUserLeaveNgbDateArray(){
 
       
   }
-  deleteLeaves(){
 
-    // this.leaveLid.push(lid)
-    // console.log(this.leaveLid)
+  //on delete leaves 
+  deleteLeaves(){
     this.modalService.dismissAll();
-    this.accountService.deleteLeave(this.selectedIds).subscribe((res) => {
-          
+    this.accountService.deleteLeave(this.selectedIds).subscribe((res) => {       
         setTimeout(() => {
           this.alertService.clear();
         }, 5000);
@@ -616,11 +477,8 @@ convertUserLeaveNgbDateArray(){
           this.router.onSameUrlNavigation = 'reload';
           this.router.navigate([this.router.url]);
           this.alertService.success('Leaves deleted successfully', { keepAfterRouteChange: false });
-
-
     },
       (error) => {
-        console.log(error)
         this.alertService.error(error, { keepAfterRouteChange: false });
       });
   }
@@ -634,39 +492,9 @@ openModal(targetModal) {
 
   }
 
-  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-      this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
-      this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
-    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
-      this.toDate = date;
-      this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
-      this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
-  
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-      this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
-      this.toDateFormatted = this.fromDateFormatted
-  
-    }
-  }
 
-  isHovered(date: NgbDate) {
-    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
-  }
 
-  isInside(date: NgbDate) {
-    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
-  }
-
-  isRange(date: NgbDate) {
-    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
-  }
- 
-
-  //delete leaves
+  //delete leaves check box cheked
   OnCheckboxSelect(id, event) {
     if (event.target.checked === true) {
       this.selectedIds.push(id);
@@ -678,8 +506,6 @@ openModal(targetModal) {
   }
    //on click of save in add leaves
    onLeaveUpdateSave() {
-    console.log(this.fromDateFormatted)
-    console.log(this.toDateFormatted)
     this.modalService.dismissAll();
     this.leaveData = { "fromDate": this.fromDateFormatted, "toDate": this.toDateFormatted, "user": { "id": this.user.id } }
     this.http
@@ -707,6 +533,8 @@ openModal(targetModal) {
 
 
   }
+
+
   // Returns an array of dates between the two dates
   getDates(startDate, endDate) {
       const dates = []
@@ -723,11 +551,10 @@ openModal(targetModal) {
       return dates
   }
 
-  //on calender date click navigate the right calender date aswell
  
 
 
-  //Event Render Function
+  //Event Render Function for full calnder
   renderEventContent(eventInfo, createElement) {
       var innerHtml;
       //Check if event has image
@@ -759,16 +586,10 @@ openModal(targetModal) {
         }
     }
 
-      
-
-    //   else{
-    //     innerHtml = eventInfo.event._def.title+"<span></span>";
-    //     return createElement = { html: '<div style=" width: 96px;height: 20px;background: #BE5C5C 0% 0% no-repeat padding-box;border-radius: 4px;">'+innerHtml+'</div>' }
-    //   }
 
   }
 
-  //Event Render Function
+  //Event Render Function for day full calender
   renderEventContentForDay(eventInfo, createElement) {
 console.log(eventInfo)
       var innerHtml;
@@ -794,14 +615,7 @@ console.log(eventInfo)
           html: innerHtml
       }
   }
-      // if (eventInfo.event._def.extendedProps.imageUrl) {
-      //     // Store custom html code in variable
-      //     innerHtml = eventInfo.event._def.title + "<div style='margin-bottom:53% !important;margin-left: 3px;display: block;width: 278px;background: #7eb9e6 0% 0% no-repeat padding-box;border-radius: 4px;'><div style='float:left'><img style='display:inline;width:28px;height:34px;border-radius: 50%;' src='" + eventInfo.event._def.extendedProps.imageUrl + "'></div>" + "<div><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span><br/><span style='color:white;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.project + "</span></div></div>";
-      //     //Event with rendering html
-      //     return createElement = {
-      //         html: innerHtml
-      //     }
-      // }
+ 
 
       if (eventInfo.event._def.extendedProps.holiday) {
           console.log(eventInfo.event._def.extendedProps);
@@ -819,162 +633,72 @@ console.log(eventInfo)
   }
 
   
+//calender popup settings
 
-  // isHovered(date: NgbDate) {
-  //     return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
-  // }
+  isWeekend(date: NgbDate) {
+    return this.calendar.getWeekday(date) >= 6;
+  }
 
-  // isInside(date: NgbDate) {
-  //     return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
-  // }
-  // isRange(date: NgbDate) {
-  //     return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
-  // }
+  isHoliday(date: NgbDate): string {
+    const holiday = this.holidays.find(h => h.day === date.day && h.month === date.month);
+    return holiday ? holiday.text : '';
+  }
+  onLeave(date:NgbDate) {
+   const leave =  this.disabledDates.find(h => h.day === date.day && h.month === date.month)
+   return leave ? leave.day: '';
+  }
+  markDisabled(date: NgbDate, current: {year: number, month: number}): boolean {
+    return this.isHoliday(date) !== '' || (this.isWeekend(date) && date.month === current.month) || this.onLeave(date)!== '';
+  }
 
+  getFirstAvailableDate(date: NgbDate): NgbDate {
+    while (this.isWeekend(date) || this.isHoliday(date)) {
+      date = this.calendar.getNext(date, 'd', 1);
+    }
+    return date;
+  }
+
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+      this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+      this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
+    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)  || date.equals(this.fromDate)) {
+      this.toDate = date;
+      this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+      this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
   
-  //date range selection
-  // onDateSelection(date: NgbDate) {
-  //   if (!this.fromDate && !this.toDate) {
-  //     this.fromDate = date;
-  //     this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
-  //     this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
-  //   } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
-  //     this.toDate = date;
-  //     this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
-  //     this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+      this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
+      this.toDateFormatted = this.fromDateFormatted
+  
+    }
+  }
 
-  //   } else {
-  //     this.toDate = null;
-  //     this.fromDate = date;
-  //     this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
-  //     this.toDateFormatted = null
+  isRange(date: NgbDate) {
+    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
+  }
 
-  //   }
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  }
 
-  // }
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
 
+  getTooltip(date: NgbDate): string {
+    const holidayTooltip = this.isHoliday(date);
 
-  isSelected = (event: any) => {
-    const date =
-      event.getFullYear() +
-      "-" +
-      ("00" + (event.getMonth() + 1)).slice(-2) +
-      "-" +
-      ("00" + event.getDate()).slice(-2);
-    return this.daysSelected.find(x => x == date) ? "selected" : null;
-  };
-
-  select(event: any, calendardate: any) {
-    const date =
-      event.getFullYear() +
-      "-" +
-      ("00" + (event.getMonth() + 1)).slice(-2) +
-      "-" +
-      ("00" + event.getDate()).slice(-2);
-    const index = this.daysSelected.findIndex(x => x == date);
-    if (index < 0) this.daysSelected.push(date);
-    else this.daysSelected.splice(index, 1);
-    calendardate.updateTodaysDate();
+    if (holidayTooltip) {
+      return holidayTooltip;
+    } else if (this.isRange(date) && !this.isWeekend(date)) {
+      return 'Vacations!';
+    } else {
+      return '';
+    }
   }
  
-  updateLeaves(){
-
-      this.updatedLeaves = [];
-      this.formatedarray = [];
-      this.index=0;
-      console.log(this.daysSelected)
-
-      this.daysSelectedset = new Set(this.daysSelected)
-       this.daysSelected = Array.from(this.daysSelectedset)
-      //  this.daysSelectedLidset= new Set(this.daysSelectedLid)
-      //  this.daysSelectedLid = Array.from(this.daysSelectedLidset)
-      this.sorteddaysSelected = this.daysSelected.sort((a, b) => b < a ? 1: -1);
-      var j,i
-      console.log(this.sorteddaysSelected)
-      for(i=this.index;i<this.sorteddaysSelected.length;i++){
-          console.log(this.index)
-          i=this.index;
-        this.from = this.sorteddaysSelected[i]
-        var count=0;
-        var first_iteration = true;
-          for( j=this.index;j<this.sorteddaysSelected.length;j++){
-            count++
-            console.log(new Date(this.sorteddaysSelected[j+1]).getDate())
-            console.log(new Date(this.sorteddaysSelected[i]).getDate()+count);
-            if(new Date(this.sorteddaysSelected[j+1]).getDate()== new Date(this.sorteddaysSelected[i]).getDate()+count){
-                this.to = this.sorteddaysSelected[j+1]
-                first_iteration = false;
-            }
-           
-         else if(first_iteration ==true && new Date(this.sorteddaysSelected[j+1]).getDate()!= new Date(this.sorteddaysSelected[i]).getDate()+count){
-            this.to=this.from;
-            this.formatedarray.push({"fromDate":this.from,"toDate":this.to})
-            break;
-         }           
-         else{
-            this.formatedarray.push({"fromDate":this.from,"toDate":this.to})
-            break;
-        }
-         
-
-          }
-
-          this.index =this.sorteddaysSelected.indexOf(this.to)+1
-
-          console.log(this.index)
-
-          
-      }
-       this.formatedarraySet = new Set(this.formatedarray)
-       this.formatedarray = Array.from(this.formatedarraySet)
-      
-    console.log(this.formatedarray)
-    console.log(this.daysSelectedLid)
-    for(var k=0;k<this.formatedarray.length;k++){
-        this.inBtwnDates = this.getDates(new Date(this.formatedarray[k].fromDate),new Date(this.formatedarray[k].toDate))
-        this.inBtwnDatesFormatted = [];
-        for(var l=0;l<this.inBtwnDates.length;l++){
-            this.inBtwnDatesFormatted.push(this.inBtwnDates[l].toISOString().slice(0, 10))
-        }
-
-        // console.log(this.inBtwnDatesFormatted)
-        // this.daysSelectedLid.filter(function(item) {
-        //     return item.indexOf(this.inBtwnDatesFormatted) === -1;
-        // });
-            for(var w=0;w<this.daysSelectedLid.length;w++){
-                this.found =0;
-                this.notFound =0;
-                console.log(this.daysSelectedLid[w].lid)
-                for(var f=0;f<this.inBtwnDatesFormatted.length;f++){
-                    if(this.inBtwnDatesFormatted[f].indexOf(this.daysSelectedLid[w].date) > -1){
-                        this.found++;
-                        this.formatedarray[k]['lid'] = this.daysSelectedLid[w].lid
-                        break;
-                       }
-                       else{
-                         this.notFound++
-                       }
-                       if(this.notFound+1==this.daysSelectedLid.length){
-                           this.formatedarray[k]['lid'] = null
-                       }
-                       
-                }
-            }
-            
-           
-        
-    }
-    console.log(this.formatedarray)
-    // var day = new Date(key);
-    // console.log(day)
-    // var date = day.getDate() + ' ' + this.month[day.getMonth()] + ' ' + day.getFullYear();
-
-  }
-
-  weekendsDatesFilter = (d: Date): boolean => {
-    const day = d.getDay();
-
-    /* Prevent Saturday and Sunday for select. */
-    return day !== 0 && day !== 6 ;
-}
 }

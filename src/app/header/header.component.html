@@ -44,8 +44,8 @@
 					<input type="password" name="oldPassword" class="custom-select col-12" [type]="fieldTextType ? 'text' : 'password'" [(ngModel)]="oldPassword" />
 					<span>Old Password</span> </label>
 					<div class="input-group-append col-2 mb-4">
-                        <span class="input-group-text">
-                            <i class="fa" [ngClass]="{
+                        <span class="input-group-text" >
+                            <i  style="cursor: pointer" class="fa" [ngClass]="{
                                 'fa-eye-slash': !fieldTextType,
                                 'fa-eye': fieldTextType
                               }" (click)="toggleFieldTextType()"></i>
@@ -59,8 +59,8 @@
 						[ngClass]="{ 'is-invalid':newConfirmMisMatch || minLengthError}" /> <span>New Password</span>
 				</label>
 				<div class="input-group-append col-2 mb-4">
-					<span class="input-group-text">
-						<i class="fa" [ngClass]="{
+					<span class="input-group-text" >
+						<i style="cursor: pointer" class="fa" [ngClass]="{
 							'fa-eye-slash': !fieldTextType2,
 							'fa-eye': fieldTextType2
 						  }" (click)="toggleFieldTextType2()"></i>
@@ -74,7 +74,7 @@
 					<span>Confirm Password</span> </label>
 					<div class="input-group-append col-2 mb-4">
                         <span class="input-group-text">
-                            <i class="fa" [ngClass]="{
+                            <i  style="cursor: pointer" class="fa" [ngClass]="{
                                 'fa-eye-slash': !fieldTextType3,
                                 'fa-eye': fieldTextType3
                               }" (click)="toggleFieldTextType3()"></i>

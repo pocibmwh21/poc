@@ -21,20 +21,6 @@
                         <button class="btn btn-primary" (click)="openModal(addLeaveModal)">Update Leaves</button>
                         <button class="delete-icon" (click)="openModal(deleteLeaveModal)"><i
                             class="fa fa-trash-o icon"></i></button>
-
-                      <!-- <button class="btn btn-primary" data-toggle="modal"
-                      data-target="#myModal2">Update Leaves</button><button class="delete-icon" data-toggle="modal" data-target="#myModal"><i
-                          class="fa fa-trash-o icon"></i></button> -->
-                          <!-- <button class="btn btn-primary" [matMenuTriggerFor]="appMenu"
-                         >Update Leaves</button> -->
-                         <!-- <mat-menu #appMenu="matMenu" class="drop-calendar" >
-                            <div (click)="$event.stopPropagation()">
-                                <mat-calendar #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar>
-                                <button (click)="updateLeaves()"style="float: right;margin: 20px;" class="btn btn-primary btn3">Save</button>
-                            </div>
-                        </mat-menu> -->
-                         <!-- <button class="delete-icon" data-toggle="modal" data-target="#myModal"><i
-                              class="fa fa-trash-o icon"></i></button> -->
                             
                 </div> 
                 <p style="font-size: 14px;font-weight: bolder; ">Leaves Update</p>
@@ -139,9 +125,7 @@
                                             #deleteItem
                                            (change)="OnCheckboxSelect(tableDatas.lid, $event)"
                                           >
-                                        <!-- <button (click)="deleteLeaves(tableDatas.lid)" style="border: none;background: white;">
-                                            <i class="fa fa-trash-o icon" style="font-size: 18px"></i>
-                                        </button> -->
+                                     
                                     </td>
                                 </tr>
                             </table>
@@ -165,29 +149,27 @@
                 <div class="modal-body">
                     <form class="form-inline">
                         <div class="form-row">
-                            <!-- <mat-calendar class="update-calender"  [minDate]="todayDate" [dateFilter]="weekendsDatesFilter" #calendars (selectedChange)="select($event,calendars)" [dateClass]="isSelected"></mat-calendar>  -->
-                            <ngb-datepicker  #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" [markDisabled]="isDisabled" 
-						outsideDays="hidden">
-					</ngb-datepicker>
-
-					<ng-template #t let-date let-focused="focused" let-selected="selected" let-disabled="disabled">
-						<span class="custom-day"   [class.focused]="focused" [class.range]="isRange(date)"
-							[class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-							(mouseleave)="hoveredDate = null">
-							{{ date.day }}
-						</span>
-					</ng-template>
-                            <!-- <ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="tr" [markDisabled]="markDisabled"
-                                outsideDays="hidden">
-                            </ngb-datepicker>
-        
-                            <ng-template #tr let-date let-focused="focused">
-                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                                    (mouseleave)="hoveredDate = null">
-                                    {{ date.day }}
-                                </span>
-                            </ng-template> -->
+                    <ng-template #dayTemplate let-date let-disabled="disabled">
+                        <span class="custom-day"  container="body" matTooltip="getTooltip(date)"  [matTooltipPosition]="'above'"
+                              [class.holiday]="!!isHoliday(date)"
+                              [class.disabled]="disabled || isWeekend(date)"
+                              [class.leave]="!!onLeave(date)"
+                              [class.range]="isRange(date)"
+                              [class.faded]="isHovered(date) || isInside(date)"
+                              (mouseenter)="hoveredDate = date"
+                              (mouseleave)="hoveredDate = null">
+                          {{ date.day }}
+                        </span>
+                      </ng-template>
+                      <ngb-datepicker
+                        (dateSelect)="onDateSelection($event)"
+                        [dayTemplate]="dayTemplate"
+                        [markDisabled]="markDisabled"
+                        [minDate]="today"
+                        outsideDays="hidden"
+                        [displayMonths]="2">
+                      </ngb-datepicker>
+                
                            
                         </div>
                        
