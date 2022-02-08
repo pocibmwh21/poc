@@ -4,7 +4,15 @@ import { Observable, Subject } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class CommonService {
     private subjectName = new Subject<any>(); //need to create a subject
+    private projectName = new Subject<any>();
 
+    sendProjectUpdate(item: any) { //the component that wants to update something, calls this fn
+        this.projectName.next(item); //next() will feed the value in Subject
+    }
+
+    getProjectUpdate(): Observable<any> { //the receiver component calls this function 
+        return this.projectName.asObservable(); //it returns as an observable to which the receiver funtion will subscribe
+    }
     sendUpdate(item: any) { //the component that wants to update something, calls this fn
         this.subjectName.next(item); //next() will feed the value in Subject
     }

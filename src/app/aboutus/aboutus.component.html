@@ -4,19 +4,12 @@
         <div class="text-center text-lg-left">
             <div class="row">
                 <div class="col-lg-8 ml-4 project-content">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                    when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                    It has survived not only five centuries, but also the leap into electronic typesetting,
-                    remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                    sheets containing Lorem Ipsum passages, Lorem Ipsum is simply dummy text of the printing and
-                    typesetting industry, typesetting industry. and more recently with desktop publishing software like
-                    Aldus PageMaker including versions of Lorem Ipsum
+                    Watson is an artificial intelligence question-answering computer system, it can answer questions posed in natural language. The computer system was initially developed to answer questions on the quiz show Jeopardy!
+In February 2013, IBM announced that Watson software system's first commercial application would be for utilization management decisions in lung cancer treatment at Memorial Sloan Kettering Cancer Center, New York City, in conjunction with WellPoint (now Anthem).
+
                     <br>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                    when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                    PageMaker including versions of Lorem Ipsum
+                    It is a digital tool that helps clients to facilitate medical research, clinical research, and healthcare solutions using artificial intelligence, data, analytics, cloud computing, and other advanced information technology.
+
                 </div>
 
                 <span class="details-section d-inline-block">
@@ -44,7 +37,7 @@
         </div>
 
 
-        <section class="pt-5 pb-5">
+        <section class="pb-5">
             <div class="row">
                 <div class="col-6 ml-4">
                     <h1 class="about-info-head">Products</h1>
@@ -54,16 +47,17 @@
 
                 <carousel class="ivycarousel" [cellWidth]="340" [loop]="true" [margin]="2" [cellsToShow]="5">
 
-                    <div *ngFor="let data of sampleData" class="carousel-cell">
-                        <button (mouseenter)="onHovering(data.product)" type="button" class="btn link products" data-placement="bottom">
-                            {{data.product}}
-                            <h6>Lorem Ipsum</h6>
+                    <div *ngFor="let data of allProjects" class="carousel-cell">
+                        <button  #items (click)="onProductClick(data.projectID)" type="button" class="btn link products" data-placement="bottom">
+                            {{data.pname}}
                         </button>
+                        <div id="{{data.pname}}" class="favyicon">
 
+                        </div>
                     </div>
                    
                 </carousel>
-                <div class="col-md-12 hide">
+                <div *ngIf="productClicked" class="col-md-12  desc">
                    {{descDetail}}
                 </div>
             </div>

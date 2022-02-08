@@ -746,10 +746,10 @@ convertUserLeaveNgbDateArray(){
   }
 
   //on project click
-  onProjectSelect(project) {
-    console.log(project);
-    this.sendProject = project;
-    this.commonService.sendUpdate(this.sendProject);
+  onProjectSelect(pid,pname) {
+    this.sendProject = pid;
+    console.log(this.sendProject)
+    this.commonService.sendProjectUpdate(this.sendProject);
     this.router.navigateByUrl('/aboutus');
   }
   onFileChanged($event: any) {
@@ -758,8 +758,9 @@ convertUserLeaveNgbDateArray(){
 
     if ($event.target.files && $event.target.files[0]) {
       let file = $event.target.files[0];
+      const fileSize = file.size / 1024 / 1024;
 
-      if (file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/jpg") {
+      if ((file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/jpg" )) {
         this.upload();
       }
 
@@ -768,7 +769,6 @@ convertUserLeaveNgbDateArray(){
         this.alertService.error('please upload valid format', { keepAfterRouteChange: false });
       }
 
-      const fileSize = file.size / 1024 / 1024;
       if (fileSize > 2) {
         this.alertService.error('File size exceeds 2 MB', { keepAfterRouteChange: false });
       }

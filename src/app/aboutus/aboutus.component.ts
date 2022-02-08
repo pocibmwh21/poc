@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { CommonService } from '@app/_services/common.service';
+import { AccountService } from '@app/_services';
 
 @Component({
   selector: 'app-aboutus',
@@ -11,78 +12,44 @@ export class AboutusComponent implements OnInit {
   project;
   desc;
   descDetail;
-  sampleData=[
-    {
-      "product": "FHIR1",
-      "ProdDesc": "Lorem Ipsum",
-      "ProdDetail":" 1. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
-    },
-    {
-      "product": "FHIR2",
-      "ProdDesc": "Lorem Ipsum",
-      "ProdDetail":" 2. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
-    },
-    {
-      "product": "FHIR3",
-      "ProdDesc": "Lorem Ipsum",
-      "ProdDetail":" 3. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
-    },
-    {
-      "product": "FHIR4",
-      "ProdDesc": "Lorem Ipsum",
-      "ProdDetail":" 4. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
-    },
-    {
-      "product": "FHIR5",
-      "ProdDesc": "Lorem Ipsum",
-      "ProdDetail":" 5. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
-    },
-    {
-      "product": "FHIR1",
-      "ProdDesc": "Lorem Ipsum",
-      "ProdDetail":" 1. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
-    },
-    {
-      "product": "FHIR2",
-      "ProdDesc": "Lorem Ipsum",
-      "ProdDetail":" 2. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
-    },
-    {
-      "product": "FHIR3",
-      "ProdDesc": "Lorem Ipsum",
-      "ProdDetail":" 3. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
-    },
-    {
-      "product": "FHIR4",
-      "ProdDesc": "Lorem Ipsum",
-      "ProdDetail":" 4. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
-    },
-    {
-      "product": "FHIR5",
-      "ProdDesc": "Lorem Ipsum",
-      "ProdDetail":" 5. I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above.I am shown when someone hovers over the div above"
-    }
-  ]
-
-  constructor(private commonService: CommonService) {
-    this.subscriptionName = this.commonService.getUpdate().subscribe(item => {
+  allProjects = [];
+  productClicked = false;
+  constructor(private commonService: CommonService,
+    private accountService :AccountService) {
+    this.subscriptionName = this.commonService.getProjectUpdate().subscribe(item => {
       this.project = item;
       console.log(this.project)
 
-    });
+    });   
+    this.accountService.getAllProjects();
 
    }
-
+  
   ngOnInit(): void {
-  }
-  onHovering(data){
-    console.log(data)
-    this.desc = this.sampleData.find(function(e) {
-      return e.product == data
-    })
+     //Get All Projects
+     this.accountService.allProjectFields.subscribe(
+      (data) => {
+          this.allProjects = data;
+          //include id in all project array for multiselect
+         
+          console.log("AllProjectnews: ", this.allProjects);
+      },
+      (error) => {
+          // this.alertService.error(error);
+      }
+  );
 
-    this.descDetail = this.desc.ProdDetail;
-    console.log(this.desc)
+  }
+
+   
+  onProductClick(data){    
+    this.desc = this.allProjects.find(function(e) {
+      return e.projectID == data
+    })
+    this.productClicked = true;
+    $('.favyicon').css('display','none')
+    document.getElementById(this.desc.pname).style.display = 'block'
+    this.descDetail = this.desc.description;
     
   }
 

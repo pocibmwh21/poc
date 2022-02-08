@@ -219,7 +219,7 @@
 							:&nbsp;&nbsp;</b>---
 					</li>
 					<li class="list-item col-6 show-elipse-static" title="{{projectCommaSeparate}}">
-						<b>Project:&nbsp;&nbsp;</b><span class="project-name" (click)="onProjectSelect(project)"
+						<b>Project:&nbsp;&nbsp;</b><span class="project-name" (click)="onProjectSelect(project.projectID,project.pname)"
 							*ngFor="let project of userInfo.projects last as isLast">{{project.pname}}{{isLast?'':', '}}</span>
 					</li>
 					<li style="display: inline-table;" class="list-item col-12">
