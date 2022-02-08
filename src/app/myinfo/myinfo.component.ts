@@ -777,7 +777,7 @@ convertUserLeaveNgbDateArray(){
   }
   upload() {
     this.loadingImage = true;
-
+    this.noImage = false;
     this.myFileInput.nativeElement.value = '';
     this.alertService.error(null);
     console.log('file: ', this.selectedFile);
