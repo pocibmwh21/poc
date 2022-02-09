@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { CommonService } from '@app/_services/common.service';
-import { AccountService } from '@app/_services';
+import { AccountService, AlertService } from '@app/_services';
 
 @Component({
   selector: 'app-aboutus',
@@ -9,44 +9,77 @@ import { AccountService } from '@app/_services';
 })
 export class AboutusComponent implements OnInit {
   subscriptionName
-  project;
+  project = {};
   desc;
   descDetail;
   allProjects = [];
   productClicked = false;
+  item ;
+  projectName;
+  resourceCount;
+  projectCount;
+  loading = false;
+  loadingCarosel =  false;
+  showCarosel =  false;
+
+
   constructor(private commonService: CommonService,
-    private accountService :AccountService) {
-    this.subscriptionName = this.commonService.getProjectUpdate().subscribe(item => {
-      this.project = item;
-      console.log(this.project)
-
-    });   
-    this.accountService.getAllProjects();
-
+    private accountService :AccountService,
+    private alertService:AlertService) {
    }
-  
+    ngAfterViewChecked() {
+    if(this.projectName!=0){
+      this.onProductClick(this.projectName)
+
+    }
+  }
   ngOnInit(): void {
-     //Get All Projects
-     this.accountService.allProjectFields.subscribe(
-      (data) => {
-          this.allProjects = data;
-          //include id in all project array for multiselect
-         
-          console.log("AllProjectnews: ", this.allProjects);
-      },
-      (error) => {
-          // this.alertService.error(error);
-      }
-  );
+    this.getAllProjects();
+    this.getCount();
+    this.subscriptionName = this.commonService.projectItem$
+    .subscribe(item => {
+      this.projectName = item
+    })
 
   }
+  getCount(){
+    this.loading = true;
+    this.accountService.getProjectResourceCount().subscribe(
+      (data) => {
+        this.loading = false;
+        this.resourceCount =  data.ResourceCount
+          this.projectCount =  data.ProjectCount
 
+
+      },
+      (error) => {
+          this.alertService.error(error);
+      }
+  );
+  }
+  getAllProjects(){
+    this.loadingCarosel = true
+    
+      this.accountService.getAllProjectAbout().subscribe(
+          (data) => {
+            this.loadingCarosel = false
+            this.showCarosel = true
+            this.allProjects = [...data];
+          },
+          (error) => {
+              this.alertService.error(error);
+          }
+      );
+    
+  }
    
-  onProductClick(data){    
-    this.desc = this.allProjects.find(function(e) {
-      return e.projectID == data
-    })
+  onProductClick(data){  
+    console.log(data)  
+    this.projectName = data;
     this.productClicked = true;
+    this.desc = this.allProjects.find(function(e) {
+      return e.pname == data
+    })
     $('.favyicon').css('display','none')
     document.getElementById(this.desc.pname).style.display = 'block'
     this.descDetail = this.desc.description;

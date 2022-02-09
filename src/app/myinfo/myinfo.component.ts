@@ -747,9 +747,12 @@ convertUserLeaveNgbDateArray(){
 
   //on project click
   onProjectSelect(pid,pname) {
-    this.sendProject = pid;
+    this.sendProject = {"projectID":pid , "pname":pname};
     console.log(this.sendProject)
-    this.commonService.sendProjectUpdate(this.sendProject);
+    this.commonService.changeProject(pname);
+
+    // this.commonService.sendProjectUpdate(this.sendProject);
+    
     this.router.navigateByUrl('/aboutus');
   }
   onFileChanged($event: any) {

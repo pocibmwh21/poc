@@ -69,14 +69,14 @@ export class TeaminfoComponent implements OnInit {
       private router: Router) {
       this.accountService.getTeamData(0);
       this.accountService.getAllSkillSets();
-      this.accountService.getAllProjects();
+    //   this.accountService.getAllProjects();
 
   }
 
   ngOnInit(): void {
       this.getTableData();
       this.getUserInfoDetails();
-
+    this.getAllProjectAbout();
       //dropdown setting for skill multiselect
       this.dropdownSettings = {
           idField: 'id',
@@ -111,26 +111,29 @@ export class TeaminfoComponent implements OnInit {
           }
       );
 
-      //Get All Projects
-      this.accountService.allProjectFields.subscribe(
-          (data) => {
-              this.allProjects = data;
-              //include id in all project array for multiselect
-              this.allProjects.map((obj, index) => {
-                  obj.id = index;
-                  return obj
-              })
-              console.log("AllProjectnews: ", this.allProjects);
-          },
-          (error) => {
-              this.alertService.error(error);
-          }
-      );
+    
 
 
   }
   //ngonit ends
+      
+  
+  //Get All Projects
 
+  getAllProjectAbout(){
+    this.accountService.getAllProjectAbout().subscribe(
+        (data) => {
+            this.allProjects = data;
+            //include id in all project array for multiselect
+            this.allProjects.map((obj, index) => {
+                obj.id = index;
+                return obj
+            })        },
+        (error) => {
+            this.alertService.error(error);
+        }
+    );
+  }
 
   getTableData() {
       this.accountService.userInfoFields.subscribe(response => {
@@ -202,6 +205,12 @@ export class TeaminfoComponent implements OnInit {
       this.getTableData();
 
 
+  }
+
+
+  //table to excel export
+  excelExport(){
+      
   }
 
 }

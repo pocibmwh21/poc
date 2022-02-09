@@ -14,7 +14,8 @@ In February 2013, IBM announced that Watson software system's first commercial a
 
                 <span class="details-section d-inline-block">
                     <span class="details-block">
-                        <p class="details-number">400+</p>
+                            <p *ngIf="loading" class="spinner-border spinner-border-lg align-center"></p>
+                        <p class="details-number">{{resourceCount}}</p>
                         <p class="details-text">Resources</p>
                     </span>
                     <span class="details-block">
@@ -23,7 +24,8 @@ In February 2013, IBM announced that Watson software system's first commercial a
                     </span>
                     <p>
                         <span class="details-block">
-                            <p class="details-number">10</p>
+                                <p *ngIf="loading" class="spinner-border spinner-border-lg align-center"></p>
+                            <p class="details-number">{{projectCount}}</p>
                             <p class="details-text">Products</p>
                         </span>
                         <span class="details-block">
@@ -44,11 +46,14 @@ In February 2013, IBM announced that Watson software system's first commercial a
                 </div>
             </div>
             <div class="container">
+                    <div  *ngIf="loadingCarosel">
+                            <span  class="spinner-border spinner-border-lg align-center"></span>
 
-                <carousel class="ivycarousel" [cellWidth]="340" [loop]="true" [margin]="2" [cellsToShow]="5">
-
+                    </div>
+                <carousel  *ngIf="showCarosel" class="ivycarousel" [cellWidth]="340" [loop]="true" [margin]="2" [cellsToShow]="5">
+                    
                     <div *ngFor="let data of allProjects" class="carousel-cell">
-                        <button  #items (click)="onProductClick(data.projectID)" type="button" class="btn link products" data-placement="bottom">
+                        <button  #items (click)="onProductClick(data.pname)" type="button" class="btn link products" data-placement="bottom">
                             {{data.pname}}
                         </button>
                         <div id="{{data.pname}}" class="favyicon">
@@ -57,7 +62,7 @@ In February 2013, IBM announced that Watson software system's first commercial a
                     </div>
                    
                 </carousel>
-                <div *ngIf="productClicked" class="col-md-12  desc">
+                <div *ngIf="productClicked && showCarosel" class="col-md-12  desc">
                    {{descDetail}}
                 </div>
             </div>

@@ -19,7 +19,9 @@ export class AccountService {
         allSkill:null,
         allProjects:null,
         allLeavesYear:null,
-        allLeaves:null
+        allLeaves:null,
+        allProjectAbout:null,
+        prouctResourceCount:null
     }
 
     private userInfoData =  new BehaviorSubject([]);
@@ -162,12 +164,7 @@ export class AccountService {
             this.allSkillData.next(this.data.allSkill.payload)
         });
     }
-    getAllProjects(){
-        return this.http.get(`/home/getAllProjects`).subscribe(response=>{
-            this.data.allProjects = response;
-            this.allProjectsData.next(this.data.allProjects.payload)
-        });
-    }
+    
 
     getAllLeavesByMonthYear(month,year){
         return this.http.get(`/home/leave/getUserLeavesByMonthAndYear?month=${month}&year=${year}`)
@@ -176,11 +173,26 @@ export class AccountService {
             return this.data.allLeavesYear
         }))
 }
+
+getAllProjectAbout(){
+    return this.http.get(`/home/getAllProjects`)
+        .pipe(map(response=>{
+            this.data.allProjectAbout = response;
+            return this.data.allProjectAbout.payload
+        }))
+}
     getAllLeaves(){
         return this.http.get(`/home/leave/getAllLeaves`)
         .pipe(map(response=>{
             this.data.allLeaves = response;
             return this.data.allLeaves
+        }))
+    }
+    getProjectResourceCount(){
+        return this.http.get(`/home/user/productAndResourceCount`)
+        .pipe(map(response=>{
+            this.data.prouctResourceCount = response;
+            return this.data.prouctResourceCount.body
         }))
     }
 }
