@@ -269,6 +269,8 @@ export class TeaminfoComponent implements OnInit {
 }
   //table to excel export
   excelToExport(){
+   this.excelData = [];
+   this.dataForExcel = [];
     for(let user of this.allUsers){
         this.excelData.push({Emp_Id:user.empId,FirstName:user.firstName,LastName:user.lastName,Project:user.projectCommas,Roles:user.roleCommas,Primary_Skill:user.primarySkill,Secondary_Skill:user.secondarySkill,Email:user.email,Designation:user.designation.title,Location:user.location.name,Gender:user.gender,Mobile_No:user.mobileNo})
 
