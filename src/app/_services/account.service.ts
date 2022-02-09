@@ -21,7 +21,8 @@ export class AccountService {
         allLeavesYear:null,
         allLeaves:null,
         allProjectAbout:null,
-        prouctResourceCount:null
+        prouctResourceCount:null,
+        allUsers:null
     }
 
     private userInfoData =  new BehaviorSubject([]);
@@ -193,6 +194,14 @@ getAllProjectAbout(){
         .pipe(map(response=>{
             this.data.prouctResourceCount = response;
             return this.data.prouctResourceCount.body
+        }))
+    }
+
+    getAllUsers(){
+        return this.http.get(`/home/user/getusers`)
+        .pipe(map(response=>{
+            this.data.allUsers = response;
+            return this.data.allUsers.payload
         }))
     }
 }
