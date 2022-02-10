@@ -39,6 +39,7 @@ import { ExportExcelService } from '@app/_services/export-excel.service';
   styleUrls: ['./teaminfo.component.less']
 })
 export class TeaminfoComponent implements OnInit {
+  
   users;
   totalSize;
   page;
@@ -231,6 +232,15 @@ export class TeaminfoComponent implements OnInit {
         })
 
         this.allUsers.map((obj) => {
+          if(obj.mobileNo!=undefined)
+         obj.mobile = obj.mobileNo.toString();
+      })
+      this.allUsers.map((obj) => {
+        if(obj.empId!=undefined)
+       obj.empIdString = obj.empId.toString();
+    })
+
+        this.allUsers.map((obj) => {
             this.techlist = []
             obj.techRoles.forEach(element => {
                 this.techlist.push(element.title);
@@ -269,10 +279,10 @@ export class TeaminfoComponent implements OnInit {
 }
   //table to excel export
   excelToExport(){
-   this.excelData = [];
-   this.dataForExcel = [];
+      this.excelData = [];
+      this.dataForExcel = [];
     for(let user of this.allUsers){
-        this.excelData.push({Emp_Id:user.empId,FirstName:user.firstName,LastName:user.lastName,Project:user.projectCommas,Roles:user.roleCommas,Primary_Skill:user.primarySkill,Secondary_Skill:user.secondarySkill,Email:user.email,Designation:user.designation.title,Location:user.location.name,Gender:user.gender,Mobile_No:user.mobileNo})
+        this.excelData.push({Emp_Id:user.empIdString,FirstName:user.firstName,LastName:user.lastName,Project:user.projectCommas,Roles:user.roleCommas,Primary_Skill:user.primarySkill,Secondary_Skill:user.secondarySkill,Email:user.email,Designation:user.designation.title,Location:user.location.name,Gender:user.gender,Mobile_No:user.mobile})
 
     }
       console.log(this.excelData)
