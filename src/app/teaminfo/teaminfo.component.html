@@ -5,12 +5,17 @@
 			<img class="float-right" width="20" height="20" (click)="applyFilter()" style="cursor: pointer; margin-top: 7px;" src="../assets/img/filter.png">
 			<ng-multiselect-dropdown class="float-right col-5" [placeholder]="'Select Skills'" [settings]="dropdownSettings" [data]="allSkills" [(ngModel)]="selectedSkill"> </ng-multiselect-dropdown>
 			<ng-multiselect-dropdown class="float-right col-5" [placeholder]="'Select Project'" [settings]="dropdownSettingsProject" [data]="allProjects" [(ngModel)]="selectedProject"> </ng-multiselect-dropdown>
-			<button  (click)="excelToExport()" style="margin:0;border-radius:0;font-size: 12px;" class="btn save">Excel Export</button>
 
 		</div>
 
 	</div>
-	<p *ngIf="teamDetails.length!=0" class="col-12 show-record-info">Showing {{userInfo.length}} records out of {{totalSize}}</p>
+	
+
+	<div *ngIf="teamDetails.length!=0">
+		<p  class="col-12 show-record-info float-left mb-2" style="width:200px;">Showing {{userInfo.length}} records out of {{totalSize}}</p>
+
+	<button  (click)="excelToExport()" style="margin:0;border-radius:0;font-size: 12px;margin-right: 24px;" class="btn save float-right mb-2">Excel Export</button>
+	</div>
 	<table class="col-12 table table-hover table-condensed table-striped">
 		<thead>
 			<tr class="border_bottom">

@@ -40,10 +40,10 @@
 	<div class="modal-body">
 		<form class="form-inline">
 			<div class="form-row col-12">
-				<label class="form-group border-lable-flt col-10 mb-4">
+				<label class="form-group border-lable-flt col-11 mb-4">
 					<input type="password" name="oldPassword" class="custom-select col-12" [type]="fieldTextType ? 'text' : 'password'" [(ngModel)]="oldPassword" />
 					<span>Old Password</span> </label>
-					<div class="input-group-append col-2 mb-4">
+					<div class="input-group-append col-1 mb-4">
                         <span class="input-group-text" >
                             <i  style="cursor: pointer" class="fa" [ngClass]="{
                                 'fa-eye-slash': !fieldTextType,
@@ -54,11 +54,11 @@
 			</div>
 
 			<div class="form-row col-12">
-				<label class="form-group border-lable-flt col-10 mb-4">
+				<label class="form-group border-lable-flt col-11 mb-4">
 					<input type="password" name="newPassword" class="custom-select col-12" [type]="fieldTextType2 ? 'text' : 'password'" [(ngModel)]="newPassword"
 						[ngClass]="{ 'is-invalid':newConfirmMisMatch || minLengthError}" /> <span>New Password</span>
 				</label>
-				<div class="input-group-append col-2 mb-4">
+				<div class="input-group-append col-1 mb-4">
 					<span class="input-group-text" >
 						<i style="cursor: pointer" class="fa" [ngClass]="{
 							'fa-eye-slash': !fieldTextType2,
@@ -68,11 +68,11 @@
 				</div>
 			</div>
 			<div class="form-row col-12">
-				<label class="form-group border-lable-flt col-10 mb-4">
+				<label class="form-group border-lable-flt col-11 mb-4">
 					<input type="password" name="confirmPassword" class="custom-select col-12" [type]="fieldTextType3 ? 'text' : 'password'"
 						[(ngModel)]="confirmPassword" [ngClass]="{ 'is-invalid':newConfirmMisMatch ||minLengthError}" />
 					<span>Confirm Password</span> </label>
-					<div class="input-group-append col-2 mb-4">
+					<div class="input-group-append col-1 mb-4">
                         <span class="input-group-text">
                             <i  style="cursor: pointer" class="fa" [ngClass]="{
                                 'fa-eye-slash': !fieldTextType3,
