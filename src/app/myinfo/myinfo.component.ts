@@ -60,6 +60,13 @@ export class MyinfoComponent implements OnInit {
   selectedPrimItems = [];
   selectedSecItems = [];
   dropdownSettings: IDropdownSettings = {};
+  //my changes
+  dropDownListCertifkn = [];
+  selectedItmesCertifkn = [];
+  certifknBoolean = true;
+  certfknEdit = [];
+  dropdownSetting: IDropdownSettings = {};
+  //my changes
   currentLocation;
   projects = [];
   projectCommaSeparate;
@@ -111,23 +118,23 @@ export class MyinfoComponent implements OnInit {
   listDatesUser = [];
   allUserLeaves = [];
   isDisabled;
-  date: {year: number, month: number};
-  
-  disabledDates: NgbDateStruct[] = [ 
-    {year: 2050, month:4, day:10},
-  
+  date: { year: number, month: number };
+
+  disabledDates: NgbDateStruct[] = [
+    { year: 2050, month: 4, day: 10 },
+
   ]
-  holidays: {month: number, day: number, text: string}[] = [
-    {month: 1, day: 26, text: 'New Years Day'},
-    {month: 4, day: 15, text: 'Good Friday (hi, Alsace!)'},
-    {month: 5, day: 1, text: 'Labour Day'},
-    {month: 5, day: 3, text: 'V-E Day'},
-    {month: 8, day: 31, text: 'Bastille Day'},
-    {month: 10, day: 2, text: 'Assumption Day'},
-    {month: 10, day: 5, text: 'All Saints Day'},
-    {month: 10, day: 26, text: 'Armistice Day'},
-    {month: 11, day: 1, text: 'Christmas Day'}
-  ];  today: NgbDate;
+  holidays: { month: number, day: number, text: string }[] = [
+    { month: 1, day: 26, text: 'New Years Day' },
+    { month: 4, day: 15, text: 'Good Friday (hi, Alsace!)' },
+    { month: 5, day: 1, text: 'Labour Day' },
+    { month: 5, day: 3, text: 'V-E Day' },
+    { month: 8, day: 31, text: 'Bastille Day' },
+    { month: 10, day: 2, text: 'Assumption Day' },
+    { month: 10, day: 5, text: 'All Saints Day' },
+    { month: 10, day: 26, text: 'Armistice Day' },
+    { month: 11, day: 1, text: 'Christmas Day' }
+  ]; today: NgbDate;
 
   //intialize variables end
 
@@ -145,7 +152,7 @@ export class MyinfoComponent implements OnInit {
     private config: NgbDatepickerConfig
   ) {
     this.markDisabled = this.markDisabled.bind(this);
-    
+
     this.getAllLeaves();
     const current = new Date();
     config.minDate = {
@@ -163,6 +170,7 @@ export class MyinfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.accountService.userValue;
+    this.dropDownListCertifkn = this.accountService.getAllCertifkn();
     this.userInfo = this.user.userInfo;
     console.log(this.userInfo);
     this.getImage();
@@ -247,84 +255,94 @@ export class MyinfoComponent implements OnInit {
       imageInput: ['', [Validators.required]],
 
     });
+    this.dropdownSetting = {
+      singleSelection: false,
+      idField: 'item_id',
+      textField: 'item_text',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
   }
 
   //ngOnit ends
 
-  getAllLeaves(){
+
+  getAllLeaves() {
     this.accountService.getAllLeaves().subscribe(
       (data) => {
-          this.allLeaves = {...data};
-          this.processAllLeaves()
+        this.allLeaves = { ...data };
+        this.processAllLeaves()
         console.log(this.allLeaves)
-  
+
       },
       (error) => {
-          // this.alertService.error(error);
+        // this.alertService.error(error);
       }
-  );
-}
-processAllLeaves(){
-  for(let yearkey in this.allLeaves){
+    );
+  }
+  processAllLeaves() {
+    for (let yearkey in this.allLeaves) {
 
-    for(let monthkey in this.allLeaves[yearkey]){
-      for(let idkey in this.allLeaves[yearkey][monthkey]){
-        if(idkey == this.user.id){
-          console.log(this.allLeaves[yearkey][monthkey][idkey]['leaves'])
-          for(let item of this.allLeaves[yearkey][monthkey][idkey]['leaves']){
+      for (let monthkey in this.allLeaves[yearkey]) {
+        for (let idkey in this.allLeaves[yearkey][monthkey]) {
+          if (idkey == this.user.id) {
+            console.log(this.allLeaves[yearkey][monthkey][idkey]['leaves'])
+            for (let item of this.allLeaves[yearkey][monthkey][idkey]['leaves']) {
 
-            this.allUserLeaves.push(item)
+              this.allUserLeaves.push(item)
+            }
+
           }
-
         }
       }
     }
+    console.log(this.allUserLeaves)
+    this.convertUserLeaveNgbDateArray();
   }
-  console.log(this.allUserLeaves)
-  this.convertUserLeaveNgbDateArray();
-}
-convertUserLeaveNgbDateArray(){
-  for(var leaves of  this.allUserLeaves){
-    if(!(leaves.hasOwnProperty('toDate'))){
-      console.log(new Date(leaves.fromDate).getFullYear(),new Date(leaves.fromDate).getMonth()+1,new Date(leaves.fromDate).getDate());
-      console.log({year:new Date(leaves.fromDate).getFullYear(),month:new Date(leaves.fromDate).getMonth()+1,day:new Date(leaves.fromDate).getDate()})
-      this.disabledDates.push({year:new Date(leaves.fromDate).getFullYear(),month:new Date(leaves.fromDate).getMonth()+1,day:new Date(leaves.fromDate).getDate()})
-    }
-    else{
-      this.listDatesUser = this.getDates(new Date(leaves.fromDate), new Date(leaves.toDate))
-      for(var list=0;list<this.listDatesUser.length;list++){
-        if(this.listDatesUser[list].getDay()!=6 && this.listDatesUser[list].getDay()!=0)
-        this.disabledDates.push({year:new Date(this.listDatesUser[list]).getFullYear(),month:new Date(this.listDatesUser[list]).getMonth()+1,day:new Date(this.listDatesUser[list]).getDate()})
+  convertUserLeaveNgbDateArray() {
+    for (var leaves of this.allUserLeaves) {
+      if (!(leaves.hasOwnProperty('toDate'))) {
+        console.log(new Date(leaves.fromDate).getFullYear(), new Date(leaves.fromDate).getMonth() + 1, new Date(leaves.fromDate).getDate());
+        console.log({ year: new Date(leaves.fromDate).getFullYear(), month: new Date(leaves.fromDate).getMonth() + 1, day: new Date(leaves.fromDate).getDate() })
+        this.disabledDates.push({ year: new Date(leaves.fromDate).getFullYear(), month: new Date(leaves.fromDate).getMonth() + 1, day: new Date(leaves.fromDate).getDate() })
       }
+      else {
+        this.listDatesUser = this.getDates(new Date(leaves.fromDate), new Date(leaves.toDate))
+        for (var list = 0; list < this.listDatesUser.length; list++) {
+          if (this.listDatesUser[list].getDay() != 6 && this.listDatesUser[list].getDay() != 0)
+            this.disabledDates.push({ year: new Date(this.listDatesUser[list]).getFullYear(), month: new Date(this.listDatesUser[list]).getMonth() + 1, day: new Date(this.listDatesUser[list]).getDate() })
+        }
 
+      }
     }
+    this.isDisabled = (date: NgbDateStruct, dates: NgbDate, current: { month: number, year: number }) => {
+
+      return this.disabledDates.find(x => NgbDate.from(x).equals(date)) || this.calendar.getWeekday(dates) >= 6 ? true : false;
+    }
+
+    console.log(this.disabledDates)
   }
-  this.isDisabled = (date: NgbDateStruct,dates:NgbDate, current: {month: number,year: number})=> {
 
-    return this.disabledDates.find(x => NgbDate.from(x).equals(date)) || this.calendar.getWeekday(dates) >= 6? true: false;
-  }
-
-  console.log(this.disabledDates)
-}
-
- // Returns an array of dates between the two dates
- getDates(startDate, endDate) {
-  const dates = []
-  let currentDate = startDate
-  const addDays = function(days) {
+  // Returns an array of dates between the two dates
+  getDates(startDate, endDate) {
+    const dates = []
+    let currentDate = startDate
+    const addDays = function (days) {
       const date = new Date(this.valueOf())
       date.setDate(date.getDate() + days)
       return date
-  }
-  while (currentDate <= endDate) {
+    }
+    while (currentDate <= endDate) {
       dates.push(currentDate)
       currentDate = addDays.call(currentDate, 1)
+    }
+    return dates
   }
-  return dates
-}
 
 
-  
+
 
   //on click of save in add leaves
   onLeaveUpdateSave() {
@@ -670,9 +688,9 @@ convertUserLeaveNgbDateArray(){
     if (
       this.editProfileForm.invalid ||
       this.primarySet.length == 0 ||
-      this.primarySet.length >5||
-      this.secondarySet.length == 0||
-      this.secondarySet.length>5
+      this.primarySet.length > 5 ||
+      this.secondarySet.length == 0 ||
+      this.secondarySet.length > 5
     ) {
       return;
     } else {
@@ -746,13 +764,13 @@ convertUserLeaveNgbDateArray(){
   }
 
   //on project click
-  onProjectSelect(pid,pname) {
-    this.sendProject = {"projectID":pid , "pname":pname};
+  onProjectSelect(pid, pname) {
+    this.sendProject = { "projectID": pid, "pname": pname };
     console.log(this.sendProject)
     this.commonService.changeProject(pname);
 
     // this.commonService.sendProjectUpdate(this.sendProject);
-    
+
     this.router.navigateByUrl('/aboutus');
   }
   onFileChanged($event: any) {
@@ -763,7 +781,7 @@ convertUserLeaveNgbDateArray(){
       let file = $event.target.files[0];
       const fileSize = file.size / 1024 / 1024;
 
-      if ((file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/jpg" )) {
+      if ((file.type == "image/jpeg" || file.type == "image/png" || file.type == "image/jpg")) {
         this.upload();
       }
 
@@ -802,11 +820,11 @@ convertUserLeaveNgbDateArray(){
           this.message = 'Image not uploaded successfully';
         }
       },
-      (error) => {
-        console.log(error)
-        this.alertService.error(error);
+        (error) => {
+          console.log(error)
+          this.alertService.error(error);
 
-      }
+        }
       );
   }
   //remove photo
@@ -856,7 +874,7 @@ convertUserLeaveNgbDateArray(){
       );
   }
 
-  
+
   isWeekend(date: NgbDate) {
     return this.calendar.getWeekday(date) >= 6;
   }
@@ -865,12 +883,12 @@ convertUserLeaveNgbDateArray(){
     const holiday = this.holidays.find(h => h.day === date.day && h.month === date.month);
     return holiday ? holiday.text : '';
   }
-  onLeave(date:NgbDate) {
-   const leave =  this.disabledDates.find(h => h.day === date.day && h.month === date.month)
-   return leave ? leave.day: '';
+  onLeave(date: NgbDate) {
+    const leave = this.disabledDates.find(h => h.day === date.day && h.month === date.month)
+    return leave ? leave.day : '';
   }
-  markDisabled(date: NgbDate, current: {year: number, month: number}): boolean {
-    return this.isHoliday(date) !== '' || (this.isWeekend(date) && date.month === current.month) || this.onLeave(date)!== '';
+  markDisabled(date: NgbDate, current: { year: number, month: number }): boolean {
+    return this.isHoliday(date) !== '' || (this.isWeekend(date) && date.month === current.month) || this.onLeave(date) !== '';
   }
 
   getFirstAvailableDate(date: NgbDate): NgbDate {
@@ -885,17 +903,17 @@ convertUserLeaveNgbDateArray(){
       this.fromDate = date;
       this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
       this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
-    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)  || date.equals(this.fromDate)) {
+    } else if (this.fromDate && !this.toDate && date.after(this.fromDate) || date.equals(this.fromDate)) {
       this.toDate = date;
       this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
       this.toDateFormatted = this.toDate.year + '-' + ('0' + (this.toDate.month)).slice(-2) + '-' + ('0' + this.toDate.day).slice(-2);
-  
+
     } else {
       this.toDate = null;
       this.fromDate = date;
       this.fromDateFormatted = this.fromDate.year + '-' + ('0' + (this.fromDate.month)).slice(-2) + '-' + ('0' + this.fromDate.day).slice(-2);
       this.toDateFormatted = this.fromDateFormatted
-  
+
     }
   }
 
@@ -922,5 +940,8 @@ convertUserLeaveNgbDateArray(){
       return '';
     }
   }
- 
+  onItemCertfkn(item: any) {
+
+  }
+
 }

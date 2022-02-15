@@ -31,11 +31,11 @@
 						<div class="user-name">
 							<p>{{userInfo.firstName}} {{userInfo.middleName}} {{userInfo.lastName}}</p>
 
-						
+
 							<div>
 								<p class="text-muted p-designation">{{userInfo.designation.title}}</p>
 								<button class="addLeave-btn"
-									(click)="openModal(addLeaveModal, user)">+&nbsp;&nbsp;Leaves</button>
+									(click)="openModal(addLeaveModal, user)">+&nbsp;&nbsp;Add Leaves</button>
 							</div>
 						</div>
 					</div>
@@ -127,6 +127,17 @@
 					</div>
 					<div class="form-row">
 						<div class="col-11 data-section">
+
+							<!-- <label for="skills">Certifications</label>
+							<ng-multiselect-dropdown class="prim-drop" *ngIf="certifknBoolean"
+								[placeholder]="'Select Certifications'" [settings]="dropdownSetting"
+								[data]="dropDownListCertifkn" [(ngModel)]="selectedItmesCertifkn"
+								formControlName="certifkn" (onSelect)="onItemCertfkn($event)"
+								(onDeSelect)="onItemDeSelectPrimary($event)"
+								(onFilterChange)="onFilterChangPrimaryeSearch($event)"
+								(onDropDownClose)="onDropDownClosePrimary()"> </ng-multiselect-dropdown>
+							<br /><br /> -->
+
 							<label for="skills">Skills : <span *ngIf="primarySkillBoolean">Primary</span> <span
 									*ngIf="!primarySkillBoolean">Secondary</span> </label>
 							<ng-multiselect-dropdown class="prim-drop" *ngIf="primarySkillBoolean"
@@ -219,7 +230,8 @@
 							:&nbsp;&nbsp;</b>---
 					</li>
 					<li class="list-item col-6 show-elipse-static" title="{{projectCommaSeparate}}">
-						<b>Project:&nbsp;&nbsp;</b><span class="project-name" (click)="onProjectSelect(project.projectID,project.pname)"
+						<b>Project:&nbsp;&nbsp;</b><span class="project-name"
+							(click)="onProjectSelect(project.projectID,project.pname)"
 							*ngFor="let project of userInfo.projects last as isLast">{{project.pname}}{{isLast?'':', '}}</span>
 					</li>
 					<li style="display: inline-table;" class="list-item col-12">
@@ -244,25 +256,17 @@
 			<form class="form-inline">
 				<div class="form-row">
 					<ng-template #dayTemplate let-date let-disabled="disabled">
-                        <span class="custom-day"  container="body" matTooltip="getTooltip(date)"  [matTooltipPosition]="'above'"
-                              [class.holiday]="!!isHoliday(date)"
-                              [class.disabled]="disabled || isWeekend(date)"
-                              [class.leave]="!!onLeave(date)"
-                              [class.range]="isRange(date)"
-                              [class.faded]="isHovered(date) || isInside(date)"
-                              (mouseenter)="hoveredDate = date"
-                              (mouseleave)="hoveredDate = null">
-                          {{ date.day }}
-                        </span>
-                      </ng-template>
-                      <ngb-datepicker
-                        (dateSelect)="onDateSelection($event)"
-                        [dayTemplate]="dayTemplate"
-                        [markDisabled]="markDisabled"
-                        [minDate]="today"
-                        outsideDays="hidden"
-                        [displayMonths]="2">
-                      </ngb-datepicker>
+						<span class="custom-day" container="body" matTooltip="getTooltip(date)"
+							[matTooltipPosition]="'above'" [class.holiday]="!!isHoliday(date)"
+							[class.disabled]="disabled || isWeekend(date)" [class.leave]="!!onLeave(date)"
+							[class.range]="isRange(date)" [class.faded]="isHovered(date) || isInside(date)"
+							(mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
+							{{ date.day }}
+						</span>
+					</ng-template>
+					<ngb-datepicker (dateSelect)="onDateSelection($event)" [dayTemplate]="dayTemplate"
+						[markDisabled]="markDisabled" [minDate]="today" outsideDays="hidden" [displayMonths]="2">
+					</ngb-datepicker>
 					<!-- <div class="input-group from-date-block">
 						<label for="from">From&nbsp;:&nbsp; </label>
 						<input class="form-control" id="from" placeholder="yyyy-mm-dd" name="from" [(ngModel)]="fromDate" ngbDatepicker #from="ngbDatepicker">

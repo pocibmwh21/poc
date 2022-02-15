@@ -359,16 +359,17 @@ color: #fff;
 .faded:not(.holiday):not(.disabled) {
   background-color: rgba(2, 117, 216, 0.5);
 }
-
-.showBg {
-  // background: #ffffff url("img_tree.png") no-repeat right top;
-
-  // background-image: url("bg-img.png");
+.fc-daygrid-more-link {
+  visibility: hidden;
 }
-.noBg{
-  background:#FFFFFF;
+.fc-daygrid-more-link:after {
+  content:'...'; 
+  visibility: visible;
+  display: block;
+  position: absolute;
+  font-weight: bold;
+  top: -4px;
 }
-
 // .fc .fc-daygrid-day-frame{
 //   cursor: pointer !important;
 // }

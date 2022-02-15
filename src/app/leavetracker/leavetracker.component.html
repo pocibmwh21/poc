@@ -33,7 +33,10 @@
                     <div>
                         <p class="holiday-head">Public Holiday</p>
                     </div>
-                    <div class="holiday-div">
+                    <div *ngIf="publicHolidayDisplay.length==0">
+                        <p style="color:grey">No  Public Holidays for this month !!!</p>
+                    </div>
+                    <div *ngIf="publicHolidayDisplay.length!=0" class="holiday-div">
                         <div *ngFor="let holiday of publicHolidayDisplay" class="sidebarsecond">
                             <p class="sidebarone-text" style="margin:6px">{{holiday.date}} <br />
                                 {{holiday.description}}</p>

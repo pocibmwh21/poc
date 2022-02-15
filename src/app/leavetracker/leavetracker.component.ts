@@ -112,6 +112,7 @@ base64Data;
   listDatesUser = [];
   allUserLeaves = [];
   isDisabled;
+  dayData = [];
   today: NgbDate;
   holidays: {month: number, day: number, text: string}[] = [
     {month: 1, day: 26, text: 'New Years Day'},
@@ -277,17 +278,24 @@ convertUserLeaveNgbDateArray(){
       this.data = [];
       this.publicHolidayData = [];
       this.deleteLeavesData = [];
+      this.publicHolidayDisplay = [];
+      this.dayData = [];
+      console.log(cMonth)
          //push public holiday data to main data of full calender and convert date to display
          for (let obj of this.public_holiday) {
             console.log("object:", obj);
             for (let key in obj) {
                 var day = new Date(key);
                 console.log(day)
+                console.log(this.month[day.getMonth()].toUpperCase())
                 var date = day.getDate() + ' ' + this.month[day.getMonth()] + ' ' + day.getFullYear();
-                this.publicHolidayDisplay.push({
-                    'date': date,
-                    'description': obj[key]
-                })
+                if(cMonth == this.month[day.getMonth()].toUpperCase()){
+                  this.publicHolidayDisplay.push({
+                      'date': date,
+                      'description': obj[key]
+                  })
+                
+               
                 this.publicHolidayData.push({
                     date: key,
                     title: '',
@@ -298,6 +306,7 @@ convertUserLeaveNgbDateArray(){
                     display: 'background',
                     color: '#649615'
                 })
+              }
             }
         }
         this.data.push(...this.publicHolidayData)
@@ -316,6 +325,14 @@ convertUserLeaveNgbDateArray(){
                      this.deleteLeavesData.push(leaves)
                  }
                  if (leaves.fromDate == leaves.toDate|| !(leaves.hasOwnProperty('toDate'))) {
+                  this.base64Data =  this.dataFromBackend[cMonth][key]['photo'];
+                  this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+                  this.dayData.push({
+                    name: this.dataFromBackend[cMonth][key]['userName'],
+                    project: this.dataFromBackend[cMonth][key]['projectName'],
+                    date: leaves.fromDate,
+                    imageUrl: this.retrievedImage
+                })
                      if (key == this.user.id) {
                          this.daysSelectedLid.push({"date":leaves.fromDate,"lid":leaves.lid})
                          this.daysSelected.push(leaves.fromDate)
@@ -327,20 +344,33 @@ convertUserLeaveNgbDateArray(){
                              display: 'background',
                              color: '#0072C7'
                          })
+                         
                      } else {
-                        this.base64Data =  this.dataFromBackend[cMonth][key]['photo'];
-                        this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+                       
                          this.data.push({
                              name: this.dataFromBackend[cMonth][key]['userName'],
                              project: this.dataFromBackend[cMonth][key]['projectName'],
                              date: leaves.fromDate,
                              imageUrl: this.retrievedImage
                          })
+                         
                      }
 
                  } else {
                      this.listDates = this.getDates(new Date(leaves.fromDate), new Date(leaves.toDate))
                      for (var j = 0; j < this.listDates.length; j++) {
+                      this.base64Data =  this.dataFromBackend[cMonth][key]['photo'];
+                      this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+                     
+                      if(new Date(this.listDates[j]).getDay()!=6 && new Date(this.listDates[j]).getDay()!=0){
+
+                       this.dayData.push({
+                           name: this.dataFromBackend[cMonth][key]['userName'],
+                           project: this.dataFromBackend[cMonth][key]['projectName'],
+                           date: this.listDates[j].toISOString().slice(0, 10),
+                           imageUrl: this.retrievedImage
+                       })
+                      }
                          if (key == this.user.id) {
                             this.daysSelectedLid.push({"date":this.listDates[j].toISOString().slice(0, 10),"lid":leaves.lid})
                            this.daysSelected.push(this.listDates[j].toISOString().slice(0, 10))
@@ -393,7 +423,7 @@ convertUserLeaveNgbDateArray(){
         // update calender
         this.calendarOptions = {
             initialView: 'dayGridMonth',
-            dayMaxEventRows: 4, // allow "more" link when too many events
+            dayMaxEventRows: 5, // allow "more" link when too many events
             eventContent: this.renderEventContent, // This will render the event with image 
             events: this.data,
             customButtons: {
@@ -409,7 +439,7 @@ convertUserLeaveNgbDateArray(){
 
         this.calendarOptionstest = {
             eventContent: this.renderEventContentForDay, // This will render the event with image
-            events: this.data
+            events: this.dayData
         };
 
         
@@ -556,6 +586,7 @@ openModal(targetModal) {
 
   //Event Render Function for full calnder
   renderEventContent(eventInfo, createElement) {
+      console.log($('.leave-calender .fc-daygrid-more-link'))
       var innerHtml;
       //Check if event has image
       if (eventInfo.event._def.extendedProps.holiday) {
@@ -568,7 +599,7 @@ openModal(targetModal) {
     }
       if (eventInfo.event._def.extendedProps.imageUrl && eventInfo.event._def.extendedProps.imageUrl!="data:image/jpeg;base64,undefined") {
           // Store custom html code in variable
-          innerHtml = eventInfo.event._def.title + "<img style='display:inline;width:20px;height:20px;border-radius: 50%;opacity: 1;/* opacity: 8; */' src='" + eventInfo.event._def.extendedProps.imageUrl + "'>" + "<span style='color:black;color: #FFFFFF;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span>";
+          innerHtml = eventInfo.event._def.title + "<img title='"+eventInfo.event._def.extendedProps.name+"' style='display:inline;width:19px;height:19px;border-radius: 50%;opacity: 1;/* opacity: 8; */' src='" + eventInfo.event._def.extendedProps.imageUrl + "'>" + "<span style='color:black;color: #FFFFFF;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span>";
           //Event with rendering html
           return createElement = {
               html: innerHtml
@@ -579,7 +610,7 @@ openModal(targetModal) {
 
         console.log(eventInfo.event._def.extendedProps.name.substring(eventInfo.event._def.extendedProps.name.indexOf(' ') + 1)[0].toUpperCase())
         // Store custom html code in variable
-        innerHtml = eventInfo.event._def.title + '<div style="background:red;display:inline;width: 72px;height: 57px;border-radius: 50%;opacity: 1;font-size: 13px;/* font-weight: bold; */padding: 4px;background: #d5e3ea;height: 40px;width: 40px;border-radius: 45px;text-align: center;line-height: 38px;color: #274750;margin-right:2px">' + eventInfo.event._def.extendedProps.name[0].toUpperCase()+eventInfo.event._def.extendedProps.name.substring(eventInfo.event._def.extendedProps.name.indexOf(' ') + 1)[0].toUpperCase() + '</div>'+ "<span style='color:black;color: #FFFFFF;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span>";;
+        innerHtml = eventInfo.event._def.title + '<div title="'+eventInfo.event._def.extendedProps.name+'" style="background:red;display:inline;width: 72px;height: 57px;border-radius: 50%;opacity: 1;font-size: 11px;/* font-weight: bold; */padding: 4px;background: #d5e3ea;height: 40px;width: 40px;border-radius: 45px;text-align: center;line-height: 38px;color: #274750;margin-right:2px">' + eventInfo.event._def.extendedProps.name[0].toUpperCase()+eventInfo.event._def.extendedProps.name.substring(eventInfo.event._def.extendedProps.name.indexOf(' ') + 1)[0].toUpperCase() + '</div>'+ "<span style='color:black;color: #FFFFFF;padding-left: 10px;'>" + eventInfo.event._def.extendedProps.name + "</span>";;
         //Event with rendering html
         return createElement = {
             html: innerHtml
