@@ -3,6 +3,7 @@ import { Designation } from "./designation";
 import { Location } from "./location";
 import { Project } from "./project";
 import { SkillSet } from "./skillset";
+import { Certifications } from "./certifications";
 import { TechRole } from "./techrole";
 export class UserInfo {
   id: string;
@@ -18,6 +19,7 @@ export class UserInfo {
   techRoles: TechRole[];
   projects: Project[];
   skillSets: SkillSet[]; 
+  certifications:Certifications[];
   secondarySkill: any[];
   primarySkill: any[];
   projectList: any[];

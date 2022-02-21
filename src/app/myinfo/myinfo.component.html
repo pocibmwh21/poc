@@ -128,15 +128,22 @@
 					<div class="form-row">
 						<div class="col-11 data-section">
 
-							<!-- <label for="skills">Certifications</label>
-							<ng-multiselect-dropdown class="prim-drop" *ngIf="certifknBoolean"
-								[placeholder]="'Select Certifications'" [settings]="dropdownSetting"
-								[data]="dropDownListCertifkn" [(ngModel)]="selectedItmesCertifkn"
-								formControlName="certifkn" (onSelect)="onItemCertfkn($event)"
-								(onDeSelect)="onItemDeSelectPrimary($event)"
-								(onFilterChange)="onFilterChangPrimaryeSearch($event)"
-								(onDropDownClose)="onDropDownClosePrimary()"> </ng-multiselect-dropdown>
-							<br /><br /> -->
+							<label for="skills">Certifications</label>
+							<ng-multiselect-dropdown class="cert-drop" 
+								[placeholder]="'Select Certifications'" [settings]="dropdownSettings"
+								[data]="dropDownListCertifkn" [(ngModel)]="selectedCertItems"
+								formControlName="selectedCertifkn" (onSelect)="onItemSelectCertfkn($event)"
+								(onDropDownClose)="onDropDownCloseCert()"
+								(onFilterChange)="onFilterChangCertification($event)"
+								(onDeSelect)="onItemDeSelectCertfkn($event)"
+								> </ng-multiselect-dropdown>
+								<span id=cert{{i}} *ngFor="let certEach of certEdit ; let i = index"
+									class="skill sec-skill">
+									{{certEach}}
+									<img (click)="deleteCert(certEach,i)" class="primclose" width="8"
+										height="8" src="../assets/img/close-icon.png">
+								</span> 
+							<br /><br />
 
 							<label for="skills">Skills : <span *ngIf="primarySkillBoolean">Primary</span> <span
 									*ngIf="!primarySkillBoolean">Secondary</span> </label>
@@ -146,6 +153,7 @@
 								(onSelect)="onItemSelectPrimary($event)" (onDeSelect)="onItemDeSelectPrimary($event)"
 								(onFilterChange)="onFilterChangPrimaryeSearch($event)"
 								(onDropDownClose)="onDropDownClosePrimary()"> </ng-multiselect-dropdown>
+								
 							<ng-multiselect-dropdown class="sec-drop" *ngIf="!primarySkillBoolean"
 								[placeholder]="'Select Secondary Skills'" [settings]="dropdownSettings"
 								[data]="dropdownListSec" [(ngModel)]="selectedSecItems" formControlName="selectedSec"
@@ -234,6 +242,14 @@
 							(click)="onProjectSelect(project.projectID,project.pname)"
 							*ngFor="let project of userInfo.projects last as isLast">{{project.pname}}{{isLast?'':', '}}</span>
 					</li>
+					<li></li>
+					<li class="list-item col-6 show-elipse-static" *ngIf="userInfo.certifications.length!=0" title ="{{certificateComma}}">
+						<b>Certifications:&nbsp;&nbsp;</b><span 
+							*ngFor="let certificate of cert last as isLast">{{certificate}}{{isLast?'':', '}}</span>
+					</li>
+					<li class="list-item col-6 show-elipse-static" *ngIf="userInfo.certifications.length==0">
+						<b>Certifications:&nbsp;&nbsp;</b><span>---</span></li>
+
 					<li style="display: inline-table;" class="list-item col-12">
 						<p><b>Skills:&nbsp;&nbsp;</b><span *ngIf="userInfo.skillSets.length==0">---</span></p>
 						<p *ngIf="userInfo.skillSets.length!=0">

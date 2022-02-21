@@ -31,6 +31,7 @@ import {
   IDropdownSettings
 } from 'ng-multiselect-dropdown';
 import { ExportExcelService } from '@app/_services/export-excel.service';
+import { IfStmt } from '@angular/compiler';
 
 
 @Component({
@@ -65,6 +66,8 @@ export class TeaminfoComponent implements OnInit {
   allUsers = [];
   dataForExcel = [];
   excelData = [];
+   skillArray =[]
+ projectArray =[];
 
   constructor(private accountService: AccountService,
       private modalService: NgbModal,
@@ -96,7 +99,7 @@ export class TeaminfoComponent implements OnInit {
       //dropdown setting for project multiselect
 
       this.dropdownSettingsProject = {
-          idField: 'id',
+          idField: 'projectID',
           textField: 'pname',
           allowSearchFilter: true
 
@@ -109,7 +112,7 @@ export class TeaminfoComponent implements OnInit {
 
               //include id in all skill array for multiselect
               this.allSkills.map((obj, index) => {
-                  obj.id = index;
+                  obj.id = obj.id;
                   return obj
               })
               console.log("AllSkilnews: ", this.allSkills);
@@ -134,9 +137,11 @@ export class TeaminfoComponent implements OnInit {
             this.allProjects = data;
             //include id in all project array for multiselect
             this.allProjects.map((obj, index) => {
-                obj.id = index;
+                obj.id = obj.projectID;
                 return obj
-            })        },
+            })       
+            console.log(this.allProjects)
+          },
         (error) => {
             this.alertService.error(error);
         }
@@ -195,11 +200,14 @@ export class TeaminfoComponent implements OnInit {
 
   //apply filter
   applyFilter() {
-      var skillArray = this.selectedSkill.map(item => item.technology);
-      var projectArray = this.selectedProject.map(item => item.pname);
-      console.log(skillArray)
-      console.log(projectArray)
-      var data = {'skills':skillArray,'projects':projectArray}
+    
+    for(let i=0;i<this.selectedProject.length;i++){
+      this.projectArray.push({"projectID":this.selectedProject[i].projectID})
+    }
+    for(let i=0;i<this.selectedSkill.length;i++){
+      this.skillArray.push({"id":this.selectedSkill[i].id})
+    }
+      var data = {'skills':this.skillArray,'projects':this.projectArray}
       console.log(data)
   }
 
@@ -223,12 +231,15 @@ export class TeaminfoComponent implements OnInit {
 
         this.allUsers.map((obj) => {
             this.projectlist = []
-            obj.projects.forEach(element => {
+            if(obj.hasOwnProperty('projects')){
+              obj.projects.forEach(element => {
                 this.projectlist.push(element.pname);
                 obj.projectList = this.projectlist;
                 obj.projectCommas = this.projectlist.join(', ')
                 return obj;
             });
+            }
+            
         })
 
         this.allUsers.map((obj) => {

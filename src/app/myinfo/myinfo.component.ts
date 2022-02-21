@@ -48,6 +48,8 @@ export class MyinfoComponent implements OnInit {
   imagePath;
   primary = [];
   secondary = [];
+  cert = [];
+  certEdit = [];
   primaryEdit = [];
   secondaryEdit = [];
   primarySkillArray = [];
@@ -61,6 +63,7 @@ export class MyinfoComponent implements OnInit {
   selectedSecItems = [];
   dropdownSettings: IDropdownSettings = {};
   //my changes
+  certificateData = [];
   dropDownListCertifkn = [];
   selectedItmesCertifkn = [];
   certifknBoolean = true;
@@ -74,8 +77,10 @@ export class MyinfoComponent implements OnInit {
   formRole;
   data = {};
   skillSet = [];
+  certSet =[];
   allPrimary = [];
   allSecondary = [];
+  allCert = [];
   allInfos;
   allGender = [];
   techRoleList = [];
@@ -87,12 +92,15 @@ export class MyinfoComponent implements OnInit {
   message: string;
   searchNewPrimarySkill;
   searchNewSecondarySkill;
+  searchNewCertificate;
   showAddNewPrimary = false;
   showAddNewSecondary = false;
+  showAddNewCert = false;
   techRolesCommaSeparate;
   hoveredDate: NgbDate | null = null;
   extraPrimary = [];
   extraSecondary = [];
+  extraCert = [];
   fromDate: NgbDate;
   toDate: NgbDate | null = null;
   noImage;
@@ -101,6 +109,7 @@ export class MyinfoComponent implements OnInit {
   primarySet = [];
   secondarySet = [];
   allSkillSet = [];
+  allCertSet = [];
   sendProject;
   location: any;
   photoId;
@@ -136,6 +145,10 @@ export class MyinfoComponent implements OnInit {
     { month: 11, day: 1, text: 'Christmas Day' }
   ]; today: NgbDate;
 
+  certificateComma;
+  certifications = ['cert2','cert4'];
+  selectedCertItems =[];
+
   //intialize variables end
 
   //get user details on constructor
@@ -170,7 +183,25 @@ export class MyinfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.accountService.userValue;
-    this.dropDownListCertifkn = this.accountService.getAllCertifkn();
+
+    //certificata
+   this.accountService.getAllCertifkn().subscribe(
+    (data) => {
+      console.log(data);
+      this.allCertSet = [];
+
+      this.allCertSet.push(...data);
+
+      console.log('AllSkills:', this.allCertSet);
+    },
+    (error) => {
+      this.alertService.error(error);
+    }
+  );
+
+    // this.certificateComma = this.certificateData.join(', ');
+
+
     this.userInfo = this.user.userInfo;
     console.log(this.userInfo);
     this.getImage();
@@ -248,6 +279,7 @@ export class MyinfoComponent implements OnInit {
       location: [this.user.location, Validators.required],
       selectedPrim: [this.selectedPrimItems],
       selectedSec: [this.selectedSecItems],
+      selectedCertifkn:[this.selectedCertItems]
     });
 
     //Add User form validations
@@ -255,15 +287,7 @@ export class MyinfoComponent implements OnInit {
       imageInput: ['', [Validators.required]],
 
     });
-    this.dropdownSetting = {
-      singleSelection: false,
-      idField: 'item_id',
-      textField: 'item_text',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
+   
   }
 
   //ngOnit ends
@@ -375,9 +399,11 @@ export class MyinfoComponent implements OnInit {
   // Function to get the primary secondary selected and all skills
   getSelectedPrimnSec() {
     this.dropdownListPrim = [];
+    this.dropDownListCertifkn = [];
     this.dropdownListSec = [];
     this.allPrimary = [];
     this.allSecondary = [];
+    this.allCert = [];
 
     // //retrieve All skills
     for (let j = 0; j < this.allSkillSet.length; j++) {
@@ -391,6 +417,21 @@ export class MyinfoComponent implements OnInit {
       // }
     }
 
+    //retreive all certificates
+    for (let j = 0; j < this.allCertSet.length; j++) {
+        this.allCert.push(this.allCertSet[j].name);
+    
+    }
+    //making dropdown array for certificate ng-multiselect
+    for (var j = 0; j < this.allCert.length; j++) {
+
+      var objDrop = {};
+      objDrop['skillId'] = j;
+      objDrop['skill'] = this.allCert[j];
+
+      this.dropDownListCertifkn.push(objDrop);
+    }
+console.log(this.dropDownListCertifkn);
     //making dropdown array for ng-multiseelect
     for (var j = 0; j < this.allPrimary.length; j++) {
       var objDrop = {};
@@ -399,6 +440,7 @@ export class MyinfoComponent implements OnInit {
 
       this.dropdownListPrim.push(objDrop);
     }
+    console.log(this.dropdownListPrim)
     for (var j = 0; j < this.allSecondary.length; j++) {
       var objDrop = {};
       objDrop['skillId'] = j;
@@ -406,7 +448,7 @@ export class MyinfoComponent implements OnInit {
       this.dropdownListSec.push(objDrop);
     }
 
-    //retrieve selected primary skills
+    //retrieve selected primary  and secondary and certification skills
     for (let i = 0; i < this.userInfo.skillSets.length; i++) {
       if (this.userInfo.skillSets[i].skillCategory == 'primary') {
         this.primary.push(this.userInfo.skillSets[i].technology);
@@ -417,6 +459,14 @@ export class MyinfoComponent implements OnInit {
         this.secondaryEdit.push(this.userInfo.skillSets[i].technology);
       }
     }
+
+    for (let i = 0; i < this.userInfo.certifications.length; i++) {
+        this.cert.push(this.userInfo.certifications[i].name);
+         //get cert comma seprated
+         this.certificateComma =  this.cert.join(', ')
+        this.certEdit.push(this.userInfo.certifications[i].name);
+    }
+    
 
     console.log(this.dropdownListPrim)
     for (var j = 0; j < this.primary.length; j++) {
@@ -434,6 +484,18 @@ export class MyinfoComponent implements OnInit {
       }
     }
 
+    for (var j = 0; j < this.cert.length; j++) {
+      for (var k = 0; k < this.dropDownListCertifkn.length; k++) {
+        console.log('cert',this.cert[j])
+        console.log('drop',this.dropDownListCertifkn[k].skill)
+
+        if (this.cert[j] == this.dropDownListCertifkn[k].skill) {
+          this.selectedCertItems.push(this.dropDownListCertifkn[k]);
+        }
+      }
+    }
+
+    console.log(this.selectedCertItems)
   }
   //function get the primary secondary slected and all skills ends
 
@@ -446,17 +508,26 @@ export class MyinfoComponent implements OnInit {
   editForm() {
     this.submitted = false;
     this.dropdownSettings = {
+      enableCheckAll: false,
       idField: 'skillId',
       textField: 'skill',
       allowSearchFilter: true,
       itemsShowLimit: 5,
+      allowRemoteDataSearch:true
     };
+    // this.dropdownSetting = {
+    //   idField: 'id',
+    //   textField: 'name',
+    //   itemsShowLimit: 3,
+    //   allowSearchFilter: true
+    // };
     console.log(this.selectedPrimItems)
     console.log(this.selectedSecItems)
 
     this.primarySkillBoolean = true;
     this.isEditForm = true;
     this.showAddNewPrimary = false;
+    this.showAddNewCert = false;
     this.showAddNewSecondary = false;
     if (this.userInfo.gender == null) {
       this.userInfo.gender = '';
@@ -474,12 +545,18 @@ export class MyinfoComponent implements OnInit {
       location: this.userInfo.location.name,
       selectedPrim: [this.selectedPrimItems],
       selectedSec: [this.selectedSecItems],
+      selectedCertifkn:[this.selectedCertItems]
+
     });
     this.selectedPrimItems = [];
     this.selectedSecItems = [];
+    this.selectedCertItems = [];
     this.primary = [];
     this.secondary = [];
+    this.cert = [];
+    this.certEdit = [];
     this.primaryEdit = [];
+    this.certfknEdit = [];
     this.secondaryEdit = [];
     this.allPrimary = [];
     this.allSecondary = [];
@@ -518,16 +595,25 @@ export class MyinfoComponent implements OnInit {
   onItemSelectSecondary(item: any) {
     this.secondaryEdit.push(item.skill);
   }
+  //on  certificate select on edit
+  onItemSelectCertfkn(item: any) {
+    this.certEdit.push(item.skill);
+  }
+
 
   //on  primary skill skill deselect on edit
   onItemDeSelectPrimary(item: any) {
     this.primaryEdit = this.primaryEdit.filter((el) => el !== item.skill);
   }
-
   //on  primary skill skill deselect on edit
   onItemDeSelectSecondary(item: any) {
     this.secondaryEdit = this.secondaryEdit.filter((el) => el !== item.skill);
   }
+  //on  primary skill skill deselect on edit
+  onItemDeSelectCertfkn(item: any) {
+    this.certEdit = this.certEdit.filter((el) => el !== item.skill);
+  }
+
 
   //click on add Primary skill
   addPrimarySkill() {
@@ -537,6 +623,18 @@ export class MyinfoComponent implements OnInit {
   //click on add secondary skill
   addSecondarySkill() {
     this.primarySkillBoolean = false;
+  }
+
+   //delete cert
+   deleteCert(name, i) {
+    var id = 'cert' + i;
+    this.selectedCertItems = this.selectedCertItems.filter(
+      (el) => el.skill !== name
+    );
+    document.getElementById(id).style.display = 'none';
+    this.editProfileForm.patchValue({
+      selectedCertifkn: this.selectedCertItems,
+    });
   }
   //delete primary skill
   deletePrimarySkill(skill, i) {
@@ -587,6 +685,31 @@ export class MyinfoComponent implements OnInit {
     });
   }
 
+  onFilterChangCertification(event){
+    const component = this;
+    $('.added-cert').remove();
+    this.searchNewCertificate = event.replace(/\w\S*/g, (w) =>
+      w.replace(/^\w/, (c) => c.toUpperCase())
+    );
+
+    if (
+      this.allCert.indexOf(this.searchNewCertificate) !== -1 ||
+      event == ''
+    ) {
+      this.showAddNewCert = false;
+    } else {
+      // this.showAddNewPrimary = true;
+
+      $('.cert-drop .filter-textbox').append(
+        '<span style="margin-left:5%;margin-top:4%;display:inline-block;color: #909192;" class="added-cert skill-text">No such certification please add new certification</span><img style="margin-top:4%" class="added-cert float-right add-new-cert" src="../assets/img/plus-icon.png">'
+      );
+      //  document.getElementsByClassName("filter-textbox")[0].appendChild(btn)
+    }
+    $('.add-new-cert').click(function () {
+      component.addNewCert();
+    });
+  }
+
   //get text typed in search multiselect skills secondary
   onFilterChangSecondarySearch(event) {
     $('.addedsec').remove();
@@ -618,6 +741,12 @@ export class MyinfoComponent implements OnInit {
     $('.added').remove();
   }
 
+    //on dropdown close primary
+    onDropDownCloseCert() {
+      this.showAddNewCert = false;
+      $('.added-cert').remove();
+    }
+
   //on dropdown close secondary
   onDropDownCloseSecondary() {
     $('.addedsec').remove();
@@ -644,9 +773,28 @@ export class MyinfoComponent implements OnInit {
     });
   }
 
+
+    //on click of + button to add new skills secondary
+    addNewCert() {
+      console.log(this.searchNewCertificate)
+      if (this.searchNewCertificate != '')
+        this.certEdit.push(this.searchNewCertificate);
+      this.extraCert.push({
+        name: this.searchNewCertificate,
+      });
+    }
+
+
   onSubmit() {
+    console.log(this.selectedCertItems)
     this.submitted = true;
     this.skillSet = [];
+    this.certSet = [];
+    for (let i = 0; i < this.selectedCertItems.length; i++) {
+      this.certSet.push({
+        name: this.selectedCertItems[i].skill,
+      });
+    }
     for (let i = 0; i < this.selectedPrimItems.length; i++) {
       this.skillSet.push({
         technology: this.selectedPrimItems[i].skill,
@@ -662,6 +810,7 @@ export class MyinfoComponent implements OnInit {
 
     this.skillSet = this.skillSet.concat(this.extraPrimary);
     this.skillSet = this.skillSet.concat(this.extraSecondary);
+    this.certSet =  this.certSet.concat(this.extraCert);
     this.primarySet = this.skillSet.filter((obj) => {
       return obj.skillCategory === 'primary';
     });
@@ -695,6 +844,7 @@ export class MyinfoComponent implements OnInit {
       return;
     } else {
       this.isEditForm = false;
+      console.log(this.data)
       this.data = {
         userInfo: {
           id: this.userInfo.id,
@@ -710,6 +860,7 @@ export class MyinfoComponent implements OnInit {
           techRoles: techRoleListJson,
           projects: this.userInfo.projects,
           skillSets: this.skillSet,
+          certifications:this.certSet
         },
       };
       console.log('data', this.data);

@@ -1,4 +1,4 @@
-<div class="container-fluid container-margin">
+<div class="container mr-0">
     <div class="row row-allign">
         <div class="col-md-7">
             <div class="leave-border"></div>
@@ -53,7 +53,7 @@
 
             <div class="modal-content">
                 <div class="modal-header">
-                    <div class="delete-leave-popup">Delete leaves</div>
+                    <div class="delete-leave-popup">Delete leavesss</div>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
 
                 </div>
@@ -64,7 +64,8 @@
                 </div>
 
                 <div class="modal-body modal-body2">
-                    <table class="table">
+                    <table class="table" style="border: 1px solid lightgrey;">
+                        <tr><td style="color:grey;font-weight: bold">Applied Leaves</td></tr>
                         <tr *ngFor="let tableDatas of deleteLeavesData | 
                         paginate:{id:'data_table',
                             itemsPerPage:5,currentPage:page,
@@ -113,7 +114,8 @@
                     </div>
                 <div class="modal-body">
                         <p *ngIf ="deleteLeavesData.length==0" >You have no planned leaves for this month!!</p>
-                        <table *ngIf ="deleteLeavesData.length!=0" class="table">
+                        <table *ngIf ="deleteLeavesData.length!=0" class="table" style="border: 1px solid lightgrey;">
+                                <tr><td style="color:grey;font-weight: bold">Applied Leaves</td></tr>
                                 <tr *ngFor="let tableDatas of deleteLeavesData | 
                                 paginate:{id:'data_table',
                                     itemsPerPage:5,currentPage:page,
@@ -121,7 +123,7 @@
                                     <td *ngIf="tableDatas.fromDate == tableDatas.toDate">{{tableDatas.fromDate}}</td>
                                     <td *ngIf="tableDatas.fromDate != tableDatas.toDate">{{tableDatas.fromDate}} - {{tableDatas.toDate}}</td>
         
-                                    
+                                    <!-- <td><img src="../assets/imgs"></td> -->
                                     <td>
                                             <input type="checkbox"
                                             name="item-{{tableDatas.lid}}"

@@ -23,7 +23,8 @@ export class AccountService {
         allLeaves: null,
         allProjectAbout: null,
         prouctResourceCount: null,
-        allUsers: null
+        allUsers: null,
+        allCertificate:null
     }
 
     private userInfoData = new BehaviorSubject([]);
@@ -206,12 +207,11 @@ export class AccountService {
             }))
     }
     getAllCertifkn() {
-        return (this.dropdownList = [
-            { item_id: 1, item_text: 'Mumbai' },
-            { item_id: 2, item_text: 'Bangaluru' },
-            { item_id: 3, item_text: 'Pune' },
-            { item_id: 4, item_text: 'Navsari' },
-            { item_id: 5, item_text: 'New Delhi' }
-        ]);
+        // return (this.dropdownList = ['cert1','cert2','cert3','cert4','cert5']);
+        return this.http.get(`/home/getAllCertificationList`)
+        .pipe(map(response => {
+            this.data.allCertificate = response;
+            return this.data.allCertificate.payload
+        }))
     }
 }
