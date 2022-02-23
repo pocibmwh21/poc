@@ -25,7 +25,7 @@
 				<th>Project</th>
 				<th>Primary Skills</th>
 				<th>Email Id</th>
-				<!-- <th>Certification</th> -->
+				<th>Certifications</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -34,6 +34,7 @@
 				<td colspan="4" class="text-center"> <span class="spinner-border spinner-border-lg align-center"></span> </td>
 			</tr>
 			<ng-container *ngFor="let user of userInfo ;  let i=index">
+					<tr *ngIf="userInfo.length==0">No data available !!!!</tr>
 				<tr [style.display]="i/pageSize>=page || i/pageSize<(page-1)?'none':null" class="border_bottom" class="accordion-toggle">
 					<td>{{user.empId}}</td>
 					<td>{{user.firstName}}</td>
@@ -58,6 +59,9 @@
                     </div> -->
 					</td>
 					<td>{{user.email}}</td>
+					<td class="project-td" matTooltip="{{user.certCommas}}" matTooltipClass="test" [matTooltipPosition]="'above'"> <span *ngFor="let cert of user.certifications last as isLast">
+						{{cert.name}}{{isLast?'':', '}}
+					</span> </td>
 					<!-- <td></td> -->
 					<td>
 						<a class="collapsed" data-toggle="collapse" [attr.data-target]="'#class'+user.empId+user.id" aria-expanded="true" aria-controls="collapseOne"> </a>

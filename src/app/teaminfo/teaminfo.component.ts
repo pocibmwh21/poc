@@ -51,15 +51,17 @@ export class TeaminfoComponent implements OnInit {
   techlist = [];
   projectCommas;
   allSkills
+  allSkillsArray 
   primarySkillArray = [];
   secondarySkillArray = [];
+  certificateArray = [];
   project;
   selectedSkills
   dropdownSettings: IDropdownSettings = {};
   dropdownSettingsProject: IDropdownSettings = {};
   allProjects;
-  selectedSkill;
-  selectedProject;
+  selectedSkill =[];
+  selectedProject =[];
   userInfo = null;
   allSkillsnNewLine = [];
   gotResponse = false;
@@ -68,6 +70,8 @@ export class TeaminfoComponent implements OnInit {
   excelData = [];
    skillArray =[]
  projectArray =[];
+ allCertificateArray =[];
+ filterData ={};
 
   constructor(private accountService: AccountService,
       private modalService: NgbModal,
@@ -79,6 +83,7 @@ export class TeaminfoComponent implements OnInit {
       public ete: ExportExcelService) {
       this.accountService.getTeamData(0);
       this.accountService.getAllSkillSets();
+  
     //   this.accountService.getAllProjects();
 
   }
@@ -88,16 +93,15 @@ export class TeaminfoComponent implements OnInit {
       this.getUserInfoDetails();
     this.getAllProjectAbout();
     this.getAllUsers();
+
       //dropdown setting for skill multiselect
       this.dropdownSettings = {
           idField: 'id',
           textField: 'technology',
           allowSearchFilter: true
-
       };
 
       //dropdown setting for project multiselect
-
       this.dropdownSettingsProject = {
           idField: 'projectID',
           textField: 'pname',
@@ -108,21 +112,37 @@ export class TeaminfoComponent implements OnInit {
       //Get All SkillSets
       this.accountService.allSkillFields.subscribe(
           (data) => {
-              this.allSkills = data;
+              this.allSkillsArray = data;
 
               //include id in all skill array for multiselect
-              this.allSkills.map((obj, index) => {
+              this.allSkillsArray.map((obj, index) => {
                   obj.id = obj.id;
                   return obj
               })
-              console.log("AllSkilnews: ", this.allSkills);
+              console.log("AllSkilnews: ", this.allSkillsArray);
           },
           (error) => {
               this.alertService.error(error);
           }
       );
 
-    
+      //get all certifications
+      this.accountService.getAllCertifkn().subscribe(
+        (data) => {
+            this.allCertificateArray = data;
+
+            //include id in all skill array for multiselect
+            this.allCertificateArray.map((obj, index) => {
+                obj.id = obj.id;
+                return obj
+            })
+            console.log("Allcertnews: ", this.allCertificateArray);
+        },
+        (error) => {
+            this.alertService.error(error);
+        }
+    );
+          
 
 
   }
@@ -176,6 +196,7 @@ export class TeaminfoComponent implements OnInit {
           this.userInfo.map((obj) => {
               this.primarySkillArray = [];
               this.secondarySkillArray = [];
+              this.certificateArray = [];
               obj.skillSets.forEach((element) => {
                   if (element.skillCategory == 'primary') {
                       this.primarySkillArray.push(element.technology);
@@ -191,6 +212,13 @@ export class TeaminfoComponent implements OnInit {
 
                   return obj;
               });
+              obj.certifications.forEach((element) => {
+                    this.certificateArray.push(element.name);
+                    obj.certArray = this.certificateArray;
+                    obj.certCommas = this.certificateArray.join(', ')
+                return obj;
+            });
+              
           });
           console.log(this.userInfo)
       });
@@ -200,25 +228,68 @@ export class TeaminfoComponent implements OnInit {
 
   //apply filter
   applyFilter() {
-    
+    console.log(this.allSkillsArray)
+    this.skillArray = [];
+    this.projectArray = [];
     for(let i=0;i<this.selectedProject.length;i++){
       this.projectArray.push({"projectID":this.selectedProject[i].projectID})
     }
+    
     for(let i=0;i<this.selectedSkill.length;i++){
-      this.skillArray.push({"id":this.selectedSkill[i].id})
+      for(let j =0;j<this.allSkillsArray.length;j++){
+        console.log(this.selectedSkill[i])
+        console.log(this.allSkillsArray[j].technology)
+        if(this.selectedSkill[i]==this.allSkillsArray[j].technology){
+          this.skillArray.push({"id":this.allSkillsArray[j].id})
+          break;
+        }
+      }
+      // this.skillArray.push({"id":this.selectedSkill[i].id})
     }
-      var data = {'skills':this.skillArray,'projects':this.projectArray}
-      console.log(data)
+       this.filterData = {'skills':this.skillArray,'projects':this.projectArray}
+       this.filterDisplayData(this.filterData,this.page-1)
+     
   }
 
+filterDisplayData(filterData,page){
+  if(this.skillArray.length == 0 && this.projectArray.length ==0){
+    this.accountService.getTeamData(page);
+    this.getTableData();
+  }
+  else{
+    this.accountService.getFilterTableData(filterData,page).subscribe(
+      (data) => {
+        console.log(data);
+        this.userInfo =data.UserInfo;
+        this.totalSize = data.TotalItems;
+        this.page = data.CurrentPage + 1;
+  
+        // this.allSkillSet.push(...data);
+  
+        // console.log('AllSkills:', this.allSkillSet);
+      },
+      (error) => {
+        this.alertService.error(error);
+      }
+    );
+
+  }
+  
+}
+ 
   //on page change
 
   onPageChange(page) {
       console.log(this.selectedSkill)
       console.log(this.selectedProject)
       console.log("pageNumber", page - 1)
-      this.accountService.getTeamData(page - 1);
-      this.getTableData();
+      if(Object.entries(this.filterData).length === 0){
+        this.accountService.getTeamData(page - 1);
+        this.getTableData();
+      }
+      else{
+        this.filterDisplayData(this.filterData,page-1)
+      }
 
 
   }

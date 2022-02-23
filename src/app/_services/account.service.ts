@@ -1,6 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -24,7 +24,8 @@ export class AccountService {
         allProjectAbout: null,
         prouctResourceCount: null,
         allUsers: null,
-        allCertificate:null
+        allCertificate:null,
+        filterData:null
     }
 
     private userInfoData = new BehaviorSubject([]);
@@ -212,6 +213,20 @@ export class AccountService {
         .pipe(map(response => {
             this.data.allCertificate = response;
             return this.data.allCertificate.payload
+        }))
+    }
+    getFilterTableData(data,page) {
+        console.log(data)
+        let options = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+            }),
+            body: data,
+        };
+        return this.http.post(`/home/user/getusersprofilewithpaginationfilter?page=${page}`,data)
+        .pipe(map(response => {
+            this.data.filterData = response;
+            return this.data.filterData
         }))
     }
 }
