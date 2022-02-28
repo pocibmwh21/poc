@@ -243,7 +243,7 @@
 							*ngFor="let project of userInfo.projects last as isLast">{{project.pname}}{{isLast?'':', '}}</span>
 					</li>
 					<li></li>
-					<li class="list-item col-6 show-elipse-static" *ngIf="userInfo.certifications.length!=0" title ="{{certificateComma}}">
+					<li class="list-item col-12 show-elipse-static-certification" *ngIf="userInfo.certifications.length!=0" title ="{{certificateComma}}">
 						<b>Certifications:&nbsp;&nbsp;</b><span 
 							*ngFor="let certificate of cert last as isLast">{{certificate}}{{isLast?'':', '}}</span>
 					</li>

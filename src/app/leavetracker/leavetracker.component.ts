@@ -321,9 +321,13 @@ export class LeavetrackerComponent implements OnInit {
           if (!(leaves.hasOwnProperty('toDate'))) {
             leaves['toDate'] = leaves.fromDate
           }
-
-          this.deleteLeavesData.push(leaves)
-
+          console.log(leaves)
+          var now = new Date();
+          now.setHours(0,0,0,0);
+          
+          if (new Date(leaves.toDate) > now) {
+            this.deleteLeavesData.push(leaves)
+          } 
         }
 
         if (leaves.fromDate == leaves.toDate || !(leaves.hasOwnProperty('toDate'))) {
@@ -430,7 +434,7 @@ export class LeavetrackerComponent implements OnInit {
     this.deleteLeavesData.map((deleteLeaveData) => {
       var toData = new Date(deleteLeaveData.toDate);
       var fromData = new Date(deleteLeaveData.fromDate);
-
+  
       deleteLeaveData.fromDate = fromData.toLocaleDateString("en-US", { day: 'numeric' }) + "-" + fromData.toLocaleDateString("en-US", { month: 'short' }) + "-" + fromData.toLocaleDateString("en-US", { year: 'numeric' })
       deleteLeaveData.toDate = toData.toLocaleDateString("en-US", { day: 'numeric' }) + "-" + toData.toLocaleDateString("en-US", { month: 'short' }) + "-" + toData.toLocaleDateString("en-US", { year: 'numeric' })
       return deleteLeaveData;
@@ -440,10 +444,10 @@ export class LeavetrackerComponent implements OnInit {
 
     // update calender
     this.calendarOptions = {
-      // selectable: true,
-
+      selectable: true,
+      unselectAuto:true,
       initialView: 'dayGridMonth',
-      dayMaxEventRows: 5, // allow "more" link when too many events
+      dayMaxEventRows: 4, // allow "more" link when too many events
       eventContent: this.renderEventContent, // This will render the event with image 
       events: this.data,
       customButtons: {
